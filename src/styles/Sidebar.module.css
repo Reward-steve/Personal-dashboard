@@ -1,16 +1,19 @@
 /* Sidebar.module.css */
 .sidebar {
-  width: 250px;
+  width: 20%;
   height: 100vh;
   background-color: #2d3748; /* Dark gray */
   color: white;
   padding: 16px;
-  position: fixed;
+  transition: 0.5s;
 }
 
 .navContainer {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   flex-direction: column;
+  height: 80%;
 }
 
 .title {
@@ -20,18 +23,33 @@
 }
 
 .navList {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  height: 90%;
+  width: 100%;
   list-style-type: none;
   padding: 0;
 }
 
-.navList li {
+.navList a {
   font-size: 1rem;
   margin-bottom: 8px;
+  height: 8%;
+  padding-left: 10px;
+  place-content: center;
+  width: 100%;
+  text-decoration: none;
+  color: white;
   cursor: pointer;
 }
 
-.navList li:hover {
+.navList a:hover {
   background-color: #4a5568; /* Hover effect */
-  padding: 8px;
   border-radius: 4px;
+}
+
+.navList a:active {
+  border-left: 2px solid cyan;
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./../../styles/Sidebar.module.css"; // Import your CSS module
+import { NavLink } from "react-router-dom";
 
 const Sidebar: React.FC = () => {
   return (
@@ -7,10 +8,10 @@ const Sidebar: React.FC = () => {
       <div className={styles.navContainer}>
         <h2 className={styles.title}>Navigation</h2>
         <ul className={styles.navList}>
-          <li>Home</li>
-          <li>Analytics</li>
-          <li>Profile</li>
-          <li>Settings</li>
+          <NavLink to={"/"}>Home</NavLink>
+          <NavLink to={"/Analytics"}>Analytics</NavLink>
+          <NavLink to={"/Profile"}>Profile</NavLink>
+          <NavLink to={"/Setting"}>Settings</NavLink>
         </ul>
       </div>
     </aside>

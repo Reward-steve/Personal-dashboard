@@ -1,16 +1,7 @@
 /* Header.module.css */
 .header {
-  flex-direction: row;
-  -webkit-box-pack: justify;
-  justify-content: space-between;
-  position: relative;
-  display: flex;
-  -webkit-box-align: center;
-  align-items: center;
-  padding-left: 8px;
-  padding-right: 8px;
-  min-height: 56px;
-  background-color: rgb(23, 24, 33);
+  width: -webkit-fill-available;
+
   height: 116px;
 }
 
