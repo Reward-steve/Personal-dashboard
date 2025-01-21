@@ -1,0 +1,33 @@
+.widget {
+  background-color: #f7fafc; /* Light background */
+  border: 1px solid #e2e8f0; /* Light gray border */
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #2d3748; /* Dark gray text */
+}
+
+.widget h3 {
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+  color: #4a5568; /* Slightly lighter dark gray */
+}
+
+.widget p {
+  margin: 4px 0;
+  font-size: 1rem;
+}
+
+.error {
+  color: #e53e3e; /* Red for errors */
+  font-weight: bold;
+}
+
+.loading {
+  color: #718096; /* Neutral gray for loading */
+  font-style: italic;
+}

@@ -1,0 +1,29 @@
+/* MainContent.module.css */
+.mainContent {
+  margin-left: 250px;
+  padding: 24px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.widget {
+  height: 150px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.weatherWidget {
+  background-color: #63b3ed; /* blue.300 */
+}
+
+.analyticsWidget {
+  background-color: #48bb78; /* green.300 */
+}
+
+.financialWidget {
+  background-color: #edf2f7; /* light gray */
+}
