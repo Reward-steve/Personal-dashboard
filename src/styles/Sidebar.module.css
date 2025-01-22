@@ -2,10 +2,9 @@
 .sidebar {
   width: 20%;
   height: 100vh;
-  background-color: #2d3748; /* Dark gray */
-  color: white;
   padding: 16px;
-  transition: 0.5s;
+  transition: 0.3s;
+  border-right: 1px solid white;
 }
 
 .navContainer {
@@ -41,7 +40,6 @@
   place-content: center;
   width: 100%;
   text-decoration: none;
-  color: white;
   cursor: pointer;
 }
 

@@ -1,18 +1,32 @@
-import React from "react";
 import styles from "./../../styles/Sidebar.module.css"; // Import your CSS module
+import theme from "./../../styles/FlexPage.module.css";
 import { NavLink } from "react-router-dom";
+import navLinkRouter from "../../router/sidebarRoutes";
+import { useTheme } from "../../hooks/useTheme";
 
 const Sidebar: React.FC = () => {
+  const { isDarkMode, toggleTheme } = useTheme();
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.navContainer}>
         <h2 className={styles.title}>Navigation</h2>
         <ul className={styles.navList}>
-          <NavLink to={"/"}>Home</NavLink>
-          <NavLink to={"/Analytics"}>Analytics</NavLink>
-          <NavLink to={"/Profile"}>Profile</NavLink>
-          <NavLink to={"/Setting"}>Settings</NavLink>
+          {navLinkRouter.map((route, id) => {
+            return (
+              <NavLink
+                className={isDarkMode ? theme.darkMode : theme.lightMode}
+                key={id}
+                to={route.to}
+              >
+                {route.name}
+              </NavLink>
+            );
+          })}
         </ul>
+        <button onClick={toggleTheme}>
+          Switch to {isDarkMode ? "Light" : "Dark"} Mode
+        </button>
       </div>
     </aside>
   );
