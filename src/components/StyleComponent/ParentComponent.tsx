@@ -1,7 +1,7 @@
 import React from "react";
 import { MainContentProps } from "../../types/mainContent";
 import { useTheme } from "../../hooks/useTheme";
-import styles from "./../../styles/FlexPage.module.css";
+import styles from "./../../styles/Theme.module.css";
 
 const ParentComponent: React.FC<MainContentProps> = ({ children }) => {
   const { isDarkMode } = useTheme();

@@ -3,7 +3,7 @@
   width: 20%;
   height: 100vh;
   padding: 16px;
-  transition: 0.3s;
+  transition: 0.2s ease-in-out;
   border-right: 1px solid white;
 }
 
@@ -44,8 +44,6 @@
 }
 
 .navList a:hover {
-  background-color: #4a5568; /* Hover effect */
-  border-radius: 4px;
 }
 
 .navList a:active {
