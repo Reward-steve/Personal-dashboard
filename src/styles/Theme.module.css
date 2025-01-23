@@ -7,13 +7,13 @@
 }
 
 .lightMode {
-  background-color: #a8a8a8;
-  color: #000000;
+  background-color: lightblue;
+  color: #091f31;
 }
 
 .darkMode {
-  background-color: #000000;
-  color: cyan;
+  background-color: #091f31;
+  color: lightblue;
 }
 
 button {

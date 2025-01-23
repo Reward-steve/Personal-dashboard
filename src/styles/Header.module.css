@@ -6,6 +6,9 @@
   justify-content: space-around;
   align-items: center;
   transition: 0.2s ease-in-out;
+  position: static;
+  backdrop-filter: blur(7px);
+  border-bottom: 1px solid;
 }
 
 .title {
@@ -20,9 +23,16 @@
 
 .searchInput {
   background-color: white;
-  color: black;
+  color: #091f31;
   padding: 8px 12px;
   width: 200px;
   margin-right: 16px;
   border: 1px solid #e2e8f0; /* Outline color */
+}
+
+.icon {
+  font-size: 1.6rem;
+  margin-right: 10px;
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
 }
