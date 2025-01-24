@@ -1,5 +1,6 @@
 import { BackgroundContext } from "./CreateBackground";
 import React, { useState } from "react";
+import defaultImage from "../assets/images/img1.png";
 // Context Interface
 export interface BackgroundContextProps {
   bgImage: string;
@@ -14,10 +15,11 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Apply background image dynamically
   React.useEffect(() => {
-    document.body.style.backgroundImage = bgImage ? `url(${bgImage})` : "";
+    document.body.style.backgroundImage = bgImage
+      ? `url(${bgImage})`
+      : `url(${defaultImage})`;
     document.body.style.backgroundSize = "cover";
     document.body.style.backgroundRepeat = "no-repeat";
-    document.body.style.backgroundPosition = "center";
   }, [bgImage]);
 
   return (

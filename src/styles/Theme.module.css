@@ -4,18 +4,16 @@
   align-items: center;
   width: 100%;
   height: 100vh;
+  transition: 1s;
+  /* animation: ; */
 }
 
 .lightMode {
   color: black;
-  background-image: url(../assets/images/img1.png);
-  background-size: cover;
 }
 
 .darkMode {
   color: lightblue;
-  background-image: url(../assets/images/gradient-grainy-texture/5479108.jpg);
-  background-size: cover;
 }
 
 button {

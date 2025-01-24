@@ -16,8 +16,6 @@ export interface ImageProps {
   alt: string;
 }
 
-console.log(img1);
-
 export const imageObj: ImageProps[] = [
   { imgSrc: img1, alt: "Image 1" },
   { imgSrc: img2, alt: "Image 2" },
