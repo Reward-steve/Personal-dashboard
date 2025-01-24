@@ -42,7 +42,7 @@ const routerObject: Router[] = [
   {
     path: "/Settings",
     element: Settings,
-    props: { name: "Settings Page" },
+    props: { name: "to Your Settings Page!" },
   },
 ];
 

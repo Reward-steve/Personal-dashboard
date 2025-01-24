@@ -1,19 +1,21 @@
 import React from "react";
 import { ComponentProps } from "../../router/mainRoutes";
 import PageIntro from "../../components/StyleComponent/PageIntroComponent";
+import BackgroundPicker from "../../components/StyleComponent/BackgroundPicker";
 
 const Profile: React.FC<ComponentProps> = ({ name }) => {
   return (
-    <PageIntro
-      title={name}
-      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-            fermentum lectus vel arcu commodo, ac posuere nunc egestas. Donec
-            nec gravida libero. Sed vel efficitur ligula, in consectetur neque.
-            Sed in turpis vitae lectus fermentum fermentum. Sed vel sem ut felis
-            convallis consectetur. Vestibulum ante ipsum primis in faucibus orci
-            luctus et ultrices posuere cubilia curae; Donec malesuada est sed ex
-            lobortis, et sagittis ipsum volutpat."
-    />
+    <>
+      <PageIntro
+        title={name}
+        description="
+        This is where you can make the experience truly yours.
+        Customize the background image to reflect your personality or mood,
+        and fine-tune the text color to ensure everything feels just right.
+        Explore the options and create a look that’s uniquely you!"
+      />
+      <BackgroundPicker />
+    </>
   );
 };
 export default Profile;

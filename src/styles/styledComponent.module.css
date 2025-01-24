@@ -15,3 +15,35 @@
   backdrop-filter: blur(7px);
   background-color: rgba(0, 0, 0, 0.274);
 }
+
+.backgroundimage {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.background {
+  padding: 10px;
+  width: 300px;
+  height: 230px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  backdrop-filter: brightness(0.7);
+  border-radius: 10px;
+}
+
+.imageholder {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+  cursor: pointer;
+  gap: 10px;
+}
