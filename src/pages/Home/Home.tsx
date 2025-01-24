@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ComponentProps } from "../../router/mainRoutes";
-import styles from "./../../styles/HomePage.module.css";
+import styles from "./../../styles/Page.module.css";
 import { useTheme } from "../../hooks/useTheme";
 
 const Profile: React.FC<ComponentProps> = ({ name }) => {

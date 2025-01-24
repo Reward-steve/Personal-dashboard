@@ -7,13 +7,15 @@
 }
 
 .lightMode {
-  background-color: lightblue;
-  color: #091f31;
+  color: lightblue;
+  background-image: url(../assets/images/artistic-blurry-colorful-wallpaper-background.jpg);
+  background-size: cover;
 }
 
 .darkMode {
-  background-color: #091f31;
   color: lightblue;
+  background-image: url(../assets/images/codioful-formerly-gradienta-OzfD79w8ptA-unsplash.jpg);
+  background-size: cover;
 }
 
 button {

@@ -1,6 +1,5 @@
 import React from "react";
 import routerObject from "./router/mainRoutes";
-import Header from "./components/Header/Header";
 import Sidebar from "./components/Sidebar/Sidebar";
 import { ThemeProvider } from "./context/ThemeContext";
 import MainContent from "./components/Main/MainContent";
@@ -14,7 +13,6 @@ const App: React.FC = () => {
         <ParentComponent>
           <Sidebar />
           <MainContent>
-            <Header />
             <Routes>
               {routerObject.map((route, id) => {
                 return (
