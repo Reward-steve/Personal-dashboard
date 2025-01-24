@@ -4,13 +4,10 @@ import { imageObj } from "../../types/backgroundImg";
 import { useBackground } from "../../hooks/useBackground";
 
 const BackgroundPicker: React.FC = () => {
-  const { setBackgroundImage } = useBackground();
+  const { setBgImage } = useBackground();
   // const [image, setImage] = React.useState<string>(imageObj[0].imgSrc);
   return (
-    <main
-      className={style.background}
-      style={{ backgroundImage: `url(${image})`, backgroundSize: "cover" }}
-    >
+    <main className={style.background}>
       <p>Background Picker</p>
       <div className={style.imageholder}>
         {imageObj.map((img, id) => (
@@ -19,7 +16,7 @@ const BackgroundPicker: React.FC = () => {
             className={style.backgroundimage}
             src={img.imgSrc}
             alt={img.alt}
-            onClick={() => setBackgroundImage(img.imgSrc)}
+            onClick={() => setBgImage(img.imgSrc)}
           />
         ))}
       </div>
