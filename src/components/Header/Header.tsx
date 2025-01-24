@@ -12,7 +12,7 @@ const Header: React.FC = () => {
         <input
           type="text"
           placeholder="Search..."
-          className={styles.searchInput}
+          className={`${styles.searchInput}`}
         />
         <CiSearch className={`${styles.icon}`} />
       </div>

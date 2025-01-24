@@ -5,6 +5,11 @@ import Analytics from "../pages/Analytics/Analytics";
 import Profile from "../pages/Profile/Profile";
 import Settings from "../pages/Settings/Settings";
 
+export interface PageIntroProps {
+  title: string;
+  description: string;
+}
+
 // Define the type for component props
 export interface ComponentProps {
   name: string;
