@@ -1,18 +1,22 @@
 import React from "react";
 import styles from "./../../styles/Header.module.css"; // Import the CSS module
-// import theme from "./../../styles/Theme.module.css";
-// import { useTheme } from "../../hooks/useTheme";
+import { CiSearch } from "react-icons/ci";
 import { CiSettings } from "react-icons/ci";
 
 const Header: React.FC = () => {
   return (
     <nav className={`${styles.header}`}>
       <h1 className={styles.title}>Dashboard</h1>
-      <input
-        type="text"
-        className={styles.searchInput}
-        placeholder="Search..."
-      />
+
+      <div className={styles.searchInputHolder}>
+        <input
+          type="text"
+          placeholder="Search..."
+          className={styles.searchInput}
+        />
+        <CiSearch className={`${styles.icon}`} />
+      </div>
+
       <CiSettings className={`${styles.icon}`} />
     </nav>
   );

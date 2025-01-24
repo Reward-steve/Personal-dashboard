@@ -21,13 +21,30 @@
   align-items: center;
 }
 
+.searchInputHolder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+  background-color: rgba(0, 0, 0, 0.363);
+  border-radius: 10px;
+}
+
 .searchInput {
-  background-color: white;
-  color: #091f31;
-  padding: 8px 12px;
-  width: 200px;
+  color: lightblue;
+  padding: 15px 12px;
+  width: 96%;
+  font-size: 1em;
   margin-right: 16px;
-  border: 1px solid #e2e8f0;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.24);
+  outline: none;
+}
+
+.searchInput:focus {
+  outline: 1px solid lightblue;
+  border-radius: 10px;
+  transition: 0.5s;
 }
 
 .icon {
