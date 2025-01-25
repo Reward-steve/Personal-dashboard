@@ -7,4 +7,5 @@
   flex-direction: column;
   overflow-y: scroll;
   scrollbar-width: thin;
+  background: #00000070;
 }

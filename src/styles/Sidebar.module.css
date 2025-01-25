@@ -4,8 +4,9 @@
   height: 100vh;
   padding: 16px;
   transition: 0.2s ease-in-out;
-  border-right: 1px solid;
-  backdrop-filter: blur(7px);
+  backdrop-filter: blur(10px);
+  background: #00000070;
+  box-shadow: inset 0 0 62px 2px;
 }
 
 .navContainer {

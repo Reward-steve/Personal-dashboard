@@ -1,15 +1,15 @@
-import img1 from "../assets/images/img1.png";
-import img2 from "../assets/images/img2.png";
-import img3 from "../assets/images/artistic-blurry-colorful-wallpaper-background.jpg";
-import img4 from "../assets/images/codioful-formerly-gradienta-OzfD79w8ptA-unsplash.jpg";
-import img5 from "../assets/images/gradient-grainy-texture/5479108.jpg";
-import img6 from "../assets/images/starry-night-background-design/O7OFWS0.jpg";
-import img7 from "../assets/images/3d-render-tree-landscape-against-fictional-planet-night-sky.jpg";
-import img8 from "../assets/images/orchid-flower-against-blue-background.jpg";
-import img9 from "../assets/images/botanical-leaves.jpg";
-import img10 from "../assets/images/selective-focus-shot-from-pathway-water-with-mountains-distance.jpg";
-import img11 from "../assets/images/cold-melancholic-scene.jpg";
-import img12 from "../assets/images/luxury-blue-golden-background/6877205.jpg";
+import img1 from "../assets/img/img1.jpg";
+import img2 from "../assets/img/img2.jpg";
+import img3 from "../assets/img/img3.jpg";
+import img4 from "../assets/img/img4.jpg";
+import img5 from "../assets/img/img5.jpg";
+import img6 from "../assets/img/img6.jpg";
+import img7 from "../assets/img/img7.png";
+import img8 from "../assets/img/img8.png";
+import img9 from "../assets/img/img9.jpg";
+import img10 from "../assets/img/img10.jpg";
+import img11 from "../assets/img/img11.jpg";
+import img12 from "../assets/img/img12.jpg";
 
 export interface ImageProps {
   imgSrc: string;
