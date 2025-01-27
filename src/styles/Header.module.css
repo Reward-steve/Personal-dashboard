@@ -7,8 +7,9 @@
   align-items: center;
   transition: 0.2s ease-in-out;
   position: static;
-  backdrop-filter: blur(7px);
-  border-bottom: 1px solid;
+  backdrop-filter: blur(10px);
+  color: aliceblue;
+  /* background-color: rgba(0, 0, 0, 0.5); */
 }
 
 .title {

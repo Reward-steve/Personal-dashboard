@@ -3,6 +3,7 @@ import { IoHome } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { SiGoogleanalytics } from "react-icons/si";
 import { IoSettingsSharp } from "react-icons/io5";
+import { FaSignInAlt } from "react-icons/fa";
 
 // Define the Router interface with props
 export interface Router {
@@ -27,6 +28,11 @@ const navLinkRouter: Router[] = [
     to: "/Profile",
     name: "Profile",
     icon: FaUser,
+  },
+  {
+    to: "/Signup",
+    name: "Signup",
+    icon: FaSignInAlt,
   },
   {
     to: "/Settings",

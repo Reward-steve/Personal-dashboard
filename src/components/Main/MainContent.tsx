@@ -6,8 +6,10 @@ import { MainContentProps } from "./../../types/mainContent"; // Import the inte
 const MainContent: React.FC<MainContentProps> = ({ children }) => {
   return (
     <main className={styles.mainContent}>
-      <Header />
-      {children}
+      <section className={styles.content}>
+        <Header />
+        {children}
+      </section>
     </main>
   );
 };

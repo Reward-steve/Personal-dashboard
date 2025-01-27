@@ -1,11 +1,17 @@
 .mainContent {
+  width: 100%;
+  height: 100vh;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+
+.content {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  height: 100vh;
+  height: auto;
   flex-direction: column;
-  overflow-y: scroll;
-  scrollbar-width: thin;
-  background: #00000070;
+  /* background: #00000070; */
 }

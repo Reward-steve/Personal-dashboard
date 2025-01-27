@@ -4,6 +4,7 @@ import Home from "../pages/Home/Home";
 import Analytics from "../pages/Analytics/Analytics";
 import Profile from "../pages/Profile/Profile";
 import Settings from "../pages/Settings/Settings";
+import Signup from "../pages/Signup/Signup";
 
 export interface PageIntroProps {
   title: string;
@@ -27,7 +28,7 @@ const routerObject: Router[] = [
   {
     path: "/",
     element: Home,
-    props: { name: "Home Page" },
+    props: { name: "Dashboard" },
   },
   {
     path: "/Analytics",
@@ -40,9 +41,14 @@ const routerObject: Router[] = [
     props: { name: "Profile Page" },
   },
   {
+    path: "/Signup",
+    element: Signup,
+    props: { name: "Signup Page" },
+  },
+  {
     path: "/Settings",
     element: Settings,
-    props: { name: "to Your Settings Page!" },
+    props: { name: "Settings Page" },
   },
 ];
 

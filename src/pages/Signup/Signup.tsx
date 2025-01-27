@@ -2,12 +2,12 @@ import * as React from "react";
 import { ComponentProps } from "../../router/mainRoutes";
 import PageIntro from "../../components/StyleComponent/PageIntroComponent";
 import PageTitle from "../../components/StyleComponent/PageTitle";
-import { IoHome } from "react-icons/io5";
+import { FaSignInAlt } from "react-icons/fa";
 
-const Profile: React.FC<ComponentProps> = ({ name }) => {
+const Signup: React.FC<ComponentProps> = ({ name }) => {
   return (
     <>
-      <PageTitle Title={"Dashboard"} Icon={<IoHome />} />
+      <PageTitle Title={"Sign-up"} Icon={<FaSignInAlt />} />
 
       <PageIntro
         title={name}
@@ -22,4 +22,4 @@ const Profile: React.FC<ComponentProps> = ({ name }) => {
     </>
   );
 };
-export default Profile;
+export default Signup;

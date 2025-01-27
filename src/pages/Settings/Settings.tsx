@@ -5,11 +5,14 @@ import { useBackground } from "../../hooks/useBackground";
 import PageIntro from "../../components/StyleComponent/PageIntroComponent";
 import BackgroundPicker from "../../components/StyleComponent/BackgroundPicker";
 import style from "../../styles/styledComponent.module.css"; // Import the CSS module for styling
+import { IoSettingsSharp } from "react-icons/io5";
+import PageTitle from "../../components/StyleComponent/PageTitle";
 
 const Profile: React.FC<ComponentProps> = ({ name }) => {
   const { setBgImage } = useBackground();
   return (
     <>
+      <PageTitle Title={"Setting"} Icon={<IoSettingsSharp />} />
       <PageIntro
         title={name}
         description="

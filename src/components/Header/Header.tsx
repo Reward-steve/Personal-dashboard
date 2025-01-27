@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./../../styles/Header.module.css"; // Import the CSS module
 import { CiSearch } from "react-icons/ci";
 import { CiSettings } from "react-icons/ci";
+import { NavLink } from "react-router-dom";
 
 const Header: React.FC = () => {
   return (
@@ -17,7 +18,9 @@ const Header: React.FC = () => {
         <CiSearch className={`${styles.icon}`} />
       </div>
 
-      <CiSettings className={`${styles.icon}`} />
+      <NavLink to={"/Settings"} style={{ color: "aliceblue" }}>
+        <CiSettings className={`${styles.icon}`} />
+      </NavLink>
     </nav>
   );
 };
