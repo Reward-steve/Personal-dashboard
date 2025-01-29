@@ -1,6 +1,6 @@
 import { BackgroundContext } from "./CreateBackground";
 import React, { useState } from "react";
-import defaultImage from "../assets/img/img1.jpg";
+import defaultImage from "../assets/img/home.jpg";
 // Context Interface
 export interface BackgroundContextProps {
   bgImage: string;

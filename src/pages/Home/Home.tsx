@@ -8,7 +8,6 @@ const Profile: React.FC<ComponentProps> = ({ name }) => {
   return (
     <>
       <PageTitle Title={"Dashboard"} Icon={<IoHome />} />
-
       <PageIntro
         title={name}
         description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
