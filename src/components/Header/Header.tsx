@@ -7,8 +7,6 @@ import { NavLink } from "react-router-dom";
 const Header: React.FC = () => {
   return (
     <nav className={`${styles.header}`}>
-      <h1 className={styles.title}>Dashboard</h1>
-
       <div className={styles.searchInputHolder}>
         <input
           type="text"
