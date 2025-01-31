@@ -18,4 +18,4 @@ const BackgroundPicker: React.FC<BackgroundPickerProps> = ({
   );
 };
 
-export default BackgroundPicker;
+export default React.memo(BackgroundPicker);
