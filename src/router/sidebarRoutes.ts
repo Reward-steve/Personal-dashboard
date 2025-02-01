@@ -10,12 +10,6 @@ import { SiGoogleanalytics } from "react-icons/si";
 import { IoSettingsSharp } from "react-icons/io5";
 import { FaSignInAlt } from "react-icons/fa";
 
-export interface ImageProps {
-  imgSrc: string;
-  alt: string;
-}
-
-// Define the Router interface with props
 export interface Router {
   to: string;
   name: string;
@@ -23,34 +17,33 @@ export interface Router {
   background: string;
 }
 
-// Define the router object with components and props
 const navLinkRouter: Router[] = [
   {
-    to: "/",
+    to: "/dashboard/home", // ✅ Nested under /dashboard
     name: "Home",
     icon: IoHome,
     background: img1,
   },
   {
-    to: "/Analytics",
+    to: "/dashboard/analytics", // ✅ Updated path
     name: "Analytics",
     icon: SiGoogleanalytics,
     background: img2,
   },
   {
-    to: "/Profile",
+    to: "/dashboard/profile", // ✅ Updated path
     name: "Profile",
     icon: FaUser,
     background: img3,
   },
   {
-    to: "/Signup",
+    to: "/dashboard/signup", // ✅ Updated path
     name: "Signup",
     icon: FaSignInAlt,
     background: img4,
   },
   {
-    to: "/Settings",
+    to: "/dashboard/settings", // ✅ Updated path
     name: "Settings",
     icon: IoSettingsSharp,
     background: img5,

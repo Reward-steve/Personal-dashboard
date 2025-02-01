@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 
 const Header: React.FC = () => {
   return (
-    <nav className={`${styles.header}`}>
+    <header className={`${styles.header}`}>
       <div className={styles.searchInputHolder}>
         <input
           type="text"
@@ -16,10 +16,10 @@ const Header: React.FC = () => {
         <CiSearch className={`${styles.icon}`} />
       </div>
 
-      <NavLink to={"/Settings"} style={{ color: "aliceblue" }}>
+      <NavLink to={"/dashboard/Settings"} style={{ color: "aliceblue" }}>
         <CiSettings className={`${styles.icon}`} />
       </NavLink>
-    </nav>
+    </header>
   );
 };
 

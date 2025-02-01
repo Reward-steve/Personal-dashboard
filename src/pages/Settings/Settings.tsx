@@ -1,15 +1,11 @@
 import React from "react";
 import { ComponentProps } from "../../router/mainRoutes";
-import { imageObj } from "../../types/backgroundImg";
-import { useBackground } from "../../hooks/useBackground";
 import PageIntro from "../../components/StyleComponent/PageIntroComponent";
 import BackgroundPicker from "../../components/StyleComponent/BackgroundPicker";
-import style from "../../styles/styledComponent.module.css"; // Import the CSS module for styling
 import { IoSettingsSharp } from "react-icons/io5";
 import PageTitle from "../../components/StyleComponent/PageTitle";
 
 const Profile: React.FC<ComponentProps> = ({ name }) => {
-  const { setBgImage } = useBackground();
   return (
     <>
       <PageTitle Title={"Setting"} Icon={<IoSettingsSharp />} />
@@ -23,15 +19,9 @@ const Profile: React.FC<ComponentProps> = ({ name }) => {
       />
       <BackgroundPicker
         title={"Background Picker"}
-        content={imageObj.map((img, id) => (
-          <img
-            key={id}
-            className={style.backgroundimage}
-            src={img.imgSrc}
-            alt={img.alt}
-            onClick={() => setBgImage(img.imgSrc)}
-          />
-        ))}
+        content={
+          "Choose a background image for your profile page. Select from the options below or upload your own image."
+        }
       />
     </>
   );

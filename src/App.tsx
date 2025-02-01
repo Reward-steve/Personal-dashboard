@@ -1,35 +1,29 @@
 import React from "react";
-import routerObject from "./router/mainRoutes";
-import Sidebar from "./components/Sidebar/Sidebar";
-import { ThemeProvider } from "./context/ThemeContext";
-import MainContent from "./components/Main/MainContent";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ParentComponent from "./components/Main/ParentComponent";
-import { BackgroundProvider } from "./context/BackgroundContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import Login from "./pages/Login/Login";
+import MainContent from "./components/Main/MainContent";
+import routerObject from "./router/mainRoutes"; // Import the routes
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <BackgroundProvider>
-        <ThemeProvider>
-          <ParentComponent>
-            <Sidebar />
-            <MainContent>
-              <Routes>
-                {routerObject.map((route, id) => {
-                  return (
-                    <Route
-                      key={id}
-                      path={route.path}
-                      element={<route.element {...route.props} />}
-                    />
-                  );
-                })}
-              </Routes>
-            </MainContent>
-          </ParentComponent>
-        </ThemeProvider>
-      </BackgroundProvider>
+      <ThemeProvider>
+        <Routes>
+          {/* Login Page */}
+          <Route path="/" element={<Login />} />
+
+          <Route path="/dashboard/*" element={<MainContent />}>
+            {routerObject.map((route, id) => (
+              <Route
+                key={id}
+                path={route.path}
+                element={<route.element {...route.props} />}
+              />
+            ))}
+          </Route>
+        </Routes>
+      </ThemeProvider>
     </BrowserRouter>
   );
 };

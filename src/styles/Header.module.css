@@ -1,15 +1,13 @@
 /* Header.module.css */
 .header {
   width: -webkit-fill-available;
-  height: 70px;
+  height: 75px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  transition: 0.2s ease-in-out;
   position: static;
-  backdrop-filter: blur(10px);
-  color: aliceblue;
-  /* background-color: rgba(0, 0, 0, 0.5); */
+  color: #ffffff;
+  background: #1e3a5f;
 }
 
 .title {
@@ -32,7 +30,7 @@
 }
 
 .searchInput {
-  color: lightblue;
+  color: #ffffff;
   padding: 15px 12px;
   width: 96%;
   font-size: 1em;
@@ -44,7 +42,7 @@
 }
 
 .searchInput:focus {
-  outline: 1px solid lightblue;
+  outline: 1px solid #ffffff;
   border-radius: 10px;
   transition: 0.5s;
 }

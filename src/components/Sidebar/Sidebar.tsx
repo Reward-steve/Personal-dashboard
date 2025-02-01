@@ -1,31 +1,54 @@
+import { motion } from "framer-motion";
 import styles from "./../../styles/Sidebar.module.css"; // Import your CSS module
 import { NavLink } from "react-router-dom";
 import navLinkRouter from "../../router/sidebarRoutes";
-import { useBackground } from "../../hooks/useBackground";
+import { IoMenu } from "react-icons/io5"; // Toggle icon
 
-const Sidebar: React.FC = () => {
-  const { setBgImage } = useBackground();
+interface SidebarProps {
+  sidebarOpen: boolean;
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
   return (
-    <aside className={styles.sidebar}>
+    <motion.aside
+      className={styles.sidebar}
+      animate={{ width: sidebarOpen ? "5%" : "15%" }} // Slide animation
+      transition={{ duration: 0.4, ease: "easeInOut" }}
+    >
+      <button
+        className={styles.toggleButton}
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+      >
+        <IoMenu size={24} />
+      </button>
+
       <div className={styles.navContainer}>
-        <h2 className={styles.title}>Navigation</h2>
+        <motion.div>
+          <h3 className={`${styles.title}`}>
+            {sidebarOpen ? " JTH" : "Joveth Temple of Health"}
+          </h3>
+        </motion.div>
         <ul className={styles.navList}>
-          {navLinkRouter.map((route, id) => {
-            return (
-              <NavLink
-                className={styles.navlink}
-                key={id}
-                to={route.to}
-                onClick={() => setBgImage(route.background)}
-              >
+          {navLinkRouter.map((route, id) => (
+            <motion.li
+              key={id}
+              whileHover={{
+                scale: 1.1,
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <NavLink className={styles.navlink} to={route.to}>
                 {<route.icon className={styles.icon} />}
-                <span className={styles.navName}>{route.name}</span>
+                {!sidebarOpen && (
+                  <span className={styles.navName}>{route.name}</span>
+                )}
               </NavLink>
-            );
-          })}
+            </motion.li>
+          ))}
         </ul>
       </div>
-    </aside>
+    </motion.aside>
   );
 };
 
