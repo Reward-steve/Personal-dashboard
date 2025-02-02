@@ -16,19 +16,19 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
       animate={{ width: sidebarOpen ? "5%" : "15%" }} // Slide animation
       transition={{ duration: 0.4, ease: "easeInOut" }}
     >
-      <button
-        className={styles.toggleButton}
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-      >
-        <IoMenu size={24} />
-      </button>
+      <motion.div>
+        <button
+          className={styles.toggleButton}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+        >
+          <IoMenu size={24} />
+        </button>
 
+        <h3 className={`${styles.title}`}>
+          {sidebarOpen ? " JTH" : "Joveth Temple of Health"}
+        </h3>
+      </motion.div>
       <div className={styles.navContainer}>
-        <motion.div>
-          <h3 className={`${styles.title}`}>
-            {sidebarOpen ? " JTH" : "Joveth Temple of Health"}
-          </h3>
-        </motion.div>
         <ul className={styles.navList}>
           {navLinkRouter.map((route, id) => (
             <motion.li
@@ -39,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
               whileTap={{ scale: 0.95 }}
             >
               <NavLink className={styles.navlink} to={route.to}>
-                {<route.icon className={styles.icon} />}
+                {<route.icon className={styles.icon} title={route.name} />}
                 {!sidebarOpen && (
                   <span className={styles.navName}>{route.name}</span>
                 )}

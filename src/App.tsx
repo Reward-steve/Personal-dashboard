@@ -13,6 +13,7 @@ const App: React.FC = () => {
           {/* Login Page */}
           <Route path="/" element={<Login />} />
 
+          {/* Dashboard Page */}
           <Route path="/dashboard/*" element={<MainContent />}>
             {routerObject.map((route, id) => (
               <Route

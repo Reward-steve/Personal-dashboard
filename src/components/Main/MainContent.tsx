@@ -16,7 +16,7 @@ const MainContent: React.FC = () => {
       <motion.section
         className={styles.content}
         animate={{ marginLeft: sidebarOpen ? "5%" : "15%" }} // Adjust width
-        transition={{ duration: 0.5, ease: "easeInOut" }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
       >
         <Header />
         <Outlet />

@@ -10,7 +10,7 @@
   flex-direction: column;
   align-items: center;
   padding-top: 16px;
-  transition: width 0.4s ease-in-out;
+  justify-content: space-between;
 }
 
 .navList {
@@ -35,7 +35,6 @@
   padding: 12px;
   width: 100%;
   gap: 10px;
-  transition: background 0.3s ease;
   border-radius: 5px;
 }
 
@@ -62,9 +61,8 @@
 
 .navContainer {
   width: 90%;
-  height: 50%;
+  height: 84%;
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
 }
@@ -82,4 +80,5 @@
 .title {
   color: #ffffff;
   text-align: center;
+  transition: width 0.4s ease-in-out;
 }

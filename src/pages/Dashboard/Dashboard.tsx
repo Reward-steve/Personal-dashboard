@@ -4,7 +4,7 @@ import PageIntro from "../../components/StyleComponent/PageIntroComponent";
 import PageTitle from "../../components/StyleComponent/PageTitle";
 import { IoHome } from "react-icons/io5";
 
-const Profile: React.FC<ComponentProps> = ({ name }) => {
+const Dashboard: React.FC<ComponentProps> = ({ name }) => {
   return (
     <>
       <PageTitle Title={"Dashboard"} Icon={<IoHome />} />
@@ -21,4 +21,4 @@ const Profile: React.FC<ComponentProps> = ({ name }) => {
     </>
   );
 };
-export default Profile;
+export default Dashboard;

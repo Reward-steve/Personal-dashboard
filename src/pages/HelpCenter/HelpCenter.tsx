@@ -3,7 +3,7 @@ import { ComponentProps } from "../../router/mainRoutes";
 import PageIntro from "../../components/StyleComponent/PageIntroComponent";
 import { SiGoogleanalytics } from "react-icons/si";
 import PageTitle from "../../components/StyleComponent/PageTitle";
-const Profile: React.FC<ComponentProps> = ({ name }) => {
+const HelpCenter: React.FC<ComponentProps> = ({ name }) => {
   return (
     <>
       <PageTitle Title={"Analytics"} Icon={<SiGoogleanalytics />} />
@@ -18,4 +18,4 @@ const Profile: React.FC<ComponentProps> = ({ name }) => {
     </>
   );
 };
-export default Profile;
+export default HelpCenter;

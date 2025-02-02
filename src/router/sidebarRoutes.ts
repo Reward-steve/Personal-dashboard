@@ -1,52 +1,71 @@
-import img1 from "../assets/img/home.jpg";
-import img2 from "../assets/img/analytics.jpg";
-import img3 from "../assets/img/userprofile.jpg";
-import img4 from "../assets/img/signin.jpg";
-import img5 from "../assets/img/setting.jpg";
 import { IconType } from "react-icons";
-import { IoHome } from "react-icons/io5";
-import { FaUser } from "react-icons/fa";
-import { SiGoogleanalytics } from "react-icons/si";
+import { IoAppsOutline } from "react-icons/io5";
+import { FaBuilding } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
-import { FaSignInAlt } from "react-icons/fa";
+import { FaCalendarAlt } from "react-icons/fa";
+import { SiApachedolphinscheduler } from "react-icons/si";
+import { FaHandshake } from "react-icons/fa";
+import { IoHelpCircleOutline } from "react-icons/io5";
+import { FaDonate } from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
+import { CiLogout } from "react-icons/ci";
 
 export interface Router {
   to: string;
   name: string;
   icon: IconType;
-  background: string;
 }
 
 const navLinkRouter: Router[] = [
   {
-    to: "/dashboard/home", // ✅ Nested under /dashboard
-    name: "Home",
-    icon: IoHome,
-    background: img1,
+    to: "/dashboard/dashboard",
+    name: "Dashboard",
+    icon: IoAppsOutline,
   },
   {
-    to: "/dashboard/analytics", // ✅ Updated path
-    name: "Analytics",
-    icon: SiGoogleanalytics,
-    background: img2,
+    to: "/dashboard/calender",
+    name: "Calender",
+    icon: FaCalendarAlt,
   },
   {
-    to: "/dashboard/profile", // ✅ Updated path
-    name: "Profile",
-    icon: FaUser,
-    background: img3,
+    to: "/dashboard/patients",
+    name: "Patients",
+    icon: FaUsers,
   },
   {
-    to: "/dashboard/signup", // ✅ Updated path
-    name: "Signup",
-    icon: FaSignInAlt,
-    background: img4,
+    to: "/dashboard/staffschedule",
+    name: "Staff Schedule",
+    icon: SiApachedolphinscheduler,
   },
   {
-    to: "/dashboard/settings", // ✅ Updated path
+    to: "/dashboard/doctors",
+    name: "Doctors",
+    icon: FaHandshake,
+  },
+  {
+    to: "/dashboard/departments",
+    name: "Departments",
+    icon: FaBuilding,
+  },
+  {
+    to: "/dashboard/stock",
+    name: "Stock",
+    icon: FaDonate,
+  },
+  {
+    to: "/dashboard/settings",
     name: "Settings",
     icon: IoSettingsSharp,
-    background: img5,
+  },
+  {
+    to: "/dashboard/helpcenter",
+    name: "Help Center",
+    icon: IoHelpCircleOutline,
+  },
+  {
+    to: "/",
+    name: "Logout",
+    icon: CiLogout,
   },
 ];
 
