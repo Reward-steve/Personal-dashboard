@@ -1,8 +1,8 @@
 import { IconType } from "react-icons";
-import { IoAppsOutline } from "react-icons/io5";
+import { RiDashboardFill } from "react-icons/ri";
 import { FaBuilding } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
-import { FaCalendarAlt } from "react-icons/fa";
+import { SlCalender } from "react-icons/sl";
 import { SiApachedolphinscheduler } from "react-icons/si";
 import { FaHandshake } from "react-icons/fa";
 import { IoHelpCircleOutline } from "react-icons/io5";
@@ -20,12 +20,12 @@ const navLinkRouter: Router[] = [
   {
     to: "/dashboard/dashboard",
     name: "Dashboard",
-    icon: IoAppsOutline,
+    icon: RiDashboardFill,
   },
   {
     to: "/dashboard/calender",
     name: "Calender",
-    icon: FaCalendarAlt,
+    icon: SlCalender,
   },
   {
     to: "/dashboard/patients",

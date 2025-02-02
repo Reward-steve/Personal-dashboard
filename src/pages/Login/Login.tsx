@@ -5,6 +5,8 @@ import style from "../../styles/LoginPage.module.css";
 import logo from "../../assets/img/medical-team.png";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { IconType } from "react-icons";
+import { motion } from "framer-motion";
+import SocialIcons from "../../router/socialIcons";
 
 export default function Login() {
   const [hide, setHide] = useState<boolean>(true);
@@ -36,7 +38,12 @@ export default function Login() {
         <form className={style.loginForm}>
           <h3>Log in</h3>
           <label>
-            <input name="email" type="email" placeholder="Email address" />
+            <input
+              name="email"
+              type="email"
+              placeholder="Email address"
+              required
+            />
           </label>
           <label>
             <input
@@ -46,22 +53,30 @@ export default function Login() {
               ref={hidePassword}
             />
             {
-              <Icon
-                style={{
-                  marginRight: "10px",
-                  color: "gray",
-                  fontSize: "2em",
-                  cursor: "pointer",
+              <motion.div
+                whileHover={{
+                  scale: 1.1,
                 }}
-                onClick={() => {
-                  setHide(!hide);
-                  onclickHidePassword();
-                }}
-              />
+                whileTap={{ scale: 0.95 }}
+              >
+                <Icon
+                  style={{
+                    marginRight: "10px",
+                    color: "gray",
+                    fontSize: "1.5em",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    setHide(!hide);
+                    onclickHidePassword();
+                  }}
+                />
+              </motion.div>
             }
           </label>
           <label>
             <NavLink
+              className={style.navlink}
               to="/dashboard/dashboard"
               style={{
                 textDecoration: "none",
@@ -70,6 +85,33 @@ export default function Login() {
               Login
             </NavLink>
           </label>
+          <NavLink
+            to="/signup"
+            style={{
+              color: "rgb(0 16 255)",
+              width: " 80%",
+              height: "10%",
+              display: "flex",
+              justifyContent: "right",
+              alignItems: "center",
+            }}
+          >
+            Forgotten password
+          </NavLink>
+          <p>or log in with</p>
+          <div className={style.socialLogin}>
+            {SocialIcons.map((icon: IconType, index: number) => {
+              const IconComponent = icon;
+              return (
+                <button className={style.socialLoginButton} key={index}>
+                  <IconComponent key={index} />
+                </button>
+              );
+            })}
+          </div>
+          <NavLink to={"/"} className={style.signup}>
+            Need an account? Sign up
+          </NavLink>
         </form>
       </main>
     </div>
