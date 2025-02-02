@@ -5,17 +5,17 @@ import style from "../../styles/LoginPage.module.css";
 import logo from "../../assets/img/medical-team.png";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { IconType } from "react-icons";
+
 export default function Login() {
   const [hide, setHide] = useState<boolean>(true);
-  const hidePassword = useRef(HTMLInputElement);
+  const hidePassword = useRef<HTMLInputElement>(null);
 
   const Icon: IconType = hide ? FaEye : FaEyeSlash;
 
   const onclickHidePassword = () => {
-    const hidden = hidePassword.current;
-    return hide && hidePassword
-      ? (hidden.type = "input")
-      : (hidden.type = "password");
+    if (hidePassword.current) {
+      hidePassword.current.type = hide ? "text" : "password";
+    }
   };
 
   return (
