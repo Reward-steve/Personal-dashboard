@@ -103,6 +103,7 @@ export default function Login() {
             {SocialIcons.map((Icon, index: number) => {
               return (
                 <motion.button
+                  key={index}
                   className={style.socialLoginButton}
                   whileTap={{ scale: 0.9 }}
                   whileHover={{
