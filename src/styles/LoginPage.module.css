@@ -130,8 +130,9 @@
 }
 
 .socialLoginButton {
-  width: 20%;
-  padding: 15px 10px;
+  width: 10%;
+  cursor: pointer;
+  padding: 10px 10px;
   border-radius: 10px;
   border: none;
   outline: 1px solid gray;

@@ -100,12 +100,19 @@ export default function Login() {
           </NavLink>
           <p>or log in with</p>
           <div className={style.socialLogin}>
-            {SocialIcons.map((icon: IconType, index: number) => {
-              const IconComponent = icon;
+            {SocialIcons.map((Icon, index: number) => {
               return (
-                <button className={style.socialLoginButton} key={index}>
-                  <IconComponent key={index} />
-                </button>
+                <motion.button
+                  className={style.socialLoginButton}
+                  whileTap={{ scale: 0.9 }}
+                  whileHover={{
+                    scale: 1.2,
+                    color: Icon.color,
+                    outline: `1px solid ${Icon.color}  `,
+                  }}
+                >
+                  <Icon.icon key={index} />
+                </motion.button>
               );
             })}
           </div>
