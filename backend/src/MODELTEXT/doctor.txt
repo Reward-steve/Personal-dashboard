@@ -1,0 +1,21 @@
+📌 Explanation of Fields
+👨‍⚕️ Basic Doctor Information
+fullName: Doctor's full name.
+email: Unique email address.
+phone: Contact number.
+specialization: Example: Cardiologist, Dermatologist, etc.
+department: Example: Pediatrics, Neurology, etc.
+experience: Number of years in practice.
+📜 Qualifications
+qualifications: List of degrees or certifications.
+🕒 Availability
+days: List of working days.
+timeSlots: Available consultation times.
+👥 Patients & Appointments
+patients: Stores IDs of patients assigned to the doctor.
+appointments: Stores IDs of scheduled appointments.
+💰 Salary
+amount: Doctor’s salary.
+currency: Default is USD, but can be changed.
+🕑 Created At
+Stores date when the doctor was added.
