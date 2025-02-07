@@ -1,0 +1,17 @@
+👤 How Users Sign In as a Patient, Doctor, or Admin
+Your system will have role-based authentication, meaning:
+
+Patients, Doctors, and Admins will log in from the same login page.
+The system will check their role and redirect them to the correct dashboard.
+🛠 Steps for User Authentication & Role-Based Access
+1️⃣ User Signs In
+They enter their email & password.
+The backend checks if the user exists in the database.
+If correct, the backend sends back a JWT token & user role.
+2️⃣ Frontend Stores User Info
+The token is stored in localStorage or cookies.
+The role determines which dashboard they see.
+3️⃣ User Is Redirected to Their Dashboard
+Patients → /patient/dashboard
+Doctors → /doctor/dashboard
+Admins → /admin/dashboard

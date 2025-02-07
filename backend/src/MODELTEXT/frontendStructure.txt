@@ -1,0 +1,77 @@
+frontend/
+│── node_modules/        # Dependencies
+│── public/              # Static files (favicon, images)
+│── src/                 # Main frontend code
+│   ├── assets/          # Images, icons, styles
+│   ├── components/      # Reusable UI components
+│   │   ├── Navbar.tsx   # Top navigation bar
+│   │   ├── Sidebar.tsx  # Side menu for dashboards
+│   │   ├── Button.tsx   # Reusable button component
+│   │   ├── Input.tsx    # Reusable input field
+│   ├── pages/           # Different pages for each role
+│   │   ├── Auth/        # Authentication pages
+│   │   │   ├── Login.tsx
+│   │   │   ├── Register.tsx
+│   │   ├── Patient/     # Patient dashboard
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── Appointments.tsx
+│   │   │   ├── MedicalHistory.tsx
+│   │   ├── Doctor/      # Doctor dashboard
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── Patients.tsx
+│   │   │   ├── Appointments.tsx
+│   │   ├── Admin/       # Admin dashboard
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── ManageUsers.tsx
+│   │   │   ├── Reports.tsx
+│   ├── routes/          # Navigation routes
+│   │   ├── PrivateRoute.tsx
+│   │   ├── AppRoutes.tsx
+│   ├── context/         # Global state management (React Context)
+│   │   ├── AuthContext.tsx
+│   ├── services/        # API calls to backend
+│   │   ├── authService.ts
+│   │   ├── patientService.ts
+│   │   ├── doctorService.ts
+│   │   ├── adminService.ts
+│   ├── utils/           # Helper functions (format dates, validation)
+│   ├── App.tsx          # Main React app
+│   ├── main.tsx         # React entry point
+│── .env                 # Environment variables (API_URL)
+│── package.json         # Dependencies & scripts
+│── README.md            # Project documentation
+
+
+🌟 Explanation of Key Parts
+1️⃣ Pages (Different Role-Based Dashboards)
+Each type of user (Patient, Doctor, Admin) has a separate dashboard:
+
+✅ Patients Dashboard (src/pages/Patient/)
+
+View appointments
+See medical history
+Manage profile settings
+✅ Doctors Dashboard (src/pages/Doctor/)
+
+View patients list
+Manage appointments
+Add medical records
+✅ Admin Dashboard (src/pages/Admin/)
+
+Manage users (Patients & Doctors)
+View reports & statistics
+2️⃣ Components (Reusable UI)
+Instead of repeating code, use reusable components:
+
+Navbar.tsx → Displays navigation menu
+Sidebar.tsx → Sidebar navigation for dashboard
+Button.tsx → Custom buttons
+Input.tsx → Reusable input fields
+3️⃣ Routing (Navigation between pages)
+We use React Router for navigation inside src/routes/:
+
+PrivateRoute.tsx → Ensures only authenticated users access certain pages
+AppRoutes.tsx → Defines routes like:
+tsx
+Copy
+Edit

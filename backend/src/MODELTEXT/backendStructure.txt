@@ -1,0 +1,57 @@
+backend/
+│── node_modules/         # Dependencies
+│── src/
+│   ├── models/           # Database schemas (Mongoose models)
+│   │   ├── User.js       # User model (Patients, Doctors, Admins)
+│   │   ├── Patient.js    # Patient model
+│   │   ├── Doctor.js     # Doctor model
+│   │   ├── Appointment.js# Appointment model
+│   │   ├── MedicalRecord.js # Medical history model
+│   ├── routes/           # API routes
+│   │   ├── authRoutes.js # Login, Signup
+│   │   ├── patientRoutes.js # Patient actions
+│   │   ├── doctorRoutes.js  # Doctor actions
+│   │   ├── adminRoutes.js   # Admin actions
+│   ├── controllers/      # Business logic
+│   │   ├── authController.js  # Authentication logic
+│   │   ├── patientController.js  # Handles patient actions
+│   │   ├── doctorController.js   # Handles doctor actions
+│   ├── middleware/       # Authentication & security
+│   │   ├── authMiddleware.js   # Protect routes
+│   │   ├── errorHandler.js     # Global error handling
+│   ├── config/           # Configuration files
+│   │   ├── db.js         # MongoDB connection
+│   │   ├── envConfig.js  # Environment variables
+│   ├── utils/            # Utility functions (email sending, etc.)
+│   ├── server.js         # Entry point (Express app)
+│── .env                  # Environment variables (PORT, DB_URI, JWT_SECRET)
+│── package.json          # Dependencies and scripts
+│── README.md             # Documentation
+
+
+
+
+
+🌟 How Requests Work (Example)
+A patient signs up at /api/auth/register
+The request goes to authRoutes.js, which calls authController.js
+The controller creates a new user in MongoDB
+The response returns success with a JWT token
+Later, the patient books an appointment at /api/patients/appointments
+The request checks authMiddleware.js to verify if the user is logged in
+If valid, the appointment is created in MongoDB
+🌟 Next Steps
+Set up your project
+
+Create the folder structure
+Install Express, Mongoose, dotenv, bcryptjs, jsonwebtoken
+Build authentication (signup & login) first
+
+Hash passwords
+Store user roles (patient, doctor, admin)
+Generate JWT tokens
+Build CRUD APIs for each user role
+
+Patients can book appointments
+Doctors can manage patients
+Admin can control everything
