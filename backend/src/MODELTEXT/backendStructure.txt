@@ -1,35 +1,36 @@
 backend/
-│── node_modules/         # Dependencies
 │── src/
-│   ├── models/           # Database schemas (Mongoose models)
-│   │   ├── User.js       # User model (Patients, Doctors, Admins)
-│   │   ├── Patient.js    # Patient model
-│   │   ├── Doctor.js     # Doctor model
-│   │   ├── Appointment.js# Appointment model
-│   │   ├── MedicalRecord.js # Medical history model
-│   ├── routes/           # API routes
-│   │   ├── authRoutes.js # Login, Signup
-│   │   ├── patientRoutes.js # Patient actions
-│   │   ├── doctorRoutes.js  # Doctor actions
-│   │   ├── adminRoutes.js   # Admin actions
-│   ├── controllers/      # Business logic
-│   │   ├── authController.js  # Authentication logic
-│   │   ├── patientController.js  # Handles patient actions
-│   │   ├── doctorController.js   # Handles doctor actions
-│   ├── middleware/       # Authentication & security
-│   │   ├── authMiddleware.js   # Protect routes
-│   │   ├── errorHandler.js     # Global error handling
-│   ├── config/           # Configuration files
-│   │   ├── db.js         # MongoDB connection
-│   │   ├── envConfig.js  # Environment variables
-│   ├── utils/            # Utility functions (email sending, etc.)
-│   ├── server.js         # Entry point (Express app)
-│── .env                  # Environment variables (PORT, DB_URI, JWT_SECRET)
-│── package.json          # Dependencies and scripts
-│── README.md             # Documentation
-
-
-
+│   ├── controllers/       # Handles business logic
+│   │   ├── patientController.js
+│   │   ├── doctorController.js
+│   │   ├── adminController.js
+│   │   ├── appointmentController.js
+│   │   ├── authController.js
+│   │
+│   ├── models/            # Defines database schemas
+│   │   ├── patientModel.js
+│   │   ├── doctorModel.js
+│   │   ├── adminModel.js
+│   │   ├── appointmentModel.js
+│   │   ├── userModel.js
+│   │
+│   ├── routes/            # Defines API endpoints
+│   │   ├── patientRoutes.js
+│   │   ├── doctorRoutes.js
+│   │   ├── adminRoutes.js
+│   │   ├── appointmentRoutes.js
+│   │   ├── authRoutes.js
+│   │
+│   ├── middleware/        # Authentication & security
+│   │   ├── authMiddleware.js
+│   │
+│   ├── config/            # Database configuration
+│   │   ├── db.js
+│   │
+│── app.js                 # Main server file
+│── server.js              # Starts the Express server
+│── package.json
+│── .env
 
 
 🌟 How Requests Work (Example)
