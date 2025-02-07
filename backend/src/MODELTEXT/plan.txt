@@ -23,6 +23,3 @@
 
 🚀 The Secret: Just Take It One Step at a Time
 Don’t think about everything at once. Just focus on one step today.
-
-If you feel stuck, I’m here to guide you. So let’s start with Step 1:
-✅ Do you have a MongoDB database set up yet? If not, I’ll help you.

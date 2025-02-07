@@ -71,7 +71,4 @@ Input.tsx → Reusable input fields
 We use React Router for navigation inside src/routes/:
 
 PrivateRoute.tsx → Ensures only authenticated users access certain pages
-AppRoutes.tsx → Defines routes like:
-tsx
-Copy
-Edit
+AppRoutes.tsx → Defines routes

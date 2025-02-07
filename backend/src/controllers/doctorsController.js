@@ -1,4 +1,4 @@
-const Doctor = require("../models/doctorModels");
+const Doctor = require("../models/Doctor.js");
 
 exports.creatnewDoctor = async (req, res, next) => {
   const {
