@@ -1,74 +1,69 @@
 const Doctor = require("../models/Doctor.js");
+const catchAsync = require("../utils/catchAsync");
+const handleNotFound = require("../utils/handleNotFound");
+const handleNoResult = require("../utils/handleNoResult");
 
-exports.creatnewDoctor = async (req, res, next) => {
-  const {
-    fullName,
-    email,
-    phone,
-    specialization,
-    department,
-    experience,
-    qualifications,
-    days,
-    timeSlots,
-    salary,
-  } = req.body;
-  const newDoctor = await Doctor.find({
-    fullName,
-    email,
-    phone,
-    specialization,
-    department,
-    experience,
-    qualifications,
-    days,
-    timeSlots,
-    salary,
+exports.getAllDoctors = catchAsync(async (req, res, next) => {
+  const doctors = await Doctor.find({});
+
+  if (doctors.length === 0) {
+    return handleNoResult(res, "No doctors found");
+  }
+
+  res.status(200).json({
+    status: "success",
+    result: doctors.length,
+    data: { doctors },
   });
-  newDoctor.save();
-  try {
-    const result = newDoctor.length;
-    if (result) {
-      res.status(200).json({
-        status: "success",
-        result,
-        message: "No doctor found",
-      });
+});
 
-      res.status(200).json({
-        status: "success",
-        result,
-        data: {
-          newDoctor,
-        },
-      });
-    }
-  } catch (err) {
-    res.status(505).json({
-      status: "failed",
-      message: "server error",
-      error: err.message,
-    });
-  }
-  next();
-};
+exports.getDoctorById = catchAsync(async (req, res, next) => {
+  const doctor = await Doctor.findById(req.params.id);
+  handleNotFound(doctor, `No doctor with ID ${req.params.id} found.`);
 
-exports.getAllDoctors = async (req, res, next) => {
-  try {
-    const doctor = await new Doctor.find({});
-    if (doctor.length === 0) {
-      return res.status(200).json({
-        status: "success",
-        result: doctor.length,
-        message: "No doctors found",
-      });
-    }
-  } catch (err) {
-    res.status(505).json({
-      status: "failed",
-      message: "server error",
-      error: err.message,
-    });
+  res.status(200).json({
+    status: "success",
+    data: { doctor },
+  });
+});
+
+exports.getAllDoctorsBySpecialization = catchAsync(async (req, res, next) => {
+  const doctors = await Doctor.find({
+    specialization: req.params.specialization,
+  });
+
+  if (doctors.length === 0) {
+    return handleNoResult(res, "No doctors found with this specialization");
   }
-  next();
-};
+
+  res.status(200).json({
+    status: "success",
+    result: doctors.length,
+    data: { doctors },
+  });
+});
+
+exports.createDoctor = catchAsync(async (req, res, next) => {
+  const doctor = await Doctor.create(req.body);
+
+  res.status(201).json({
+    status: "success",
+    message: "Doctor created successfully",
+    data: { doctor },
+  });
+});
+
+exports.updateDoctorById = catchAsync(async (req, res, next) => {
+  const doctor = await Doctor.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  handleNotFound(doctor, `No doctor with ID ${req.params.id} found.`);
+
+  res.status(200).json({
+    status: "success",
+    message: "Doctor updated successfully",
+    data: { doctor },
+  });
+});

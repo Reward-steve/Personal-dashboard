@@ -9,6 +9,7 @@ const medicalHistorySchema = new mongoose.Schema({
   doctorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Doctor",
+    required: true,
   },
   diagnosis: {
     type: String,
@@ -20,11 +21,17 @@ const medicalHistorySchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  notes: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
+
+// ✅ Indexing for faster queries
+medicalHistorySchema.index({ patientId: 1, doctorId: 1 });
 
 const MedicalHistory = mongoose.model("MedicalHistory", medicalHistorySchema);
 module.exports = MedicalHistory;

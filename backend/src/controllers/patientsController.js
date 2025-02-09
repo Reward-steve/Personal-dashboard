@@ -1,48 +1,61 @@
-const Patient = require("../models/Patient.js");
+const Patient = require("../models/Patient");
+const catchAsync = require("../utils/catchAsync");
+const handleNotFound = require("../utils/handleNotFound");
+const handleNoResult = require("../utils/handleNoResult");
 
-exports.getAllPatients = async (req, res, next) => {
-  try {
-    const patient = await Patient.find({});
+exports.getAllPatients = catchAsync(async (req, res, next) => {
+  const patients = await Patient.find({});
+  handleNoResult(patients, "No patients found", next);
 
-    if (patient.length === 0) {
-      return res.status(200).json({
-        status: "successful",
-        result: 0,
-        message: "No patients found",
-      });
-    }
+  res.status(200).json({
+    status: "success",
+    result: patients.length,
+    data: { patients },
+  });
+});
 
-    res.status(200).json({
-      status: "successful",
-      result: patient.length,
-      data: {
-        patient,
-      },
-    });
-  } catch (err) {
-    res.status(500).json({
-      status: "failed",
-      message: "Server error",
-      error: err.message,
-    });
-  }
-};
-exports.createnewPatient = async (req, res, next) => {
-  try {
-    const newPatient = await Patient.create(req.body);
+exports.createPatient = catchAsync(async (req, res) => {
+  cosole.log("Request.body:", req.body);
 
-    res.status(201).json({
-      status: "successful",
-      message: "New patient created successfully",
-      data: {
-        newPatient,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: "failed",
-      message: "unable to create patient",
-      error: err.message,
-    });
-  }
-};
+  const newPatient = await Patient.create(req.body);
+
+  res.status(201).json({
+    status: "success",
+    message: "New patient created successfully",
+    data: { newPatient },
+  });
+});
+
+exports.getPatientById = catchAsync(async (req, res, next) => {
+  const patient = await Patient.findById(req.params.id);
+  handleNotFound(patient, `No patient with ID ${req.params.id} found`, next);
+
+  res.status(200).json({
+    status: "success",
+    data: { patient },
+  });
+});
+
+exports.updatePatientById = catchAsync(async (req, res, next) => {
+  const patient = await Patient.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  handleNotFound(patient, `No patient with ID ${req.params.id} found`, next);
+
+  res.status(200).json({
+    status: "success",
+    message: "Patient updated successfully",
+    data: { patient },
+  });
+});
+
+exports.deletePatientById = catchAsync(async (req, res, next) => {
+  const patient = await Patient.findByIdAndDelete(req.params.id);
+  handleNotFound(patient, `No patient with ID ${req.params.id} found`, next);
+
+  res.status(204).json({
+    status: "success",
+    message: "Patient deleted successfully",
+  });
+});

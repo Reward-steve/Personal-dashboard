@@ -1,12 +1,25 @@
 const express = require("express");
+const router = express.Router();
+const { Register, Login } = require("../controllers/authController");
 const {
   getAllDoctors,
-  creatnewDoctor,
+  getDoctorById,
+  getAllDoctorsBySpecialization,
+  createDoctor,
+  updateDoctorById,
 } = require("../controllers/doctorsController");
-const router = express.Router();
 
-router.route("/").post(creatnewDoctor).get(getAllDoctors);
+// Doctor authentication
+router.route("/register").post(Register);
+router.route("/login").post(Login);
 
-router.route("/:id").get().put();
+// Fetch doctors and their details
+router.route("/").get(getAllDoctors).post(createDoctor);
+router.route("/:id").get(getDoctorById).put(updateDoctorById);
+
+// Fetch doctors by specialization
+router
+  .route("/specialization/:specialization")
+  .get(getAllDoctorsBySpecialization);
 
 module.exports = router;

@@ -1,12 +1,24 @@
 const express = require("express");
+const { Register, Login } = require("../controllers/authController");
 const {
   getAllPatients,
-  createnewPatient,
+  createPatient,
+  getPatientById,
+  updatePatientById,
+  deletePatientById,
 } = require("../controllers/patientsController");
 
 const router = express.Router();
 
-router.route("/").post(createnewPatient).get(getAllPatients);
+router.route("/register").post(Register);
+router.route("/login").post(Login);
 
-router.route("/:id").get().put().delete();
+router.route("/").post(createPatient).get(getAllPatients);
+
+router
+  .route("/:id")
+  .get(getPatientById)
+  .put(updatePatientById)
+  .delete(deletePatientById);
+
 module.exports = router;

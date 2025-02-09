@@ -8,35 +8,30 @@ const patientSchema = new mongoose.Schema({
   },
   dateOfBirth: {
     type: Date,
-    required: [true, "Date of birth is required. Date formate: YYYY-MM-DD"],
+    required: true,
   },
   gender: {
     type: String,
     enum: ["Male", "Female", "Other"],
     required: true,
   },
-  contactInfo: {
-    phone: {
-      type: String,
-      required: [true, "Phone number is required. Format: +123-456-7890"],
-    },
-    email: {
-      type: String,
-      required: [true, "Email is required. Format: example@example.com"],
-      match: [
-        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        "Please enter a valid email address",
-      ],
-      unique: true,
-      lowercase: true,
-    },
-    address: {
-      street: String,
-      city: String,
-      state: String,
-      country: String,
-      zipCode: String,
-    },
+  phone: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+  },
+  address: {
+    street: String,
+    city: String,
+    state: String,
+    country: String,
+    zipCode: String,
   },
   emergencyContact: {
     name: String,
@@ -54,20 +49,11 @@ const patientSchema = new mongoose.Schema({
     medications: [String],
     vaccinations: [String],
   },
-  doctorVisits: [
+  // ✅ Instead of embedding doctor visits, store references to MedicalHistory
+  medicalRecords: [
     {
-      date: {
-        type: Date,
-        default: Date.now,
-      },
-      doctorId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Doctor",
-      },
-      diagnosis: String,
-      treatment: String,
-      prescription: [String],
-      notes: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "MedicalHistory",
     },
   ],
   labTests: [
@@ -108,6 +94,8 @@ const patientSchema = new mongoose.Schema({
   },
 });
 
-const Patient = mongoose.model("Patient", patientSchema);
+// ✅ Indexing for better performance
+// patientSchema.index({ phone: 1, email: 1 });
 
+const Patient = mongoose.model("Patient", patientSchema);
 module.exports = Patient;
