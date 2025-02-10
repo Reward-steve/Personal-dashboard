@@ -24,10 +24,10 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["patient", "doctor", "admin"],
+    enum: ["patient", "doctor", "admin", "user"],
     required: true,
     lowercase: true,
-    default: "patient",
+    default: "user",
   },
   createdAt: {
     type: Date,
@@ -35,18 +35,25 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// Hash password before saving
+// hash the password before saving it to the database
 userSchema.pre("save", async function (next) {
+  // only run this function if password was actually modified
   if (!this.isModified("password")) return next();
 
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+  // hash the password with cost of 12
+  this.password = await bcrypt.hash(this.password, 10);
+
+  // delete passwordConfirm field
+  this.passwordConfirm = undefined;
   next();
 });
 
-//Compare password method
-userSchema.methods.comparePassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+// check if password has been changed
+userSchema.methods.changedPasswordAfter = function (timestamp) {
+  if (this.createdAt) {
+    const createdAt = parseInt(this.createdAt.getTime() / 1000, 10);
+    return createdAt > timestamp;
+  }
 };
 
 const User = mongoose.model("User", userSchema);

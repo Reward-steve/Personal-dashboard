@@ -15,7 +15,7 @@ exports.getAllPatients = catchAsync(async (req, res, next) => {
 });
 
 exports.createPatient = catchAsync(async (req, res) => {
-  cosole.log("Request.body:", req.body);
+  console.log("Request.body:", req.body);
 
   const newPatient = await Patient.create(req.body);
 

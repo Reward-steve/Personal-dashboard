@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Register, Login } = require("../controllers/authController");
+
 const {
   getAllDoctors,
   getDoctorById,
@@ -8,10 +8,6 @@ const {
   createDoctor,
   updateDoctorById,
 } = require("../controllers/doctorsController");
-
-// Doctor authentication
-router.route("/register").post(Register);
-router.route("/login").post(Login);
 
 // Fetch doctors and their details
 router.route("/").get(getAllDoctors).post(createDoctor);
