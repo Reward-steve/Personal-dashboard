@@ -15,7 +15,7 @@ app.use("/api/patients", patientsRouter);
 app.use("/api/doctors", doctorsRouter);
 app.use("/api/appoointments", appointmentRouter);
 app.use("/api/admin", adminRouter);
-app.use("/api/medical-history", medicalHistoryRouter); // ✅ Register the new route
+app.use("/api/medical-history", medicalHistoryRouter);
 app.all("*", (req, res, next) => {
   next(new AppError("Invalid route", 404));
 });

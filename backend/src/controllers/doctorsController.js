@@ -1,4 +1,5 @@
 const Doctor = require("../models/Doctor.js");
+const Patient = require("../models/Patient.js");
 const catchAsync = require("../utils/catchAsync");
 const handleNotFound = require("../utils/handleNotFound");
 const handleNoResult = require("../utils/handleNoResult");
@@ -7,7 +8,7 @@ exports.getAllDoctors = catchAsync(async (req, res, next) => {
   const doctors = await Doctor.find({});
 
   if (doctors.length === 0) {
-    return handleNoResult(res, "No doctors found");
+    return handleNoResult(res, "No doctors found", next);
   }
 
   res.status(200).json({
@@ -19,7 +20,7 @@ exports.getAllDoctors = catchAsync(async (req, res, next) => {
 
 exports.getDoctorById = catchAsync(async (req, res, next) => {
   const doctor = await Doctor.findById(req.params.id);
-  handleNotFound(doctor, `No doctor with ID ${req.params.id} found.`);
+  handleNotFound(doctor, `No doctor with ID ${req.params.id} found.`, next);
 
   res.status(200).json({
     status: "success",
@@ -32,9 +33,7 @@ exports.getAllDoctorsBySpecialization = catchAsync(async (req, res, next) => {
     specialization: req.params.specialization,
   });
 
-  if (doctors.length === 0) {
-    return handleNoResult(res, "No doctors found with this specialization");
-  }
+  handleNoResult(doctors, "No doctors found with this specialization", next);
 
   res.status(200).json({
     status: "success",
@@ -59,11 +58,61 @@ exports.updateDoctorById = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  handleNotFound(doctor, `No doctor with ID ${req.params.id} found.`);
+  handleNotFound(doctor, `No doctor with ID ${req.params.id} found.`, next);
 
   res.status(200).json({
     status: "success",
     message: "Doctor updated successfully",
     data: { doctor },
+  });
+});
+
+exports.assignPatientToDoctor = catchAsync(async (req, res, next) => {
+  const { patientId, doctorId } = req.body;
+  const patient = await Patient.findById(patientId);
+  const doctor = await Doctor.findByIdAndUpdate(
+    doctorId,
+    { $push: { patients: patient._id } },
+    { new: true }
+  ).populate("patients");
+
+  console.log(doctor);
+
+  handleNotFound(doctor, `No doctor with ID ${doctorId} found.`, next);
+  handleNotFound(patient, `No patient with ID ${patientId} found.`, next);
+
+  res.status(200).json({
+    status: "success",
+    message: "Patient assigned to doctor successfully",
+    doctor,
+  });
+});
+
+exports.getDoctorsPatient = catchAsync(async (req, res, next) => {
+  const doctor = await Doctor.findById(req.params.id).populate("patients");
+
+  handleNotFound(doctor, `No doctor with ID ${req.params.id} found.`, next);
+
+  res.status(200).json({
+    status: "success",
+    message: "Doctor patients",
+    patients: doctor.patients,
+  });
+});
+
+exports.unassignPatientFromDoctor = catchAsync(async (req, res, next) => {
+  const { patientId, doctorId } = req.body;
+  const doctor = await Doctor.findByIdAndUpdate(
+    doctorId,
+    { $pull: { patients: patientId } },
+    { new: true }
+  ).populate("patients");
+
+  handleNotFound(doctor, `No doctor with ID ${doctorId} found.`, next);
+
+  res.status(200).json({
+    status: "success",
+    message: "Patient unassigned from doctor successfully",
+    doctor,
   });
 });

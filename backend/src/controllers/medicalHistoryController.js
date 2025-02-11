@@ -4,6 +4,16 @@ const catchAsync = require("../utils/catchAsync");
 const handleNoResult = require("../utils/handleNoResult");
 const handleNotFound = require("../utils/handleNotFound");
 
+exports.getAllMedicalRecord = catchAsync(async (req, res, next) => {
+  const medicalRecords = await MedicalHistory.find({});
+  handleNoResult(medicalRecords, "No medical records found", next);
+  res.status(200).json({
+    status: "success",
+    result: medicalRecords.length,
+    data: { medicalRecords },
+  });
+});
+
 // ✅ Create a new medical record
 exports.createMedicalRecord = catchAsync(async (req, res, next) => {
   // Extract patientId from the request body
@@ -82,6 +92,13 @@ exports.getMedicalRecordById = catchAsync(async (req, res, next) => {
   const record = await MedicalHistory.findById(id)
     .populate("patientId", "fullName")
     .populate("doctorId", "fullName");
+
+  if (record === null) {
+    return res.status(404).json({
+      status: "error",
+      message: "Invalid ID provided",
+    });
+  }
 
   handleNotFound(record, "Medical record not found", next);
 

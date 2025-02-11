@@ -5,11 +5,11 @@ const handleNoResult = require("../utils/handleNoResult");
 const fetchAppointments = require("../utils/fetchAppointments");
 
 exports.bookAppointment = catchAsync(async (req, res) => {
-  const { doctorId, patientId, date, timeSlot } = req.body;
+  const { doctorId, patientId, appointmentDate, timeSlot } = req.body;
   const appointment = await Appointment.create({
     doctorId,
     patientId,
-    date,
+    appointmentDate,
     timeSlot,
   });
 
@@ -101,9 +101,9 @@ exports.getDoctorAppointments = catchAsync((req, res, next) => {
 });
 
 exports.getDoctorAppointmentsByFilter = catchAsync((req, res, next) => {
-  const { doctorId, date, timeSlot } = req.params;
+  const { doctorId, appointmentDate, timeSlot } = req.params;
   const query = { doctorId };
-  if (date) query.date = date;
+  if (appointmentDate) query.appointmentDate = appointmentDate;
   if (timeSlot) query.timeSlot = timeSlot;
 
   return fetchAppointments(

@@ -7,10 +7,11 @@ const {
   getMedicalRecordById,
   updateMedicalRecord,
   deleteMedicalRecord,
+  getAllMedicalRecord,
 } = require("../controllers/medicalHistoryController");
 
 // ✅ Create a new medical history record
-router.route("/").post(createMedicalRecord);
+router.route("/").get(getAllMedicalRecord).post(createMedicalRecord);
 
 // ✅ Get all medical records for a specific patient
 router.route("/patient/:patientId").get(getMedicalRecordsByPatient);

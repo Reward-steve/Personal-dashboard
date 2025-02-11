@@ -13,12 +13,16 @@ const appointmentSchema = new mongoose.Schema({
   },
   appointmentDate: {
     type: Date,
-    required: true,
+    default: Date.now,
   },
   status: {
     type: String,
     enum: ["Scheduled", "Completed", "Canceled"],
     default: "Scheduled",
+  },
+  timeSlot: {
+    type: String,
+    default: "Morning",
   },
   notes: String,
   createdAt: {

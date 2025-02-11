@@ -1,11 +1,14 @@
 const User = require("../models/User");
+const Patient = require("../models/Patient");
+const Doctor = require("../models/Doctor");
+
 const catchAsync = require("../utils/catchAsync");
 const handleNoResult = require("../utils/handleNoResult");
 const handleNotFound = require("../utils/handleNotFound");
 
 exports.getDoctersAndPatients = catchAsync(async (req, res, next) => {
-  const doctor = await User.find({ role: "doctor" });
-  const patient = await User.find({ role: "patient" });
+  const doctor = await Doctor.find({});
+  const patient = await Patient.find({});
 
   handleNoResult(doctor, "No doctors found", next);
   handleNoResult(patient, "No patients found", next);

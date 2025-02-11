@@ -60,4 +60,9 @@ const doctorSchema = new mongoose.Schema({
 
 const Doctor = mongoose.model("Doctor", doctorSchema);
 
+doctorSchema.pre(/^find/, function (next) {
+  this.populate("patients"); // Auto-populate patients whenever you query doctors
+  next();
+});
+
 module.exports = Doctor;

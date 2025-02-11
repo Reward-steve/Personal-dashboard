@@ -46,7 +46,7 @@ exports.updatePatientById = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     message: "Patient updated successfully",
-    data: { patient },
+    patient,
   });
 });
 
