@@ -1,3 +1,8 @@
+* {
+  list-style: none;
+  text-decoration: none;
+}
+
 .loginPageBackground {
   display: flex;
   align-items: center;
@@ -55,7 +60,7 @@
 }
 
 .signup {
-  color: blue;
+  color: rgb(0, 89, 255);
 }
 
 .loginForm h3 {
@@ -93,8 +98,11 @@
   text-align: center;
 }
 
+.loginForm input[name="fullName"],
 .loginForm input[name="email"],
 .loginForm input[name="password"],
+.loginForm input[name="confirmPassword"],
+.loginForm select[name="role"],
 .navlink {
   width: 100%;
   padding: 15px 10px;
@@ -108,7 +116,9 @@
   transition: outline 0.4s linear;
 }
 
-.loginForm input[name="password"] {
+.loginForm input[name="password"],
+.loginForm input[name="confirmPassword"],
+.loginForm select[name="role"] {
   border-radius: 10px 0 0 10px;
 }
 

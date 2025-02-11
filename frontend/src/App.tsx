@@ -1,17 +1,22 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
-import Login from "./pages/Login/Login";
+import Authentication from "./pages/Authentication/Authentication";
 import MainContent from "./components/Main/MainContent";
 import routerObject from "./router/mainRoutes"; // Import the routes
+import SignUp from "./components/Signup/Signup";
+import Login from "./components/Signup/Login";
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
       <ThemeProvider>
         <Routes>
-          {/* Login Page */}
-          <Route path="/" element={<Login />} />
+          {/* Signup Page */}
+          <Route path="/*" element={<Authentication />}>
+            <Route index element={<Login />} />
+            <Route path="Signup" element={<SignUp />} />
+          </Route>
 
           {/* Dashboard Page */}
           <Route path="/dashboard/*" element={<MainContent />}>
