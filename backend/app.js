@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const AppError = require("./src/utils/AppError.js");
 const usersRoutes = require("./src/routes/userRoutes.js");
 const patientsRouter = require("./src/routes/patientRoutes.js");
@@ -9,6 +10,15 @@ const medicalHistoryRouter = require("./src/routes/medicalHistoryRoutes.js");
 
 const app = express();
 app.use(express.json());
+app.use(cors());
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 app.use("/api/users", usersRoutes);
 app.use("/api/patients", patientsRouter);

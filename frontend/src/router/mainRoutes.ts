@@ -10,8 +10,7 @@ import Stock from "../pages/Stock/Stock";
 import HelpCenter from "../pages/HelpCenter/HelpCenter";
 
 export interface PageIntroProps {
-  title: string;
-  description: string;
+  children: React.ReactNode;
 }
 
 export interface ComponentProps {

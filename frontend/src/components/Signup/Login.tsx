@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
+import { useApi } from "../../hooks/useApi";
 import style from "../../styles/LoginPage.module.css";
 import { motion } from "framer-motion";
 import SocialIcons from "../../router/socialIcons";
@@ -11,6 +12,9 @@ export default function Login(): JSX.Element {
   const [hide, setHide] = useState<boolean>(true);
   const Icon: IconType = hide ? FaEye : FaEyeSlash;
   const hidePassword = useRef<HTMLInputElement>(null);
+  const { data, error, isLoading, message } = useApi();
+
+  console.log(data, error, isLoading, message);
 
   const onclickHidePassword = () => {
     if (hidePassword.current) {

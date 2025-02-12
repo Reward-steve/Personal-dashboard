@@ -16,6 +16,6 @@ router.route("/appointments").get(getAllAppointments);
 router
   .route("/users/:id")
   .delete(deleteDoctorsAndPatientsById)
-  .post(updateDoctorAndPatientById);
+  .put(updateDoctorAndPatientById);
 
 module.exports = router;

@@ -24,10 +24,10 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["patient", "doctor", "admin", "user"],
+    enum: ["patient", "doctor", "admin", "visitor"],
     required: true,
     lowercase: true,
-    default: "user",
+    default: "visitor",
   },
   createdAt: {
     type: Date,

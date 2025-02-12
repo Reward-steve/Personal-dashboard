@@ -9,7 +9,7 @@
   overflow: hidden;
 }
 
-.content {
+.contentHolder {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -19,4 +19,13 @@
   flex: 1; /* Take up remaining space */
   overflow-y: auto;
   background: #e3f2fd;
+}
+
+.content {
+  width: 100%;
+  height: 100vh;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  display: flex;
+  flex-direction: column;
 }

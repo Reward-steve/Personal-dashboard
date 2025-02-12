@@ -14,12 +14,14 @@ const MainContent: React.FC = () => {
 
       {/* Animated main content */}
       <motion.section
-        className={styles.content}
+        className={styles.contentHolder}
         animate={{ marginLeft: sidebarOpen ? "5%" : "15%" }} // Adjust width
         transition={{ duration: 0.4, ease: "easeInOut" }}
       >
-        <Header />
-        <Outlet />
+        <div className={styles.content}>
+          <Header />
+          <Outlet />
+        </div>
       </motion.section>
     </main>
   );

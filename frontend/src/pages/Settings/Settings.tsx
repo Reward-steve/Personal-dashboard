@@ -1,7 +1,7 @@
 import React from "react";
 import { ComponentProps } from "../../router/mainRoutes";
 import PageIntro from "../../components/StyleComponent/PageIntroComponent";
-import BackgroundPicker from "../../components/StyleComponent/BackgroundPicker";
+import BackgroundPicker from "../../components/StyleComponent/SideComponent";
 import { IoSettingsSharp } from "react-icons/io5";
 import PageTitle from "../../components/StyleComponent/PageTitle";
 
