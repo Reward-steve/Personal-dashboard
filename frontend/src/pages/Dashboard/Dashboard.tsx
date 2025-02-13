@@ -74,7 +74,6 @@ const Dashboard: React.FC<ComponentProps> = () => {
             display: "flex",
             justifyContent: "center",
             flexDirection: "column",
-            // height: "100vh",
           }}
         >
           <GrayBg width="100%">

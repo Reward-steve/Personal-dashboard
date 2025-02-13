@@ -2,7 +2,6 @@
   height: auto;
   padding: 20px;
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   border-radius: 10px;
   flex-direction: column;
@@ -38,7 +37,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  cursor: pointer;
   border-radius: 10px;
   padding: 25px 16px;
   background: #1e3a5f;
@@ -69,16 +68,16 @@
   justify-content: space-between;
   width: 100%;
   align-items: center;
+  flex-shrink: 0;
   flex-wrap: nowrap;
-  gap: 10px;
+  gap: 15px;
 }
 
 .containerHolder {
   width: 100%;
   display: flex;
   justify-content: center;
-  /* align-items: center; */
   padding: 20px;
-  flex-wrap: nowrap;
   gap: 15px;
+  flex-wrap: nowrap;
 }

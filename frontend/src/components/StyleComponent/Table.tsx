@@ -20,6 +20,18 @@ export default function AppointmentTable() {
             <td>29/05/2023, 08.00</td>
             <td>-</td>
           </tr>
+          <tr>
+            <td>Emilia Fox</td>
+            <td>Eczema</td>
+            <td>29/05/2023, 08.00</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>Emilia Fox</td>
+            <td>Eczema</td>
+            <td>29/05/2023, 08.00</td>
+            <td>-</td>
+          </tr>
         </tbody>
       </table>
     </>

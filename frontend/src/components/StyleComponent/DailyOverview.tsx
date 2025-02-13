@@ -23,6 +23,7 @@ export default function DailyOverview({
             width: "100%",
             display: "flex",
             justifyContent: "space-evenly",
+            flexGrow: 1,
             alignItems: "center",
           }}
         >
