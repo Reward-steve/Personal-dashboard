@@ -1,23 +1,31 @@
 import * as React from "react";
 import { ComponentProps } from "../../router/mainRoutes";
-import PageIntro from "../../components/StyleComponent/PageIntroComponent";
+import styles from "./../../styles/styledComponent.module.css";
 import PageTitle from "../../components/StyleComponent/PageTitle";
 import { IoHome } from "react-icons/io5";
-
-const Dashboard: React.FC<ComponentProps> = ({ name }) => {
+import SideComponent from "../../components/StyleComponent/SideComponent";
+import MainComponent from "../../components/StyleComponent/MainComponent";
+const Dashboard: React.FC<ComponentProps> = () => {
   return (
     <>
       <PageTitle Title={"Dashboard"} Icon={<IoHome />} />
-      <PageIntro
-        title={name}
-        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-            fermentum lectus vel arcu commodo, ac posuere nunc egestas. Donec
-            nec gravida libero. Sed vel efficitur ligula, in consectetur neque.
-            Sed in turpis vitae lectus fermentum fermentum. Sed vel sem ut felis
-            convallis consectetur. Vestibulum ante ipsum primis in faucibus orci
-            luctus et ultrices posuere cubilia curae; Donec malesuada est sed ex
-            lobortis, et sagittis ipsum volutpat."
-      />
+      <div className={styles.container}>
+        <main className={styles.mainHolder}>
+          <MainComponent>
+            <h1>Welcome to Our Website</h1>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac
+              urna ipsum. Donec quis lectus vel neque efficitur bibendum.
+            </p>
+          </MainComponent>
+        </main>
+        <aside>
+          <SideComponent>
+            <h2>Sidebar</h2>
+            <p>Some content goes here</p>
+          </SideComponent>
+        </aside>
+      </div>
     </>
   );
 };
