@@ -13,12 +13,19 @@ import MainComponent from "../../components/StyleComponent/MainComponent";
 import DailyOverview from "../../components/StyleComponent/DailyOverview";
 import GrayBg from "../../components/StyleComponent/GrayBg";
 import AppointmentTable from "../../components/StyleComponent/Table";
+import Notification from "../../components/StyleComponent/Notification";
+
+import img1 from "../../assets/img/home.jpg";
+import img2 from "../../assets/img/medical-record.png";
+import img3 from "../../assets/img/signin.jpg";
+import img4 from "../../assets/img/userprofile.jpg";
+
 const Dashboard: React.FC<ComponentProps> = () => {
   return (
     <>
       <PageTitle Title={"Dashboard"} Icon={<IoHome />} />
       <div className={styles.containerHolder}>
-        <GrayBg width="70%">
+        <GrayBg width="70%" height="auto">
           <SectionName Name={"Daily overview"} />
           <div className={styles.flexContainer}>
             <aside className={styles.flex}>
@@ -76,20 +83,49 @@ const Dashboard: React.FC<ComponentProps> = () => {
             flexDirection: "column",
           }}
         >
-          <GrayBg width="100%">
+          <GrayBg width="100%" height="auto">
             <SectionName Name={"Calender 🗓️"} />
             <MainComponent>
               <PersistentDatePicker />
             </MainComponent>
           </GrayBg>
-          <GrayBg width="100%">
+          <GrayBg width="100%" height="300px">
             <SectionName Name={"Notifications"} />
-            <MainComponent>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac
-                urna ipsum. Donec quis lectus vel neque efficitur bibendum.
-              </p>
-            </MainComponent>
+            <div
+              style={{
+                width: "100%",
+                height: "80%",
+                border: "1px solid gray",
+                borderRadius: "10px",
+                overflowY: "scroll",
+                scrollBehavior: "smooth",
+                transition: ".5s",
+                scrollbarWidth: "thin",
+              }}
+            >
+              <MainComponent>
+                <Notification
+                  image={img1}
+                  altImg="img"
+                  message="You have 38 appointment requests."
+                />
+                <Notification
+                  image={img2}
+                  altImg="img"
+                  message="Your vacation request was denied."
+                />
+                <Notification
+                  image={img3}
+                  altImg="img"
+                  message="Tom Daley cancelled his appointment."
+                />
+                <Notification
+                  image={img4}
+                  altImg="img"
+                  message="Someone wants to become you patient"
+                />
+              </MainComponent>
+            </div>
           </GrayBg>
         </div>
       </div>

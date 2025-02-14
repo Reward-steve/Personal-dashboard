@@ -17,7 +17,7 @@ export default function DailyOverview({
 }: DailyOverviewProps) {
   return (
     <>
-      <SideComponent>
+      <SideComponent width="25%">
         <div
           style={{
             width: "100%",

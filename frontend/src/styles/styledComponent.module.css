@@ -12,6 +12,7 @@
   width: 100%;
   height: auto;
   padding: 10px;
+  border-radius: 10px;
   background: #1e3a5f;
   color: #ffffff;
   box-shadow: 0 11px 18px -2px rgba(0, 0, 0, 0.651);
@@ -19,7 +20,12 @@
 
 .mainContent {
   height: auto;
-  padding: 20px;
+  padding: 10px;
+  row-gap: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .backgroundimage {
@@ -32,14 +38,13 @@
 }
 
 .background {
-  width: 200px;
   height: auto;
   display: flex;
   justify-content: center;
+  padding: 25px 16px;
   align-items: center;
   cursor: pointer;
   border-radius: 10px;
-  padding: 25px 16px;
   background: #1e3a5f;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
   box-shadow: 0 11px 18px -2px rgba(0, 0, 0, 0.651);
@@ -80,4 +85,27 @@
   padding: 20px;
   gap: 15px;
   flex-wrap: nowrap;
+}
+
+.notify {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 10px;
+}
+
+.img_holder {
+  width: 50px;
+  height: 50px;
+}
+
+.img_holder img {
+  width: 100%;
+  border-radius: 100%;
+  height: 100%;
+}
+
+.msg {
+  width: 80%;
 }
