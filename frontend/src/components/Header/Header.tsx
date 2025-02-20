@@ -5,11 +5,12 @@ import { CiSearch } from "react-icons/ci";
 import { CiSettings } from "react-icons/ci";
 import { NavLink } from "react-router-dom";
 import { FaCaretDown } from "react-icons/fa6";
-
-import img from "../../assets/img/analytics.jpg";
+import img from "../../assets/img/jwtLogo.jpg";
+import Dropdown from "./Dropdown";
 
 const Header: React.FC = () => {
   const [search, setSearch] = useState<string>("");
+  const [active, setActive] = useState<boolean>(false);
   console.log(search);
 
   return (
@@ -30,15 +31,29 @@ const Header: React.FC = () => {
           <CiSettings className={`${styles.icon}`} />
         </NavLink>
 
+        {/* <NavLink to={"/dashboard/profile"}> */}
         <div className={styles.profile}>
           <div className={styles.profile_content}>
             <div className={styles.pro_pic}>
               <img src={img} alt={"altImg"} />
             </div>
-            <p className={styles.msg}>Dr.kawasaki</p>
-            <FaCaretDown style={{ fontSize: "2em", color: "red" }} />
+            <p className={styles.msg}>
+              Dr.kawasaki
+              <p style={{ color: "gray", fontSize: "15px" }}>
+                view your profile
+              </p>
+            </p>
+
+            <FaCaretDown
+              style={{ fontSize: "1em", color: "white" }}
+              onClick={() => {
+                setActive(!active);
+              }}
+            />
+            {active && <Dropdown />}
           </div>
         </div>
+        {/* </NavLink> */}
       </header>
     </nav>
   );
