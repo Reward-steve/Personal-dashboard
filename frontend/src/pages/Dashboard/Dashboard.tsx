@@ -24,6 +24,7 @@ const Dashboard: React.FC<ComponentProps> = () => {
   return (
     <>
       <PageTitle Title={"Dashboard"} Icon={<IoHome />} />
+
       <div className={styles.containerHolder}>
         <GrayBg width="70%" height="auto">
           <SectionName Name={"Daily overview"} />
@@ -36,19 +37,19 @@ const Dashboard: React.FC<ComponentProps> = () => {
                 Icon={FaUsers}
               />
               <DailyOverview
-                cl="#008bff"
+                cl="skyblue"
                 Result="12"
                 Details="reviews"
                 Icon={FaStar}
               />
               <DailyOverview
-                cl="#961dff"
+                cl="skyblue"
                 Result="13"
                 Details="appointments"
                 Icon={FaComments}
               />
               <DailyOverview
-                cl="red"
+                cl="skyblue"
                 Result="1"
                 Details="surgery"
                 Icon={MdMonitorHeart}
@@ -59,11 +60,13 @@ const Dashboard: React.FC<ComponentProps> = () => {
           <SectionName Name={"Schedule"} />
           <main className={styles.mainHolder}>
             <MainComponent>
-              <ul>
-                <li>Maria</li>
-                <li>Patrick</li>
-                <li>Norris</li>
-              </ul>
+              <div>
+                <ul>
+                  <li>Maria</li>
+                  <li>Patrick</li>
+                  <li>Norris</li>
+                </ul>
+              </div>
             </MainComponent>
           </main>
 
@@ -76,7 +79,7 @@ const Dashboard: React.FC<ComponentProps> = () => {
         </GrayBg>
         <div
           style={{
-            width: "30%",
+            width: "25%",
             rowGap: "15px",
             display: "flex",
             justifyContent: "center",
@@ -84,10 +87,7 @@ const Dashboard: React.FC<ComponentProps> = () => {
           }}
         >
           <GrayBg width="100%" height="auto">
-            <SectionName Name={"Calender 🗓️"} />
-            <MainComponent>
-              <PersistentDatePicker />
-            </MainComponent>
+            <PersistentDatePicker />
           </GrayBg>
           <GrayBg width="100%" height="300px">
             <SectionName Name={"Notifications"} />
