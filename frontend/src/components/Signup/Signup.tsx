@@ -102,6 +102,15 @@ export default function SignUp(): JSX.Element {
             }
           />
         </motion.div>
+        <NavLink
+          className={style.navlink}
+          to="/dashboard/dashboard"
+          style={{
+            textDecoration: "none",
+          }}
+        >
+          Signup
+        </NavLink>
       </label>
 
       <p>or sign up with</p>
