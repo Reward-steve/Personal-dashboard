@@ -1,5 +1,8 @@
 const express = require("express");
 const router = express.Router();
+
+const { restrict } = require("../middleware/restrict");
+
 const {
   createMedicalRecord,
   getMedicalRecordsByPatient,
@@ -9,9 +12,13 @@ const {
   deleteMedicalRecord,
   getAllMedicalRecord,
 } = require("../controllers/medicalHistoryController");
+const { Protect } = require("../controllers/authController");
 
 // ✅ Create a new medical history record
-router.route("/").get(getAllMedicalRecord).post(createMedicalRecord);
+router
+  .route("/")
+  .get(Protect, restrict("admin"), getAllMedicalRecord)
+  .post(createMedicalRecord);
 
 // ✅ Get all medical records for a specific patient
 router.route("/patient/:patientId").get(getMedicalRecordsByPatient);
@@ -24,6 +31,6 @@ router
   .route("/:id")
   .get(getMedicalRecordById)
   .put(updateMedicalRecord)
-  .delete(deleteMedicalRecord);
+  .delete(Protect, restrict("admin", "doctor"), deleteMedicalRecord);
 
 module.exports = router;

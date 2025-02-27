@@ -23,3 +23,17 @@
 
 🚀 The Secret: Just Take It One Step at a Time
 Don’t think about everything at once. Just focus on one step today.
+
+
+{
+  "fullName":"Mr Ayo Jackson",
+  "email":"jacksondavid@gmail.com",
+  "password":"jacksondavid",
+  "phone":"090 980 29 287",
+  "dateOfBirth":"2004-01-31",
+  "gender":"Male",
+  "role":"doctor",
+  "specialization":"Ophthalmic Surgery",
+  "department":"Rehabilitation",
+  "experience":5
+}

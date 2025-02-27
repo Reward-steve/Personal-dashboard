@@ -1,4 +1,7 @@
 const express = require("express");
+
+const { restrict } = require("../middleware/restrict");
+
 const {
   bookAppointment,
   getAllAppointments,
@@ -10,10 +13,11 @@ const {
   getDoctorAppointmentsByFilter,
   getPatientAppointmentsByFilter,
 } = require("../controllers/appointmentController");
+const { Protect } = require("../controllers/authController");
 
 const router = express.Router();
 
-router.route("/").get(getAllAppointments);
+router.route("/").get(Protect, restrict("admin"), getAllAppointments);
 
 router.route("/book").post(bookAppointment);
 
@@ -21,7 +25,7 @@ router
   .route("/:id")
   .get(getAppointmentById)
   .put(updateAppointment)
-  .delete(deleteAppointment);
+  .delete(Protect, restrict("admin", "doctor"), deleteAppointment);
 
 router.route("/patient/:patientId").get(getPatientAppointments);
 

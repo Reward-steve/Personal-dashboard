@@ -7,6 +7,7 @@ const doctorsRouter = require("./src/routes/doctorRoutes.js");
 const appointmentRouter = require("./src/routes/appointmentRoutes.js");
 const adminRouter = require("./src/routes/adminRoutes.js");
 const medicalHistoryRouter = require("./src/routes/medicalHistoryRoutes.js");
+const errorController = require("./src/controllers/errorController.js");
 
 const app = express();
 app.use(express.json());
@@ -26,10 +27,12 @@ app.use("/api/doctors", doctorsRouter);
 app.use("/api/appoointments", appointmentRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/medical-history", medicalHistoryRouter);
+
 app.all("*", (req, res, next) => {
-  next(new AppError("Invalid route", 404));
+  next(new AppError(`Cannot find ${req.originalUrl} on server`, 404));
 });
 
+app.use(errorController);
 app.use((err, req, res, next) => {
   console.error("ERROR:", err);
 

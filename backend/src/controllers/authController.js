@@ -1,5 +1,6 @@
 const { promisify } = require("node:util");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const AppError = require("../utils/AppError");
 const SignToken = require("../utils/SignToken.js");
 const catchAsync = require("../utils/catchAsync");
@@ -7,16 +8,21 @@ const User = require("../models/User.js");
 const Admin = require("../models/Admin.js");
 const Doctor = require("../models/Doctor.js");
 const Patient = require("../models/Patient.js");
+const handleNotFound = require("../utils/handleNotFound.js");
 
 exports.Register = catchAsync(async (req, res, next) => {
-  const { fullName, email, password, role, phone, specialization, department } =
-    req.body;
+  const {
+    fullName,
+    email,
+    password,
+    role = "patient", //default role
+    phone,
+    specialization,
+    department,
+  } = req.body;
 
-  // check if email already exists in the database. with an array of Promise
-  // If found, return an error message. Otherwise, continue with registration.
-
+  // check if email already exists in the database.
   const existingUser = await Promise.all([
-    User.findOne({ email }),
     Patient.findOne({ email }),
     Doctor.findOne({ email }),
     Admin.findOne({ email }),
@@ -28,20 +34,14 @@ exports.Register = catchAsync(async (req, res, next) => {
 
   // Save new user in the database. According to the role, save additional user details.
   let newUser;
-
-  if (role === "user") {
-    newUser = await User.create({
-      fullName,
-      email,
-      password,
-      role,
-    });
-  } else if (role === "patient") {
+  if (role === "patient") {
+    const patientId = await Patient.find(); // create patient ID
     newUser = await Patient.create({
       fullName,
       email,
       password,
       phone,
+      patientID: (patientId.length + 1) * 1, // set patient ID
       dateOfBirth: req.body.dateOfBirth,
       gender: req.body.gender,
       address: req.body.address,
@@ -69,7 +69,9 @@ exports.Register = catchAsync(async (req, res, next) => {
       password,
       role,
     });
-  } else return next(new AppError("Invalid role specified", 400));
+  } else {
+    next();
+  }
 
   // Generate and send JWT token to the client.
   const token = SignToken(newUser._id);
@@ -88,20 +90,19 @@ exports.Register = catchAsync(async (req, res, next) => {
 
 exports.Login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  // Check all role-based collections for user
-  const user =
-    (await User.findOne({ email: email }).select("+password")) ||
-    (await Patient.findOne({ email: email }).select("+password")) ||
-    (await Doctor.findOne({ email: email }).select("+password")) ||
-    (await Admin.findOne({ email: email }).select("+password"));
 
   // check if email and password exist
   if (!email || !password) {
     return next(new AppError("Please provide email and password", 400));
   }
 
+  // Check all role-based collections for user
+  const user =
+    (await Patient.findOne({ email }).select("+password")) ||
+    (await Doctor.findOne({ email }).select("+password")) ||
+    (await Admin.findOne({ email }).select("+password"));
+
   const isMatch = await bcrypt.compare(password, user.password);
-  console.log(password, user.password);
 
   if (!user || !isMatch) {
     return next(new AppError("Incorrect email or password", 401));
@@ -116,9 +117,9 @@ exports.Login = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.protect = catchAsync(async (req, res, next) => {
+//Protected middleware to allow access to only authorized users
+exports.Protect = catchAsync(async (req, res, next) => {
   let token;
-
   // Extract token from Authorization header
   if (
     req.headers.authorization &&
@@ -127,6 +128,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   }
 
+  //check if token is found
   if (!token) {
     return next(
       new AppError("You are not logged in. Please login to get access", 401)
@@ -138,52 +140,46 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // Find user in any role-based collection
   const currentUser =
-    (await User.findById(decoded.id)) ||
     (await Patient.findById(decoded.id)) ||
     (await Doctor.findById(decoded.id)) ||
     (await Admin.findById(decoded.id));
 
-  if (!currentUser) {
-    next(new AppError("The User belonging to this token does not exist", 401));
-  }
-  // check if user changed password after the token was issued
-  if (currentUser.changedPasswordAfter(decoded.iat)) {
-    next(
-      new AppError("User recently changed password. Please Login again", 401)
+  if (!currentUser)
+    return next(
+      new AppError("The User belonging to this token does not exist", 401)
     );
-  }
+  console.log(decoded.iat);
 
   // grant access to protected route
   req.user = currentUser;
+  next();
 });
 
-exports.restrict = (...roles) => {
-  return async (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      next(
-        new AppError("You do not have permission to access this route", 403)
-      );
-    }
-    next();
-  };
-};
+exports.forgottenPassword = catchAsync(async (req, res, next) => {
+  const { email } = req.body;
 
-// exports.forgotPassword = catchAsync(async (req, res, next) => {
-//   // get user based on posted email
-//   const user = await User.findOne({ email: req.body.email });
+  !email ? next(new AppError("Please provide an email address")) : email;
 
-//   if (!user) {
-//     return next(new AppError("There is no email with user address.", 404));
-//   }
-//   // generate random reset token
+  const user =
+    (await Doctor.findOne({ email })) ||
+    (await Patient.findOne({ email })) ||
+    (await Admin.findOne({ email }));
 
-//   const resetToken = user.createPasswordResetToken();
-//   await user.save({ validateBeforeSave: false });
-//   // send it to user's email
+  //check if user still exist
+  handleNotFound(user, `No user found with email: ${email}`, next);
 
-//   // const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`;
-//   res.status(200).json({
-//     status: "success",
-//     resetToken,
-//   });
+  //generate reset token
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    status: "success",
+    resetToken,
+  });
+
+  //generate reset token
+});
+
+// exports.Logout = catchAsync(async (req, res, next) => {
+//   const currentUser  = await Patient.findOne
 // });

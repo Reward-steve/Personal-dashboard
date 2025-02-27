@@ -1,4 +1,6 @@
+const crypto = require("crypto");
 const mongoose = require("mongoose");
+const validate = require("validator");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
@@ -21,18 +23,29 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 6,
+    select: false,
   },
+  confirmPassword: {
+    type: String,
+    validate: function (value) {
+      return value === this.password;
+    },
+    message: "This Password {{value}} do not match",
+  },
+
   role: {
     type: String,
-    enum: ["patient", "doctor", "admin", "visitor"],
-    required: true,
-    lowercase: true,
-    default: "visitor",
+    enum: ["patient", "staff", "doctor", "admin"],
+    default: "patient",
   },
+
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  passwordChangedAt: Date.now(),
+  passwordResetToken: String,
+  resetTokenExp: Date,
 });
 
 // hash the password before saving it to the database
@@ -44,7 +57,7 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
 
   // delete passwordConfirm field
-  this.passwordConfirm = undefined;
+  this.confirmPassword = undefined;
   next();
 });
 
@@ -52,8 +65,21 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.changedPasswordAfter = function (timestamp) {
   if (this.createdAt) {
     const createdAt = parseInt(this.createdAt.getTime() / 1000, 10);
-    return createdAt > timestamp;
+    return createdAt < timestamp;
   }
+};
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  this.resetTokenExp = Date.now() + 10 * 60 * 1000;
+  console.log("user:", { resetToken });
+
+  return resetToken;
 };
 
 const User = mongoose.model("User", userSchema);

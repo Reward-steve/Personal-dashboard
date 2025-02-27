@@ -10,13 +10,13 @@ exports.getAllPatients = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     result: patients.length,
-    data: { patients },
+    data: {
+      patients,
+    },
   });
 });
 
 exports.createPatient = catchAsync(async (req, res) => {
-  console.log("Request.body:", req.body);
-
   const newPatient = await Patient.create(req.body);
 
   res.status(201).json({
