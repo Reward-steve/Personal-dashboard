@@ -6,28 +6,38 @@ const appointmentSchema = new mongoose.Schema({
     ref: "Patient",
     required: true,
   },
-  doctorId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Doctor",
-    required: true,
+  bookAppointment: {
+    type: Boolean,
+    default: false,
   },
-  appointmentDate: {
-    type: Date,
-    default: Date.now,
+  department: {
+    type: String,
+    enum: [
+      "General Department",
+      "Surgical Departments",
+      "Medical Departments",
+      "Emergency",
+      "Intensive-Care Departments",
+      "Pediatric Departments",
+      "Obstetrics",
+      "Gynecology (OB-GYN)",
+      "Mental Health",
+      "Neurology",
+      "Oncology (Cancer Treatment)",
+      "Infectious Diseases",
+      "Radiology & Imaging",
+      "Pathology & Laboratory Medicine",
+      "Physical Medicine & Rehabilitation",
+      "Ophthalmology (Eye Care)",
+      "Urology",
+      "Otolaryngology (ENT - Ear, Nose, Throat)",
+    ],
+    default: "General Department",
   },
   status: {
     type: String,
-    enum: ["Scheduled", "Completed", "Canceled"],
-    default: "Scheduled",
-  },
-  timeSlot: {
-    type: String,
-    default: "Morning",
-  },
-  notes: String,
-  createdAt: {
-    type: Date,
-    default: Date.now,
+    enum: ["Pending", "Scheduled", "Completed", "Canceled"],
+    default: "Pending",
   },
 });
 

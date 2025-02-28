@@ -35,7 +35,14 @@ const userSchema = new mongoose.Schema({
 
   role: {
     type: String,
-    enum: ["patient", "staff", "doctor", "admin"],
+    enum: [
+      "patient",
+      "Nurses",
+      "Lab Technicians",
+      "Receptionists",
+      "doctor",
+      "admin",
+    ],
     default: "patient",
   },
 
@@ -43,7 +50,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  passwordChangedAt: Date.now(),
+  passwordChangedAt: Date,
   passwordResetToken: String,
   resetTokenExp: Date,
 });
@@ -63,9 +70,12 @@ userSchema.pre("save", async function (next) {
 
 // check if password has been changed
 userSchema.methods.changedPasswordAfter = function (timestamp) {
-  if (this.createdAt) {
-    const createdAt = parseInt(this.createdAt.getTime() / 1000, 10);
-    return createdAt < timestamp;
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return timestamp < changedTimestamp;
   }
 };
 

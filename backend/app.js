@@ -24,7 +24,7 @@ app.use(
 app.use("/api/users", usersRoutes);
 app.use("/api/patients", patientsRouter);
 app.use("/api/doctors", doctorsRouter);
-app.use("/api/appoointments", appointmentRouter);
+app.use("/api/appointments", appointmentRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/medical-history", medicalHistoryRouter);
 

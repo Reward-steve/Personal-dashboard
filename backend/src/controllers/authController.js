@@ -104,7 +104,7 @@ exports.Login = catchAsync(async (req, res, next) => {
 
   const isMatch = await bcrypt.compare(password, user.password);
 
-  if (!user || !isMatch) {
+  if (!isMatch || !user) {
     return next(new AppError("Incorrect email or password", 401));
   }
 
@@ -148,7 +148,14 @@ exports.Protect = catchAsync(async (req, res, next) => {
     return next(
       new AppError("The User belonging to this token does not exist", 401)
     );
-  console.log(decoded.iat);
+
+  console.log(currentUser.changedPasswordAfter(decoded.iat));
+  // check if user changed password after token was issued
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next(
+      new AppError("User recently changed password! Please login again", 401)
+    );
+  }
 
   // grant access to protected route
   req.user = currentUser;

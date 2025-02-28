@@ -5,7 +5,6 @@ This backend structure follows best practices and ensures a secure and scalable 
 Each user type has specific permissions and actions they can perform in the system.
 
 🔹 Admin (Super User)
-✅ Manage users (approve/reject doctor/staff upgrade requests).
 ✅ Assign roles to users.
 ✅ View and manage all patients, doctors, and staff.
 ✅ Manage appointments (modify/cancel any appointment).

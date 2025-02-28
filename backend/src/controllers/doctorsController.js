@@ -90,9 +90,10 @@ exports.assignPatientToDoctor = catchAsync(async (req, res, next) => {
 });
 
 exports.getDoctorsPatient = catchAsync(async (req, res, next) => {
-  const doctor = await Doctor.findById(req.params.id).populate("patients");
+  const { doctorId } = req.body;
+  const doctor = await Doctor.findById(doctorId).populate("patients");
 
-  handleNotFound(doctor, `No doctor with ID ${req.params.id} found.`, next);
+  handleNotFound(doctor, `No doctor with ID ${doctorId} found.`, next);
 
   res.status(200).json({
     status: "success",

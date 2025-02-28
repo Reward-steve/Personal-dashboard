@@ -30,13 +30,3 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     },
   });
 });
-
-exports.createAdmin = catchAsync(async (req, res, next) => {
-  const newAdmin = await Admin.create(req.body);
-
-  res.status(201).json({
-    status: "success",
-    message: "New admin created successfully",
-    newAdmin,
-  });
-});

@@ -18,11 +18,7 @@ const patientSchema = new mongoose.Schema({
     enum: ["Male", "Female", "Other"],
     required: true,
   },
-  phone: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+  phone: String,
   email: {
     type: String,
     // required: true,
@@ -118,6 +114,7 @@ const patientSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  passwordChangedAt: Date,
   patientID: {
     type: Number,
   },
@@ -137,10 +134,14 @@ patientSchema.pre("save", async function (next) {
   next();
 });
 
+// check if password has been changed
 patientSchema.methods.changedPasswordAfter = function (timestamp) {
-  if (this.createdAt) {
-    const createdAt = parseInt(this.createdAt.getTime() / 1000, 10);
-    return createdAt > timestamp;
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return timestamp < changedTimestamp;
   }
 };
 

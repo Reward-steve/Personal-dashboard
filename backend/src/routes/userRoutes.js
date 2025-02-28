@@ -10,26 +10,18 @@ const {
 } = require("../controllers/authController");
 
 const {
-  getAllDoctorsBySpecialization,
-} = require("../controllers/doctorsController");
-const {
   getPatientById,
-  createPatient,
   updatePatientById,
   deletePatientById,
-  getAllPatients,
 } = require("../controllers/patientsController");
 
-const {
-  bookAppointment,
-  getPatientAppointments,
-} = require("../controllers/appointmentController");
+const { bookAppointment } = require("../controllers/appointmentController");
 
 const router = express.Router();
 
 router.route("/register").post(Register);
 
-router.route("/login").post(Protect, Login);
+router.route("/login").post(Login);
 
 router.route("/forgotpassword").post(forgottenPassword);
 
@@ -39,17 +31,8 @@ router
   .patch(updatePatientById)
   .delete(Protect, restrict("admin"), deletePatientById);
 
-router.route("/bookappointment").post(bookAppointment);
-
-router.route("/:patientsappointment").get(getPatientAppointments);
-
 router
-  .route("/:doctorsappointment/specialization")
-  .get(getAllDoctorsBySpecialization);
-
-router
-  .route("/")
-  .get(Protect, restrict("admin"), getAllPatients)
-  .post(createPatient);
+  .route("/bookappointment")
+  .post(Protect, restrict("patient"), bookAppointment);
 
 module.exports = router;

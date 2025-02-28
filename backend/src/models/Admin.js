@@ -23,10 +23,12 @@ const adminSchema = new mongoose.Schema(
         message: "This Password {{value}} do not match",
       },
     },
+    passwordChangedAt: Date,
     role: String,
     passwordResetToken: String,
     resetTokenExp: Date,
   },
+
   { timestamps: true }
 );
 
@@ -42,10 +44,14 @@ adminSchema.pre("save", async function (next) {
   next();
 });
 
+// check if password has been changed
 adminSchema.methods.changedPasswordAfter = function (timestamp) {
-  if (this.createdAt) {
-    const createdAt = parseInt(this.createdAt.getTime() / 1000, 10);
-    return createdAt > timestamp;
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return timestamp < changedTimestamp;
   }
 };
 

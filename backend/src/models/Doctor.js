@@ -67,10 +67,7 @@ const doctorSchema = new mongoose.Schema({
     },
   },
   role: String,
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+  passwordChangedAt: Date,
   passwordResetToken: String,
   resetTokenExp: Date,
 });
@@ -93,9 +90,12 @@ doctorSchema.pre("save", async function (next) {
 });
 
 doctorSchema.methods.changedPasswordAfter = function (timestamp) {
-  if (this.createdAt) {
-    const createdAt = parseInt(this.createdAt.getTime() / 1000, 10);
-    return createdAt > timestamp;
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return timestamp < changedTimestamp;
   }
 };
 

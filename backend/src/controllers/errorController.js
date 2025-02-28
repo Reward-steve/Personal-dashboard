@@ -7,7 +7,7 @@ const handleValidatorErrorDB = (err) => {
   return new AppError(message, 400);
 };
 
-const handleTokenExpiredError = (err) => {
+const handleTokenExpiredError = () => {
   return new AppError("Your token has expired! Please log in again", 401);
 };
 
@@ -47,14 +47,9 @@ const SendErrorProd = (err, res) => {
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
-
   if (process.env.NODE_ENV === "development") {
     SendErrorDev(err, res);
   } else if (process.env.NODE_ENV === "production") {
-    if (err.name === "CastError") err = handleCastErrorDB(err);
-
-    if (err.code === 11000) err = handleDuplicateErrorDB(err);
-
     if (err.name === "ValidationError") err = handleValidatorErrorDB(err);
 
     if (err.name === "TokenExpiredError") err = handleTokenExpiredError();

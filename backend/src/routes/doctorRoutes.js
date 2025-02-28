@@ -7,7 +7,6 @@ const {
   getAllDoctors,
   getDoctorById,
   getAllDoctorsBySpecialization,
-  createDoctor,
   updateDoctorById,
   deleteDoctorById,
   getDoctorsPatient,
@@ -15,12 +14,17 @@ const {
   unassignPatientFromDoctor,
 } = require("../controllers/doctorsController");
 const { Protect } = require("../controllers/authController");
-const { getAllPatients } = require("../controllers/patientsController");
+const {
+  getAllPatients,
+  getPatientById,
+} = require("../controllers/patientsController");
 
 // Fetch doctors and their details
-router.route("/").get(getAllDoctors);
+router.route("/").get(Protect, restrict("admin"), getAllDoctors);
 
 router.route("/patients").get(getAllPatients);
+
+router.route("/patientid").get(getPatientById);
 
 router
   .route("/:id")
