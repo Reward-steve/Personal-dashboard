@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+const validate = require("validator");
+const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 
 const patientSchema = new mongoose.Schema({
   fullName: {
@@ -15,16 +18,28 @@ const patientSchema = new mongoose.Schema({
     enum: ["Male", "Female", "Other"],
     required: true,
   },
-  phone: {
-    type: String,
-    // required: true,
-    unique: true,
-  },
+  phone: String,
   email: {
     type: String,
     // required: true,
     unique: true,
     lowercase: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 6,
+    select: false,
+  },
+  confirmPassword: {
+    type: String,
+    // required: [true, "Please confirm passord"],
+    validate: {
+      validator: function (value) {
+        return value === this.password;
+      },
+      message: "This Password {{value}} do not match",
+    },
   },
   address: {
     street: String,
@@ -94,14 +109,54 @@ const patientSchema = new mongoose.Schema({
     admittedOn: Date,
     dischargedOn: Date,
   },
+  role: String,
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  passwordChangedAt: Date,
+  patientID: {
+    type: Number,
+  },
+  passwordResetToken: String,
+  resetTokenExp: Date,
 });
 
-// ✅ Indexing for better performance
-// patientSchema.index({ phone: 1, email: 1 });
+patientSchema.pre("save", async function (next) {
+  // only run this function if password was actually modified
+  if (!this.isModified("password")) return next();
+
+  // hash the password with cost of 12
+  this.password = await bcrypt.hash(this.password, 10);
+
+  // delete passwordConfirm field
+  this.confirmPassword = undefined;
+  next();
+});
+
+// check if password has been changed
+patientSchema.methods.changedPasswordAfter = function (timestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return timestamp < changedTimestamp;
+  }
+};
+
+patientSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  this.passwordResetToken = crypto
+    .createHash("shake256")
+    .update(resetToken)
+    .digest("hex");
+
+  this.resetTokenExp = Date.now() + 10 * 60 * 1000;
+
+  console.log("patient:", { resetToken });
+  return resetToken;
+};
 
 const Patient = mongoose.model("Patient", patientSchema);
 module.exports = Patient;

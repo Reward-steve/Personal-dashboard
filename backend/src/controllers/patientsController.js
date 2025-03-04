@@ -10,13 +10,13 @@ exports.getAllPatients = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     result: patients.length,
-    data: { patients },
+    data: {
+      patients,
+    },
   });
 });
 
 exports.createPatient = catchAsync(async (req, res) => {
-  console.log("Request.body:", req.body);
-
   const newPatient = await Patient.create(req.body);
 
   res.status(201).json({
@@ -27,8 +27,9 @@ exports.createPatient = catchAsync(async (req, res) => {
 });
 
 exports.getPatientById = catchAsync(async (req, res, next) => {
-  const patient = await Patient.findById(req.params.id);
-  handleNotFound(patient, `No patient with ID ${req.params.id} found`, next);
+  const { patientID } = req.body;
+  const patient = await Patient.findOne({ patientID });
+  handleNotFound(patient, `No patient with ID ${patientID} found`, next);
 
   res.status(200).json({
     status: "success",

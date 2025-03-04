@@ -1,17 +1,15 @@
 const User = require("../models/User");
 const Patient = require("../models/Patient");
 const Doctor = require("../models/Doctor");
-
+const Admin = require("../models/Admin");
 const catchAsync = require("../utils/catchAsync");
 const handleNoResult = require("../utils/handleNoResult");
-const handleNotFound = require("../utils/handleNotFound");
 
-exports.getDoctersAndPatients = catchAsync(async (req, res, next) => {
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+  const user = await User.find({});
   const doctor = await Doctor.find({});
   const patient = await Patient.find({});
-
-  handleNoResult(doctor, "No doctors found", next);
-  handleNoResult(patient, "No patients found", next);
+  const admin = await Admin.find({});
 
   res.status(200).json({
     status: "success",
@@ -19,56 +17,16 @@ exports.getDoctersAndPatients = catchAsync(async (req, res, next) => {
     results: {
       doctors: doctor.length,
       patients: patient.length,
+      users: user.length,
+      admins: admin.length,
+      allSignedIn:
+        (doctor.length + patient.length + user.length + admin.length) * 1,
     },
     data: {
-      doctors: doctor,
-      patients: patient,
-    },
-  });
-});
-
-exports.deleteDoctorsAndPatientsById = catchAsync(async (req, res, next) => {
-  const doctor = await User.findByIdAndDelete(req.params.id);
-  const patient = await User.findByIdAndDelete(req.params.id);
-
-  handleNotFound(doctor, `Doctor not found with id of ${req.params.id} `, next);
-  handleNotFound(
-    patient,
-    `Patient not found with id of ${req.params.id} `,
-    next
-  );
-
-  res.status(204).json({
-    status: "success",
-    message: doctor
-      ? "Doctor deleted successfully"
-      : "Patient deleted successfully",
-  });
-});
-
-exports.updateDoctorAndPatientById = catchAsync(async (req, res, next) => {
-  const doctor = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  const patient = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  handleNotFound(doctor, `Doctor not found with id of ${req.params.id} `, next);
-  handleNotFound(
-    patient,
-    `Patient not found with id of ${req.params.id} `,
-    next
-  );
-  res.status(200).json({
-    status: "success",
-    message: doctor
-      ? "Doctor updated successfully"
-      : "Patient updated successfully",
-    data: {
-      updatedDoctor: doctor ? doctor : null,
-      updatedPatient: patient ? patient : null,
+      doctors: doctor.length === 0 ? "No doctor found" : doctor,
+      patients: patient.length === 0 ? "No patient found" : patient,
+      user: user.length === 0 ? "No user found" : user,
+      admin: admin.length === 0 ? "No admin found" : admin,
     },
   });
 });

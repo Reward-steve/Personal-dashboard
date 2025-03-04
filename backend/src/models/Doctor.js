@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+const validate = require("validator");
+const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 
 const doctorSchema = new mongoose.Schema({
   fullName: {
@@ -11,6 +14,17 @@ const doctorSchema = new mongoose.Schema({
     required: true,
     unique: true,
     lowercase: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 6,
+    select: false,
+  },
+
+  confirmPassword: {
+    type: String,
+    default: this.password,
   },
   phone: {
     type: String,
@@ -52,17 +66,52 @@ const doctorSchema = new mongoose.Schema({
       default: "USD",
     },
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+  role: String,
+  passwordChangedAt: Date,
+  passwordResetToken: String,
+  resetTokenExp: Date,
 });
-
-const Doctor = mongoose.model("Doctor", doctorSchema);
 
 doctorSchema.pre(/^find/, function (next) {
   this.populate("patients"); // Auto-populate patients whenever you query doctors
   next();
 });
 
+doctorSchema.pre("save", async function (next) {
+  // only run this function if password was actually modified
+  if (!this.isModified("password")) return next();
+
+  // hash the password with cost of 12
+  this.password = await bcrypt.hash(this.password, 10);
+
+  // delete passwordConfirm field
+  this.confirmPassword = undefined;
+  next();
+});
+
+doctorSchema.methods.changedPasswordAfter = function (timestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return timestamp < changedTimestamp;
+  }
+};
+
+doctorSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  this.passwordResetToken = crypto
+    .createHash("shake256")
+    .update(resetToken)
+    .digest("hex");
+
+  this.resetTokenExp = Date.now() + 10 * 60 * 1000;
+
+  console.log("doctor:", { resetToken });
+
+  return resetToken;
+};
+
+const Doctor = mongoose.model("Doctor", doctorSchema);
 module.exports = Doctor;

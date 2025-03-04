@@ -1,6 +1,7 @@
 const Doctor = require("../models/Doctor.js");
 const Patient = require("../models/Patient.js");
 const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/AppError.js");
 const handleNotFound = require("../utils/handleNotFound");
 const handleNoResult = require("../utils/handleNoResult");
 
@@ -8,7 +9,7 @@ exports.getAllDoctors = catchAsync(async (req, res, next) => {
   const doctors = await Doctor.find({});
 
   if (doctors.length === 0) {
-    return handleNoResult(res, "No doctors found", next);
+    return next(new AppError("No doctors found", 200));
   }
 
   res.status(200).json({
@@ -89,9 +90,10 @@ exports.assignPatientToDoctor = catchAsync(async (req, res, next) => {
 });
 
 exports.getDoctorsPatient = catchAsync(async (req, res, next) => {
-  const doctor = await Doctor.findById(req.params.id).populate("patients");
+  const { doctorId } = req.body;
+  const doctor = await Doctor.findById(doctorId).populate("patients");
 
-  handleNotFound(doctor, `No doctor with ID ${req.params.id} found.`, next);
+  handleNotFound(doctor, `No doctor with ID ${doctorId} found.`, next);
 
   res.status(200).json({
     status: "success",
@@ -114,5 +116,17 @@ exports.unassignPatientFromDoctor = catchAsync(async (req, res, next) => {
     status: "success",
     message: "Patient unassigned from doctor successfully",
     doctor,
+  });
+});
+
+exports.deleteDoctorById = catchAsync(async (req, res, next) => {
+  const doctor = await Doctor.findByIdAndDelete(req.params.id);
+  console.log(req.params.id);
+
+  handleNotFound(doctor, `No Doctor found with id ${req.params.id}`, next);
+
+  res.status(204).json({
+    status: "success",
+    message: "Doctor deleted successfully",
   });
 });

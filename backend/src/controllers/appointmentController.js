@@ -1,25 +1,41 @@
 const Appointment = require("../models/Appointment");
+const Notification = require("../models/Notification");
+const AppError = require("../utils/AppError");
 const catchAsync = require("../utils/catchAsync");
 const handleNotFound = require("../utils/handleNotFound");
 const handleNoResult = require("../utils/handleNoResult");
 const fetchAppointments = require("../utils/fetchAppointments");
+const filterQuery = require("../utils/filterQuery");
 
+//book an appointment
 exports.bookAppointment = catchAsync(async (req, res) => {
-  const { doctorId, patientId, appointmentDate, timeSlot } = req.body;
+  const { bookAppointment, department } = req.body;
+  const patientId = req.user._id;
+
   const appointment = await Appointment.create({
-    doctorId,
-    patientId,
-    appointmentDate,
-    timeSlot,
+    patientId: patientId,
+    bookAppointment,
+    department,
   });
 
-  res.status(201).json({
+  if (!appointment) {
+    return next(new AppError("Appointment not booked", 400));
+  }
+
+  //notify patient
+  await Notification.create({
+    user: patientId,
+    message:
+      "Your appointment request is pending, you will receive a notification when it is scheduled",
+  });
+
+  res.status(200).json({
     status: "success",
-    message: "Appointment booked successfully",
-    data: { appointment },
+    message: "Appointment booked",
   });
 });
 
+//get all appointments
 exports.getAllAppointments = catchAsync(async (req, res, next) => {
   const appointments = await Appointment.find();
   handleNoResult(appointments, "No appointments found", next);
@@ -31,99 +47,43 @@ exports.getAllAppointments = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getAppointmentById = catchAsync(async (req, res, next) => {
-  const appointment = await Appointment.findById(req.params.id);
-  handleNotFound(
-    appointment,
-    `No appointment with ID ${req.params.id} found`,
-    next
-  );
+//Schedule appointments
+exports.sheduleAppointment = catchAsync(async (req, res, next) => {
+  const { patientId } = req.body;
+  const user = await Appointment.findOne({ patientId });
+
+  if (!user || user.status !== "Pending") {
+    return next(new AppError("No Pending appointment found"));
+  }
+
+  user.status = "Scheduled";
+  user.save();
+
+  // Send notification
+  await Notification.create({
+    user: user._id,
+    message: `Your appointment request has been approved! Your appointment is now ${user.status}.`,
+    isRead: true,
+  });
 
   res.status(200).json({
     status: "success",
-    data: { appointment },
+    message: "Patient Appointment was scheduled",
   });
 });
 
-exports.updateAppointment = catchAsync(async (req, res, next) => {
-  const appointment = await Appointment.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
-  handleNotFound(
-    appointment,
-    `No appointment with ID ${req.params.id} found`,
-    next
-  );
+//cancle appointment
+exports.cancleAppointment = catchAsync(async (req, res, next) => {
+  const { patientId } = req.body;
+  const user = await Appointment.find();
 
-  res.status(200).json({
-    status: "success",
-    message: "Appointment updated successfully",
-    data: { appointment },
-  });
+  // if(!user || user.status)
 });
 
-exports.deleteAppointment = catchAsync(async (req, res, next) => {
-  const appointment = await Appointment.findByIdAndDelete(req.params.id);
-  handleNotFound(
-    appointment,
-    `No appointment with ID ${req.params.id} found`,
-    next
-  );
-
-  res.status(204).json({
-    status: "success",
-    message: "Appointment deleted successfully",
-  });
-});
-
-// Reuse fetchAppointments for patient & doctor queries
-exports.getPatientAppointments = catchAsync((req, res, next) => {
-  return fetchAppointments(
-    { patientId: req.params.patientId },
-    res,
-    next,
-    "No appointments found for this patient"
-  );
-});
-
-exports.getDoctorAppointments = catchAsync((req, res, next) => {
-  return fetchAppointments(
-    { doctorId: req.params.doctorId },
-    res,
-    next,
-    "No appointments found for this doctor"
-  );
-});
-
-exports.getDoctorAppointmentsByFilter = catchAsync((req, res, next) => {
-  const { doctorId, appointmentDate, timeSlot } = req.params;
-  const query = { doctorId };
-  if (appointmentDate) query.appointmentDate = appointmentDate;
-  if (timeSlot) query.timeSlot = timeSlot;
-
-  return fetchAppointments(
-    query,
-    res,
-    next,
-    "No matching appointments found for this doctor"
-  );
-});
-
-exports.getPatientAppointmentsByFilter = catchAsync((req, res, next) => {
-  const { patientId, date, timeSlot } = req.params;
-  const query = { patientId };
-  if (date) query.date = date;
-  if (timeSlot) query.timeSlot = timeSlot;
-
-  return fetchAppointments(
-    query,
-    res,
-    next,
-    "No matching appointments found for this patient"
-  );
+exports.queryBySort = catchAsync(async (req, res, next) => {
+  const sortBy = req.query.sort;
+  if (!sortBy) {
+    return next();
+  }
+  await filterQuery(res, sortBy);
 });
