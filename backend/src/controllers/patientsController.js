@@ -1,7 +1,10 @@
 const Patient = require("../models/Patient");
-const catchAsync = require("../utils/catchAsync");
-const handleNotFound = require("../utils/handleNotFound");
-const handleNoResult = require("../utils/handleNoResult");
+
+const {
+  catchAsync,
+  handleNoResult,
+  handleNotFound,
+} = require("../utils/reusableFunctions");
 
 exports.getAllPatients = catchAsync(async (req, res, next) => {
   const patients = await Patient.find({});
@@ -52,7 +55,7 @@ exports.updatePatientById = catchAsync(async (req, res, next) => {
 });
 
 exports.deletePatientById = catchAsync(async (req, res, next) => {
-  const patient = await Patient.findByIdAndDelete(req.params.id);
+  const patient = await Patient.find(req.params.id);
   handleNotFound(patient, `No patient with ID ${req.params.id} found`, next);
 
   res.status(204).json({

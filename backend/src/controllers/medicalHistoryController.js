@@ -1,8 +1,11 @@
 const MedicalHistory = require("../models/MedicalHistory");
 const Patient = require("../models/Patient");
-const catchAsync = require("../utils/catchAsync");
-const handleNoResult = require("../utils/handleNoResult");
-const handleNotFound = require("../utils/handleNotFound");
+
+const {
+  catchAsync,
+  handleNoResult,
+  handleNotFound,
+} = require("../utils/reusableFunctions");
 
 exports.getAllMedicalRecord = catchAsync(async (req, res, next) => {
   const medicalRecords = await MedicalHistory.find({});

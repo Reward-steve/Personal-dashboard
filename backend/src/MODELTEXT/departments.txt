@@ -1,4 +1,5 @@
-Doctors can work in various medical departments, depending on their specialization. Here are the major hospital departments along with their roles:
+Doctors can work in various medical departments, depending on their specialization.
+Here are the major hospital departments along with their roles:
 
 1. Surgical Departments
 General Surgery – Handles common surgical procedures.

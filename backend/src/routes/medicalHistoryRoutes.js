@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const { restrict } = require("../middleware/restrict");
-
 const {
   createMedicalRecord,
   getMedicalRecordsByPatient,
@@ -12,7 +10,9 @@ const {
   deleteMedicalRecord,
   getAllMedicalRecord,
 } = require("../controllers/medicalHistoryController");
-const { Protect } = require("../controllers/authController");
+
+const { Protect } = require("../middleware/protect");
+const { restrict } = require("../middleware/restrict");
 
 // ✅ Create a new medical history record
 router

@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const { restrict } = require("../middleware/restrict");
-
 const {
   getAllDoctors,
   getDoctorById,
@@ -13,7 +11,10 @@ const {
   assignPatientToDoctor,
   unassignPatientFromDoctor,
 } = require("../controllers/doctorsController");
-const { Protect } = require("../controllers/authController");
+
+const { Protect } = require("../middleware/protect");
+const { restrict } = require("../middleware/restrict");
+
 const {
   getAllPatients,
   getPatientById,

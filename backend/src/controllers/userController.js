@@ -1,7 +1,10 @@
 const User = require("../models/User");
-const catchAsync = require("../utils/catchAsync");
-const handleNoResult = require("../utils/handleNoResult");
-const handleNotFound = require("../utils/handleNotFound");
+
+const {
+  catchAsync,
+  handleNotFound,
+  handleNoResult,
+} = require("../utils/reusableFunctions");
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const user = await User.find();

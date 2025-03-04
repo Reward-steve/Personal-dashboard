@@ -1,10 +1,12 @@
 const Appointment = require("../models/Appointment");
 const Notification = require("../models/Notification");
-const AppError = require("../utils/AppError");
-const catchAsync = require("../utils/catchAsync");
-const handleNotFound = require("../utils/handleNotFound");
-const handleNoResult = require("../utils/handleNoResult");
-const fetchAppointments = require("../utils/fetchAppointments");
+
+const {
+  AppError,
+  catchAsync,
+  handleNoResult,
+} = require("../utils/reusableFunctions");
+
 const filterQuery = require("../utils/filterQuery");
 
 //book an appointment
@@ -81,9 +83,16 @@ exports.cancleAppointment = catchAsync(async (req, res, next) => {
 });
 
 exports.queryBySort = catchAsync(async (req, res, next) => {
-  const sortBy = req.query.sort;
-  if (!sortBy) {
-    return next();
+  const status = req.query.sort;
+
+  if (
+    status === "Pending" ||
+    status === "Scheduled" ||
+    status === "Completed" ||
+    status === "Canceled"
+  ) {
+    await filterQuery(req, res, status, next);
   }
-  await filterQuery(res, sortBy);
+
+  return next(new AppError(`Invalid query request ${status}`, 404));
 });

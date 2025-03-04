@@ -1,0 +1,106 @@
+// models/User.js
+const mongoose = require("mongoose");
+const UserSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ["Admin", "Doctor", "Patient", "Nurse", "Receptionist", "Pharmacist"], required: true }
+});
+module.exports = mongoose.model("User", UserSchema);
+
+// models/Doctor.js
+const DoctorSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  specialization: { type: String, required: true }
+});
+module.exports = mongoose.model("Doctor", DoctorSchema);
+
+// models/Patient.js
+const PatientSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  dateOfBirth: { type: Date, required: true },
+  insuranceId: { type: mongoose.Schema.Types.ObjectId, ref: "Insurance" }
+});
+module.exports = mongoose.model("Patient", PatientSchema);
+
+// models/Nurse.js
+const NurseSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  department: { type: String, required: true },
+  shift: { type: String, required: true }
+});
+module.exports = mongoose.model("Nurse", NurseSchema);
+
+// models/Receptionist.js
+const ReceptionistSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  workSchedule: { type: String, required: true }
+});
+module.exports = mongoose.model("Receptionist", ReceptionistSchema);
+
+// models/Pharmacist.js
+const PharmacistSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  licenseNumber: { type: String, required: true }
+});
+module.exports = mongoose.model("Pharmacist", PharmacistSchema);
+
+// models/Appointment.js
+const AppointmentSchema = new mongoose.Schema({
+  patientId: { type: mongoose.Schema.Types.ObjectId, ref: "Patient", required: true },
+  doctorId: { type: mongoose.Schema.Types.ObjectId, ref: "Doctor", required: true },
+  date: { type: Date, required: true },
+  status: { type: String, enum: ["Scheduled", "Completed", "Cancelled"], default: "Scheduled" }
+});
+module.exports = mongoose.model("Appointment", AppointmentSchema);
+
+// models/MedicalRecord.js
+const MedicalRecordSchema = new mongoose.Schema({
+  patientId: { type: mongoose.Schema.Types.ObjectId, ref: "Patient", required: true },
+  diagnosis: { type: String, required: true },
+  treatment: { type: String, required: true }
+});
+module.exports = mongoose.model("MedicalRecord", MedicalRecordSchema);
+
+// models/Prescription.js
+const PrescriptionSchema = new mongoose.Schema({
+  patientId: { type: mongoose.Schema.Types.ObjectId, ref: "Patient", required: true },
+  doctorId: { type: mongoose.Schema.Types.ObjectId, ref: "Doctor", required: true },
+  medicine: { type: String, required: true },
+  dosage: { type: String, required: true }
+});
+module.exports = mongoose.model("Prescription", PrescriptionSchema);
+
+// models/Billing.js
+const BillingSchema = new mongoose.Schema({
+  patientId: { type: mongoose.Schema.Types.ObjectId, ref: "Patient", required: true },
+  amount: { type: Number, required: true },
+  status: { type: String, enum: ["Pending", "Paid"], default: "Pending" }
+});
+module.exports = mongoose.model("Billing", BillingSchema);
+
+// models/Insurance.js
+const InsuranceSchema = new mongoose.Schema({
+  provider: { type: String, required: true },
+  coverageDetails: { type: String, required: true }
+});
+module.exports = mongoose.model("Insurance", InsuranceSchema);
+
+// models/Message.js
+const MessageSchema = new mongoose.Schema({
+  senderId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  receiverId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  message: { type: String, required: true },
+  timestamp: { type: Date, default: Date.now },
+  isRead: { type: Boolean, default: false }
+});
+module.exports = mongoose.model("Message", MessageSchema);
+
+// models/Notification.js
+const NotificationSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  message: { type: String, required: true },
+  isRead: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now }
+});
+module.exports = mongoose.model("Notification", NotificationSchema);

@@ -1,6 +1,6 @@
 const Notification = require("../models/Notification");
-const AppError = require("../utils/AppError");
-const catchAsync = require("../utils/catchAsync");
+
+const { AppError, catchAsync } = require("../utils/reusableFunctions");
 
 exports.getPatientNotification = catchAsync(async (req, res, next) => {
   const { patientId } = req.body;

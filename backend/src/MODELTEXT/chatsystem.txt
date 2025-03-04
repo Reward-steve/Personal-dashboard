@@ -1,0 +1,43 @@
+const express = require("express");
+const Chat = require("../models/Chat");
+const Message = require("../models/Message");
+const router = express.Router();
+
+// Create a new chat
+router.post("/", async (req, res) => {
+  try {
+    const chat = new Chat({ participants: req.body.participants });
+    await chat.save();
+    res.status(201).json(chat);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create chat" });
+  }
+});
+
+// Send a message
+router.post("/:chatId/message", async (req, res) => {
+  try {
+    const message = new Message({
+      chatId: req.params.chatId,
+      senderId: req.body.senderId,
+      receiverId: req.body.receiverId,
+      message: req.body.message
+    });
+    await message.save();
+    res.status(201).json(message);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to send message" });
+  }
+});
+
+// Get chat messages
+router.get("/:chatId", async (req, res) => {
+  try {
+    const messages = await Message.find({ chatId: req.params.chatId });
+    res.status(200).json(messages);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch messages" });
+  }
+});
+
+module.exports = router;
