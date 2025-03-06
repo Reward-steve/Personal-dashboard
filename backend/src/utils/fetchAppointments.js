@@ -1,5 +1,5 @@
 const Appointment = require("../models/Appointment");
-const handleNoResult = require("./handleNoResult");
+const { handleNoResult } = require("./reusableFunctions");
 
 module.exports = fetchAppointments = async (query, res, next, message) => {
   const appointments = await Appointment.find(query);

@@ -1,0 +1,117 @@
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User.js");
+const Doctor = require("../models/Doctor.js");
+const Patient = require("../models/Patient.js");
+
+const {
+  AppError,
+  catchAsync,
+  CreateSendToken,
+  handleNotFound,
+} = require("../utils/reusableFunctions.js");
+
+const sendEmail = require("../mail/sendEmail.js");
+const emailCard = require("../template/emailCard.js");
+
+// REGISTER (SIGNUP)
+const Register = catchAsync(async (req, res, next) => {
+  const { fullName, email, password, confirmPassword, role, phone, ...extraData } = req.body;
+
+  // Ensure passwords match
+  if (password !== confirmPassword) {
+    return next(new AppError("Passwords do not match", 400));
+  }
+
+  // Check if email already exists
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return next(new AppError("Email already in use", 400));
+  }
+
+  // Create new user
+  const newUser = await User.create({ fullName, email, password, role, phone });
+
+  // Create associated role-based record
+  if (role === "Doctor") {
+    await Doctor.create({ userId: newUser._id, ...extraData });
+  } else if (role === "Patient") {
+    await Patient.create({ userId: newUser._id, ...extraData });
+  }
+
+  // Send JWT Token
+  CreateSendToken(newUser, 201, res);
+});
+
+// LOGIN (SIGNIN)
+const Login = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return next(new AppError("Please provide email and password", 400));
+  }
+
+  const user = await User.findOne({ email }).select("+password");
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return next(new AppError("Incorrect email or password", 401));
+  }
+
+  // Send JWT Token
+  CreateSendToken(user, 200, res);
+});
+
+// LOGOUT
+const Logout = catchAsync(async (req, res) => {
+  res.cookie("jwt", "", { httpOnly: true, expires: new Date(0) });
+  res.status(200).json({ status: "success", message: "Logged out successfully" });
+});
+
+// FORGOTTEN PASSWORD
+const forgottenPassword = catchAsync(async (req, res, next) => {
+  const { email } = req.body;
+  if (!email) return next(new AppError("Please provide an email address"));
+
+  const user = await User.findOne({ email });
+  if (!user) return next(new AppError("No user found with this email", 404));
+
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  const resetURL = `${req.protocol}://${req.get("host")}/api/users/resetpassword/${resetToken}`;
+  const subject = "Your password reset token (Valid for 10 mins)";
+
+  try {
+    await sendEmail({ email, subject, html: emailCard(resetURL, user.fullName, subject) });
+    res.status(200).json({ status: "success", message: "Email sent successfully" });
+  } catch (err) {
+    user.passwordResetToken = undefined;
+    user.resetTokenExp = undefined;
+    return next(new AppError("Error sending email, try again later!", 500));
+  }
+});
+
+// RESET PASSWORD
+const resetPassword = catchAsync(async (req, res, next) => {
+  const encryptedToken = hashedToken(req.params.token);
+  const user = await User.findOne({
+    passwordResetToken: encryptedToken,
+    resetTokenExp: { $gt: Date.now() },
+  });
+
+  if (!user) return next(new AppError("Invalid or expired token", 400));
+
+  user.password = req.body.password;
+  user.confirmPassword = req.body.confirmPassword;
+  user.passwordResetToken = undefined;
+  user.resetTokenExp = undefined;
+  await user.save();
+
+  CreateSendToken(user, 200, res);
+});
+
+module.exports = {
+  Register,
+  Login,
+  Logout,
+  forgottenPassword,
+  resetPassword,
+};

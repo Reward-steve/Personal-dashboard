@@ -1,13 +1,14 @@
 const express = require("express");
 
-const { restrict } = require("../middleware/restrict");
-
 const {
   Register,
   Login,
-  Protect,
   forgottenPassword,
-} = require("../controllers/authController");
+  resetPassword,
+} = require("../auth/authentications");
+
+const { Protect } = require("../middleware/protect");
+const { restrict } = require("../middleware/restrict");
 
 const {
   getPatientById,
@@ -24,6 +25,8 @@ router.route("/register").post(Register);
 router.route("/login").post(Login);
 
 router.route("/forgotpassword").post(forgottenPassword);
+
+router.route("/resetpassword/:token").patch(resetPassword);
 
 router
   .route("/:id")

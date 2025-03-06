@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
-const validate = require("validator");
-const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
+
+const {
+  PreSave,
+  createPasswordResetToken,
+  changedPasswordAfter,
+} = require("../utils/SchemaMethods");
 
 const doctorSchema = new mongoose.Schema({
   fullName: {
@@ -17,14 +20,14 @@ const doctorSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
-    minlength: 6,
+    required: [true, "A password is required"],
+    minlength: [8, "A password must have more than or equal to 8 characters"],
+    maxlength: [60, "A password must have less than or equal to 60 characters"],
     select: false,
   },
-
   confirmPassword: {
     type: String,
-    default: this.password,
+    required: [true, "A password confirmation is required"],
   },
   phone: {
     type: String,
@@ -77,41 +80,9 @@ doctorSchema.pre(/^find/, function (next) {
   next();
 });
 
-doctorSchema.pre("save", async function (next) {
-  // only run this function if password was actually modified
-  if (!this.isModified("password")) return next();
-
-  // hash the password with cost of 12
-  this.password = await bcrypt.hash(this.password, 10);
-
-  // delete passwordConfirm field
-  this.confirmPassword = undefined;
-  next();
-});
-
-doctorSchema.methods.changedPasswordAfter = function (timestamp) {
-  if (this.passwordChangedAt) {
-    const changedTimestamp = parseInt(
-      this.passwordChangedAt.getTime() / 1000,
-      10
-    );
-    return timestamp < changedTimestamp;
-  }
-};
-
-doctorSchema.methods.createPasswordResetToken = function () {
-  const resetToken = crypto.randomBytes(32).toString("hex");
-  this.passwordResetToken = crypto
-    .createHash("shake256")
-    .update(resetToken)
-    .digest("hex");
-
-  this.resetTokenExp = Date.now() + 10 * 60 * 1000;
-
-  console.log("doctor:", { resetToken });
-
-  return resetToken;
-};
+doctorSchema.pre("save", PreSave);
+doctorSchema.methods.changedPasswordAfter = changedPasswordAfter;
+doctorSchema.methods.createPasswordResetToken = createPasswordResetToken;
 
 const Doctor = mongoose.model("Doctor", doctorSchema);
 module.exports = Doctor;

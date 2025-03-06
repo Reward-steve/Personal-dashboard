@@ -1,9 +1,12 @@
 const Doctor = require("../models/Doctor.js");
 const Patient = require("../models/Patient.js");
-const catchAsync = require("../utils/catchAsync");
-const AppError = require("../utils/AppError.js");
-const handleNotFound = require("../utils/handleNotFound");
-const handleNoResult = require("../utils/handleNoResult");
+
+const {
+  catchAsync,
+  AppError,
+  handleNotFound,
+  handleNoResult,
+} = require("../utils/reusableFunctions.js");
 
 exports.getAllDoctors = catchAsync(async (req, res, next) => {
   const doctors = await Doctor.find({});

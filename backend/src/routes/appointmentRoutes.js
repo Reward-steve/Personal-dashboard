@@ -1,19 +1,19 @@
 const express = require("express");
 
-const { restrict } = require("../middleware/restrict");
-
 const {
   bookAppointment,
   getAllAppointments,
   queryBySort,
 } = require("../controllers/appointmentController");
-const { Protect } = require("../controllers/authController");
+
+const { Protect } = require("../middleware/protect");
+const { restrict } = require("../middleware/restrict");
 
 const router = express.Router();
 
-router
-  .route("/")
-  .get(Protect, restrict("admin"), queryBySort, getAllAppointments);
+router.route("/").get(Protect, restrict("admin"), getAllAppointments);
+
+router.route("/filter").get(queryBySort);
 
 router.route("/book-appointment").post(Protect, bookAppointment);
 

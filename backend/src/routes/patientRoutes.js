@@ -1,6 +1,5 @@
 const express = require("express");
 
-const { restrict } = require("../middleware/restrict");
 const { getPatientNotification } = require("../controllers/notifyController");
 
 const {
@@ -8,7 +7,9 @@ const {
   updatePatientById,
   deletePatientById,
 } = require("../controllers/patientsController");
-const { Protect } = require("../controllers/authController");
+
+const { Protect } = require("../middleware/protect");
+const { restrict } = require("../middleware/restrict");
 
 const router = express.Router();
 

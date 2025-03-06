@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
-const validate = require("validator");
-const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
+const {
+  PreSave,
+  changedPasswordAfter,
+  createPasswordResetToken,
+} = require("../utils/SchemaMethods");
 
 const adminSchema = new mongoose.Schema(
   {
@@ -9,19 +11,17 @@ const adminSchema = new mongoose.Schema(
     email: { type: String, unique: true, required: true },
     password: {
       type: String,
-      required: true,
-      minlength: 6,
+      required: [true, "A password is required"],
+      minlength: [8, "A password must have more than or equal to 8 characters"],
+      maxlength: [
+        60,
+        "A password must have less than or equal to 60 characters",
+      ],
       select: false,
     },
     confirmPassword: {
       type: String,
-      // required: [true, "Please confirm passord"],
-      validate: {
-        validator: function (value) {
-          return value === this.password;
-        },
-        message: "This Password {{value}} do not match",
-      },
+      required: [true, "A password confirmation is required"],
     },
     passwordChangedAt: Date,
     role: String,
@@ -32,39 +32,8 @@ const adminSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-adminSchema.pre("save", async function (next) {
-  // only run this function if password was actually modified
-  if (!this.isModified("password")) return next();
-
-  // hash the password with cost of 12
-  this.password = await bcrypt.hash(this.password, 10);
-
-  // delete passwordConfirm field
-  this.confirmPassword = undefined;
-  next();
-});
-
-// check if password has been changed
-adminSchema.methods.changedPasswordAfter = function (timestamp) {
-  if (this.passwordChangedAt) {
-    const changedTimestamp = parseInt(
-      this.passwordChangedAt.getTime() / 1000,
-      10
-    );
-    return timestamp < changedTimestamp;
-  }
-};
-
-adminSchema.methods.createPasswordResetToken = function () {
-  const resetToken = crypto.randomBytes(10).toString("hex");
-  this.passwordResetToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
-
-  this.resetTokenExp = Date.now() + 10 * 60 * 1000;
-  console.log("admin:", { resetToken });
-  return resetToken;
-};
+adminSchema.pre("save", PreSave);
+adminSchema.methods.changedPasswordAfter = changedPasswordAfter;
+adminSchema.methods.createPasswordResetToken = createPasswordResetToken;
 
 module.exports = mongoose.model("Admin", adminSchema);

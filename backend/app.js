@@ -1,13 +1,13 @@
 const express = require("express");
 const cors = require("cors");
-const AppError = require("./src/utils/AppError.js");
+const { AppError } = require("./src/utils/reusableFunctions.js");
 const usersRoutes = require("./src/routes/userRoutes.js");
 const patientsRouter = require("./src/routes/patientRoutes.js");
 const doctorsRouter = require("./src/routes/doctorRoutes.js");
 const appointmentRouter = require("./src/routes/appointmentRoutes.js");
 const adminRouter = require("./src/routes/adminRoutes.js");
 const medicalHistoryRouter = require("./src/routes/medicalHistoryRoutes.js");
-const errorController = require("./src/controllers/errorController.js");
+const errorHandler = require("./src/middleware/errorHandler.js");
 
 const app = express();
 app.use(express.json());
@@ -32,7 +32,7 @@ app.all("*", (req, res, next) => {
   next(new AppError(`Cannot find ${req.originalUrl} on server`, 404));
 });
 
-app.use(errorController);
+app.use(errorHandler);
 app.use((err, req, res, next) => {
   console.error("ERROR:", err);
 
