@@ -1,27 +1,32 @@
 const express = require("express");
 const cors = require("cors");
 const { AppError } = require("./src/utils/reusableFunctions.js");
-const usersRoutes = require("./src/routes/userRoutes.js");
+const authRouter = require("./src/routes/authRoute.js");
 const patientsRouter = require("./src/routes/patientRoutes.js");
 const doctorsRouter = require("./src/routes/doctorRoutes.js");
 const appointmentRouter = require("./src/routes/appointmentRoutes.js");
 const adminRouter = require("./src/routes/adminRoutes.js");
 const medicalHistoryRouter = require("./src/routes/medicalHistoryRoutes.js");
 const errorHandler = require("./src/middleware/errorHandler.js");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: true,
+    // methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 
-app.use("/api/users", usersRoutes);
+app.options("*", cors());
+
+app.use("/api/auth", authRouter);
 app.use("/api/patients", patientsRouter);
 app.use("/api/doctors", doctorsRouter);
 app.use("/api/appointments", appointmentRouter);

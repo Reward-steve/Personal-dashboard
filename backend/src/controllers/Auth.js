@@ -1,7 +1,6 @@
-const bcrypt = require("bcryptjs");
-const Admin = require("../models/Admin.js");
 const Doctor = require("../models/Doctor.js");
 const Patient = require("../models/Patient.js");
+const User = require("../models/User.js");
 
 const {
   AppError,
@@ -18,10 +17,9 @@ const emailCard = require("../template/emailCard.js");
 //REGISTER OR SIGNUP
 const Register = catchAsync(async (req, res, next) => {
   const {
-    fullName,
+    name,
     email,
     password,
-    confirmPassword,
     role = "patient", //default role
     phone,
     specialization,
@@ -30,9 +28,9 @@ const Register = catchAsync(async (req, res, next) => {
 
   // check if email already exists in the database.
   const existingUser = await Promise.all([
-    Admin.findOne({ email }),
     Doctor.findOne({ email }),
     Patient.findOne({ email }),
+    User.findOne({ email }),
   ]);
 
   if (existingUser.some((user) => user)) {
@@ -44,10 +42,9 @@ const Register = catchAsync(async (req, res, next) => {
   if (role === "patient") {
     const patientId = await Patient.find(); // create patient ID
     newUser = await Patient.create({
-      fullName,
+      name,
       email,
       password,
-      confirmPassword,
       phone,
       patientID: (patientId.length + 1) * 1, // set patient ID
       dateOfBirth: req.body.dateOfBirth,
@@ -58,10 +55,9 @@ const Register = catchAsync(async (req, res, next) => {
     });
   } else if (role === "doctor") {
     newUser = await Doctor.create({
-      fullName,
+      name,
       email,
       password,
-      confirmPassword,
       phone,
       specialization,
       department,
@@ -71,16 +67,13 @@ const Register = catchAsync(async (req, res, next) => {
       salary: req.body.salary,
       role,
     });
-  } else if (role === "admin") {
-    newUser = await Admin.create({
-      fullName,
+  } else {
+    newUser = await User.create({
+      name,
       email,
       password,
-      confirmPassword,
       role,
     });
-  } else {
-    next();
   }
 
   // Generate and send JWT token to the client.
@@ -98,11 +91,11 @@ const Login = catchAsync(async (req, res, next) => {
 
   // Check all role-based collections for user
   const user =
-    (await Admin.findOne({ email }).select("+password")) ||
+    (await User.findOne({ email }).select("+password")) ||
     (await Doctor.findOne({ email }).select("+password")) ||
     (await Patient.findOne({ email }).select("+password"));
 
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await user.comparePassword(password, user.password);
 
   if (!isMatch || !user) {
     return next(new AppError("Incorrect email or password", 401));
@@ -120,9 +113,9 @@ const forgottenPassword = catchAsync(async (req, res, next) => {
   !email ? next(new AppError("Please provide an email address")) : email;
 
   const user =
+    (await User.findOne({ email })) ||
     (await Doctor.findOne({ email })) ||
-    (await Patient.findOne({ email })) ||
-    (await Admin.findOne({ email }));
+    (await Patient.findOne({ email }));
 
   //check if user still exist
   handleNotFound(user, `No user found with email: ${email} found`, next);
@@ -133,7 +126,7 @@ const forgottenPassword = catchAsync(async (req, res, next) => {
 
   //send it to users email
 
-  const userName = user.fullName;
+  const userName = user.name;
   const resetURL = `${req.protocol}://${req.get(
     "host"
   )}/api/users/resetpassword/${resetToken}`;
@@ -166,7 +159,7 @@ const resetPassword = catchAsync(async (req, res, next) => {
   const encryptedToken = hashedToken(req.params.token);
 
   const user =
-    (await currentUser(Admin, encryptedToken, { $gt: Date.now() })) ||
+    (await currentUser(User, encryptedToken, { $gt: Date.now() })) ||
     (await currentUser(Doctor, encryptedToken, { $gt: Date.now() })) ||
     (await currentUser(Patient, encryptedToken, { $gt: Date.now() }));
 
@@ -186,13 +179,60 @@ const resetPassword = catchAsync(async (req, res, next) => {
   CreateSendToken(user, 200, res);
 });
 
-// const Logout = catchAsync(async (req, res, next) => {
-//   const currentUser  = await Patient.findOne
-// });
+const updatePassword = catchAsync(async (req, res, next) => {
+  const { currentPassword, password, confirmPassword } = req.body;
+
+  if (!currentPassword || !password || !confirmPassword) {
+    return next(new AppError("All fields are require", 500));
+  }
+  //get user from collection
+  const user =
+    (await User.findById(req.user.id).select("+password")) ||
+    (await Doctor.findById(req.user.id).select("+password")) ||
+    (await Patient.findById(req.user.id).select("+password"));
+
+  //check if currentPassword is correct
+  const isMatch = await user.comparePassword(currentPassword, user.password);
+
+  if (!user || !isMatch) {
+    return next(new AppError("Your current password is wrong.", 400));
+  }
+
+  user.password = password;
+  user.confirmPassword = confirmPassword;
+  await user.save();
+
+  res.status(200).json({
+    status: "success",
+    message: "password updated successfully",
+  });
+});
+
+const Logout = catchAsync(async (req, res, next) => {
+  const currentUser =
+    (await User.findById(req.user.id).select("+password")) ||
+    (await Doctor.findById(req.user.id).select("+password")) ||
+    (await Patient.findById(req.user.id).select("+password"));
+
+  if (!currentUser) {
+    next(new AppError("User not found", 404));
+  }
+
+  res.cookie("token", "", { httpOnly: true, expires: new Date(0) });
+
+  token = "";
+
+  res.status(200).json({
+    status: "success",
+    message: "successfully logged out",
+  });
+});
 
 module.exports = {
   Register,
   Login,
   forgottenPassword,
   resetPassword,
+  updatePassword,
+  Logout,
 };

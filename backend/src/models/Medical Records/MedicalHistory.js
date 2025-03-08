@@ -15,6 +15,14 @@ const medicalHistorySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  medicalHistory: {
+    bloodGroup: {
+      type: String,
+      enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+    },
+    allergies: [String],
+    pastDiseases: [String],
+  },
   treatments: [String],
   medications: [String],
   visitDate: {

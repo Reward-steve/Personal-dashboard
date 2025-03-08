@@ -4,10 +4,11 @@ const {
   PreSave,
   createPasswordResetToken,
   changedPasswordAfter,
+  comparePassword,
 } = require("../utils/SchemaMethods");
 
 const userSchema = new mongoose.Schema({
-  fullName: {
+  name: {
     type: String,
     required: true,
     trim: true,
@@ -25,21 +26,10 @@ const userSchema = new mongoose.Schema({
     maxlength: [60, "A password must have less than or equal to 60 characters"],
     select: false,
   },
-  confirmPassword: {
-    type: String,
-    required: [true, "A password confirmation is required"],
-  },
   role: {
     type: String,
     lowercase: true,
-    enum: [
-      "patient",
-      "nurse",
-      "lab technician",
-      "receptionist",
-      "doctor",
-      "admin",
-    ],
+    enum: ["admin", "doctor", "patient", "nurse", "receptionist", "pharmacist"],
     default: "patient",
   },
 
@@ -53,10 +43,9 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", PreSave);
-
-userSchema.methods.changedPasswordAfter = changedPasswordAfter(timestamp);
-
-userSchema.methods.createPasswordResetToken = createPasswordResetToken();
+userSchema.methods.changedPasswordAfter = changedPasswordAfter;
+userSchema.methods.createPasswordResetToken = createPasswordResetToken;
+userSchema.methods.comparePassword = comparePassword;
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

@@ -16,10 +16,10 @@ const PreSave = async function (next) {
       return next(new AppError("Invalid Email Address", 400));
     }
 
-    // Confirm password
-    if (this.password !== this.confirmPassword) {
-      return next(new AppError("Passwords do not match", 400));
-    }
+    // // Confirm password
+    // if (this.password !== this.confirmPassword) {
+    //   return next(new AppError("Passwords do not match", 400));
+    // }
 
     // Only hash the password if it was modified
     if (this.isModified("password")) {
@@ -54,8 +54,13 @@ const createPasswordResetToken = function () {
   return resetToken;
 };
 
+const comparePassword = async function (currPassword, encryptedPassword) {
+  return await bcrypt.compare(currPassword, encryptedPassword);
+};
+
 module.exports = {
   PreSave,
   changedPasswordAfter,
   createPasswordResetToken,
+  comparePassword,
 };
