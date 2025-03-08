@@ -1,38 +1,37 @@
 const { promisify } = require("node:util");
 const jwt = require("jsonwebtoken");
 
-const Patient = require("../models/Patient");
+const User = require("../models/User");
 const Doctor = require("../models/Doctor");
-const Admin = require("../models/Admin");
+const Patient = require("../models/Patient");
 
 const { AppError, catchAsync } = require("../utils/reusableFunctions.js");
 
 //Protected middleware to allow access to only authorized users
 exports.Protect = catchAsync(async (req, res, next) => {
-  let token;
+  const authToken = req.cookies.token;
   // Extract token from Authorization header
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
-  }
+
+  console.log(authToken);
 
   //check if token is found
-  if (!token) {
+  if (!authToken) {
     return next(
       new AppError("You are not logged in. Please login to get access", 401)
     );
   }
 
   // verify token
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  const decoded = await promisify(jwt.verify)(
+    authToken,
+    process.env.JWT_SECRET
+  );
 
   // Find user in any role-based collection
   const currentUser =
-    (await Patient.findById(decoded.id)) ||
+    (await User.findById(decoded.id)) ||
     (await Doctor.findById(decoded.id)) ||
-    (await Admin.findById(decoded.id));
+    (await Patient.findById(decoded.id));
 
   if (!currentUser)
     return next(

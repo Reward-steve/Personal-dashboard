@@ -5,6 +5,8 @@ const {
   Login,
   forgottenPassword,
   resetPassword,
+  updatePassword,
+  Logout,
 } = require("../auth/authentications");
 
 const { Protect } = require("../middleware/protect");
@@ -12,7 +14,6 @@ const { restrict } = require("../middleware/restrict");
 
 const {
   getPatientById,
-  updatePatientById,
   deletePatientById,
 } = require("../controllers/patientsController");
 
@@ -28,10 +29,13 @@ router.route("/forgotpassword").post(forgottenPassword);
 
 router.route("/resetpassword/:token").patch(resetPassword);
 
+router.route("/updatepassword").patch(Protect, updatePassword);
+
+router.route("/logout").post(Protect, Logout);
+
 router
   .route("/:id")
   .get(getPatientById)
-  .patch(updatePatientById)
   .delete(Protect, restrict("admin"), deletePatientById);
 
 router

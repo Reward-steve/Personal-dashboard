@@ -48,8 +48,17 @@ const SignToken = (ID) => {
 
 //CREATE SEND TOKEN
 const CreateSendToken = (user, statusCode, res) => {
+  //create token
   const token = SignToken(user._id);
 
+  //set token to cookies
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: true,
+  });
+
+  //if ok send response
   res.status(statusCode).json({
     status: "success",
     token,

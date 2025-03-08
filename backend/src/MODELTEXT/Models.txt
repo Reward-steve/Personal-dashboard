@@ -104,3 +104,38 @@ const NotificationSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 module.exports = mongoose.model("Notification", NotificationSchema);
+
+
+// models/Room.js
+const mongoose = require("mongoose");
+const RoomSchema = new mongoose.Schema({
+roomNumber: { type: String, required: true, unique: true },
+type: { type: String, enum: ["General", "ICU", "Maternity", "Private"], required: true },
+totalBeds: { type: Number, required: true },
+availableBeds: { type: Number, required: true, default: function() { return this.totalBeds; } }
+});
+module.exports = mongoose.model("Room", RoomSchema);
+
+// models/Bed.js
+const BedSchema = new mongoose.Schema({
+roomId: { type: mongoose.Schema.Types.ObjectId, ref: "Room", required: true },
+bedNumber: { type: String, required: true },
+status: { type: String, enum: ["Available", "Occupied", "Under Maintenance"], default: "Available" }
+});
+module.exports = mongoose.model("Bed", BedSchema);
+
+// Automatically update room availability
+BedSchema.post("save", async function () {
+const room = await mongoose.model("Room").findById(this.roomId);
+const occupiedBeds = await mongoose.model("Bed").countDocuments({ roomId: this.roomId, status: "Occupied" });
+room.availableBeds = room.totalBeds - occupiedBeds;
+await room.save();
+});
+
+// models/Admin.js
+const AdminSchema = new mongoose.Schema({
+userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+permissions: [{ type: String, enum: ["Manage Users", "Manage Rooms", "Manage Appointments", "Manage Billing"] }]
+});
+module.exports = mongoose.model("Admin", AdminSchema);
+
