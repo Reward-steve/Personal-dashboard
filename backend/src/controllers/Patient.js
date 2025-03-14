@@ -4,7 +4,6 @@ const {
   catchAsync,
   handleNoResult,
   handleNotFound,
-  findAndUpdate,
   sendResponse,
 } = require("../Utils/reusableFunctions");
 
@@ -22,34 +21,30 @@ exports.getAllPatients = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createPatient = catchAsync(async (req, res) => {
-  const newPatient = await Patient.create(req.body);
-
-  sendResponse(
-    res,
-    201,
-    "success",
-    "New patient created successfully",
-    newPatient
-  );
-});
-
 exports.getPatientById = catchAsync(async (req, res, next) => {
-  const { patientID } = req.body;
-  const patient = await Patient.findOne({ patientID });
-  handleNotFound(patient, `No patient with ID ${patientID} found`, next);
+  const { patientId } = req.body;
+  const patient = await Patient.findOne({ patientId });
+  handleNotFound(patient, `No patient with ID ${patientId} found`, next);
 
   sendResponse(res, 200, "success", "patient retrieved successfully", patient);
 });
 
 exports.updatePatientById = catchAsync(async (req, res, next) => {
-  const { id } = req.params.id;
+  const { id } = req.params;
 
-  const patient = await findAndUpdate(Patient, id, req.body);
+  const patient = await Patient.findByIdAndUpdate(id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  handleNotFound(patient, `No patient with ID ${id} found`, next);
 
-  handleNotFound(patient, `No patient with ID ${req.params.id} found`, next);
-
-  sendResponse(res, 200, "success", "Patient updated successfully", patient);
+  res.status(200).json({
+    status: "success",
+    message: "Patient updated successfully",
+    data: {
+      patient,
+    },
+  });
 });
 
 exports.deletePatientById = catchAsync(async (req, res, next) => {

@@ -2,8 +2,6 @@ const { promisify } = require("node:util");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/UserModels/User.js");
-const Doctor = require("../models/UserModels/Doctor.js");
-const Patient = require("../models/UserModels/Patient.js");
 
 const { AppError, catchAsync } = require("../Utils/reusableFunctions.js");
 
@@ -11,8 +9,6 @@ const { AppError, catchAsync } = require("../Utils/reusableFunctions.js");
 exports.Protect = catchAsync(async (req, res, next) => {
   const authToken = req.cookies.token;
   // Extract token from Authorization header
-
-  console.log(authToken);
 
   //check if token is found
   if (!authToken) {
@@ -28,10 +24,7 @@ exports.Protect = catchAsync(async (req, res, next) => {
   );
 
   // Find user in any role-based collection
-  const currentUser =
-    (await User.findById(decoded.id)) ||
-    (await Doctor.findById(decoded.id)) ||
-    (await Patient.findById(decoded.id));
+  const currentUser = await User.findById(decoded.id);
 
   if (!currentUser)
     return next(

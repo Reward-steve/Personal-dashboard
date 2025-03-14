@@ -46,16 +46,6 @@ exports.getAllDoctorsBySpecialization = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createDoctor = catchAsync(async (req, res, next) => {
-  const doctor = await Doctor.create(req.body);
-
-  res.status(201).json({
-    status: "success",
-    message: "Doctor created successfully",
-    data: { doctor },
-  });
-});
-
 exports.updateDoctorById = catchAsync(async (req, res, next) => {
   const doctor = await Doctor.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -78,9 +68,7 @@ exports.assignPatientToDoctor = catchAsync(async (req, res, next) => {
     doctorId,
     { $push: { patients: patient._id } },
     { new: true }
-  ).populate("patients");
-
-  console.log(doctor);
+  ).populate("patients", "name");
 
   handleNotFound(doctor, `No doctor with ID ${doctorId} found.`, next);
   handleNotFound(patient, `No patient with ID ${patientId} found.`, next);
@@ -94,7 +82,7 @@ exports.assignPatientToDoctor = catchAsync(async (req, res, next) => {
 
 exports.getDoctorsPatient = catchAsync(async (req, res, next) => {
   const { doctorId } = req.body;
-  const doctor = await Doctor.findById(doctorId).populate("patients");
+  const doctor = await Doctor.findById(doctorId).populate("patients", "name");
 
   handleNotFound(doctor, `No doctor with ID ${doctorId} found.`, next);
 

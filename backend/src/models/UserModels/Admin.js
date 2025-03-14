@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 const User = require("./User");
 
 const adminSchema = new mongoose.Schema({
-  role: {
+  adminRole: {
     type: String,
-    enum: ["Super Admin", "HOD", "Receptionist"],
+    enum: ["SuperAdmin", "HOD", "Receptionist"],
     required: true,
   },
   workSchedules: [
@@ -46,17 +46,6 @@ const adminSchema = new mongoose.Schema({
           message: (props) => `${props.value} is not a valid time format!`,
         },
       },
-    },
-  ],
-  permissions: [
-    {
-      type: String,
-      enum: [
-        "manage_users",
-        "manage_rooms",
-        "manage_appointments",
-        "view_reports",
-      ],
     },
   ],
 });

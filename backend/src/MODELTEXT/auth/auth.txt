@@ -1,117 +1,211 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User.js");
-const Doctor = require("../models/Doctor.js");
-const Patient = require("../models/Patient.js");
+const User = require("../models/UserModels/User");
+const Admin = require("../models/UserModels/Admin");
+const Doctor = require("../models/UserModels/Doctor");
+const Nurse = require("../models/UserModels/Nurse");
+const Patient = require("../models/UserModels/Patient");
+const LabTechnician = require("../models/UserModels/LabTechnician");
+const Pharmacist = require("../models/UserModels/Pharmacist");
 
 const {
   AppError,
   catchAsync,
-  CreateSendToken,
+  hashedToken,
   handleNotFound,
-} = require("../utils/reusableFunctions.js");
+  CreateSendToken,
+  currentUser,
+} = require("../Utils/reusableFunctions.js");
 
 const sendEmail = require("../mail/sendEmail.js");
 const emailCard = require("../template/emailCard.js");
 
-// REGISTER (SIGNUP)
-const Register = catchAsync(async (req, res, next) => {
-  const { fullName, email, password, confirmPassword, role, phone, ...extraData } = req.body;
+// Helper function to find user by email
+const findUserByEmail = async (email) => {
+  return (
+    (await User.findOne({ email }).select("+password")) ||
+    (await Admin.findOne({ email }).select("+password")) ||
+    (await Doctor.findOne({ email }).select("+password")) ||
+    (await Nurse.findOne({ email }).select("+password")) ||
+    (await Patient.findOne({ email }).select("+password")) ||
+    (await LabTechnician.findOne({ email }).select("+password")) ||
+    (await Pharmacist.findOne({ email }).select("+password"))
+  );
+};
 
-  // Ensure passwords match
-  if (password !== confirmPassword) {
-    return next(new AppError("Passwords do not match", 400));
+// Helper function to find user by ID
+const findUserById = async (id) => {
+  return (
+    (await User.findById(id).select("+password")) ||
+    (await Admin.findById(id).select("+password")) ||
+    (await Doctor.findById(id).select("+password")) ||
+    (await Nurse.findById(id).select("+password")) ||
+    (await Patient.findById(id).select("+password")) ||
+    (await LabTechnician.findById(id).select("+password")) ||
+    (await Pharmacist.findById(id).select("+password"))
+  );
+};
+
+// Helper function to create role-specific details
+const createRoleSpecificDetails = async (role, userId, rest) => {
+  switch (role) {
+    case "Admin":
+      return await Admin.create({ userId, ...rest });
+    case "Doctor":
+      return await Doctor.create({ userId, ...rest });
+    case "Nurse":
+      return await Nurse.create({ userId, ...rest });
+    case "Patient":
+      return await Patient.create({ userId, ...rest });
+    case "LabTechnician":
+      return await LabTechnician.create({ userId, ...rest });
+    case "Pharmacist":
+      return await Pharmacist.create({ userId, ...rest });
+    default:
+      throw new Error("Invalid role specified");
   }
+};
 
-  // Check if email already exists
-  const existingUser = await User.findOne({ email });
+// ✅ Register a new user
+const Register = catchAsync(async (req, res, next) => {
+  const { name, email, password, role = "Patient", ...rest } = req.body;
+
+  // Check if email already exists in the database
+  const existingUser = await findUserByEmail(email);
   if (existingUser) {
     return next(new AppError("Email already in use", 400));
   }
 
-  // Create new user
-  const newUser = await User.create({ fullName, email, password, role, phone });
+  // Create a new user
+  const newUser = await User.create({ name, email, password, role });
 
-  // Create associated role-based record
-  if (role === "Doctor") {
-    await Doctor.create({ userId: newUser._id, ...extraData });
-  } else if (role === "Patient") {
-    await Patient.create({ userId: newUser._id, ...extraData });
-  }
+  // Create role-specific details
+  const roleSpecificDetails = await createRoleSpecificDetails(role, newUser._id, rest);
 
-  // Send JWT Token
+  // Generate and send JWT token to the client
   CreateSendToken(newUser, 201, res);
 });
 
-// LOGIN (SIGNIN)
+// ✅ Login user
 const Login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
+
+  // Check if email and password exist
   if (!email || !password) {
     return next(new AppError("Please provide email and password", 400));
   }
 
-  const user = await User.findOne({ email }).select("+password");
-  if (!user || !(await bcrypt.compare(password, user.password))) {
+  // Find user by email
+  const user = await findUserByEmail(email);
+  if (!user || !(await user.comparePassword(password, user.password))) {
     return next(new AppError("Incorrect email or password", 401));
   }
 
-  // Send JWT Token
+  // Generate and send JWT token to the client
   CreateSendToken(user, 200, res);
 });
 
-// LOGOUT
-const Logout = catchAsync(async (req, res) => {
-  res.cookie("jwt", "", { httpOnly: true, expires: new Date(0) });
-  res.status(200).json({ status: "success", message: "Logged out successfully" });
-});
-
-// FORGOTTEN PASSWORD
+// ✅ Forgotten password
 const forgottenPassword = catchAsync(async (req, res, next) => {
   const { email } = req.body;
-  if (!email) return next(new AppError("Please provide an email address"));
 
-  const user = await User.findOne({ email });
-  if (!user) return next(new AppError("No user found with this email", 404));
+  if (!email) {
+    return next(new AppError("Please provide an email address", 400));
+  }
 
+  const user = await findUserByEmail(email);
+  handleNotFound(user, `No user found with email: ${email}`, next);
+
+  // Generate the random reset token
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
 
+  // Send it to user's email
+  const userName = user.name;
   const resetURL = `${req.protocol}://${req.get("host")}/api/users/resetpassword/${resetToken}`;
-  const subject = "Your password reset token (Valid for 10 mins)";
+  const subject = "Your password reset token is (Valid for 10 mins)";
 
   try {
-    await sendEmail({ email, subject, html: emailCard(resetURL, user.fullName, subject) });
-    res.status(200).json({ status: "success", message: "Email sent successfully" });
+    await sendEmail({
+      email,
+      subject,
+      html: emailCard(resetURL, userName, subject),
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "Email successfully sent to user",
+    });
   } catch (err) {
     user.passwordResetToken = undefined;
     user.resetTokenExp = undefined;
-    return next(new AppError("Error sending email, try again later!", 500));
+
+    return next(new AppError("There was an error sending email, try again later!", 500));
   }
 });
 
-// RESET PASSWORD
+// ✅ Reset password
 const resetPassword = catchAsync(async (req, res, next) => {
   const encryptedToken = hashedToken(req.params.token);
-  const user = await User.findOne({
-    passwordResetToken: encryptedToken,
-    resetTokenExp: { $gt: Date.now() },
-  });
 
-  if (!user) return next(new AppError("Invalid or expired token", 400));
+  const user = await currentUser(User, encryptedToken, { $gt: Date.now() }) ||
+    await currentUser(Admin, encryptedToken, { $gt: Date.now() }) ||
+    await currentUser(Doctor, encryptedToken, { $gt: Date.now() }) ||
+    await currentUser(Nurse, encryptedToken, { $gt: Date.now() }) ||
+    await currentUser(Patient, encryptedToken, { $gt: Date.now() }) ||
+    await currentUser(LabTechnician, encryptedToken, { $gt: Date.now() }) ||
+    await currentUser(Pharmacist, encryptedToken, { $gt: Date.now() });
+
+  if (!user) {
+    return next(new AppError("Invalid token or token has expired", 400));
+  }
 
   user.password = req.body.password;
   user.confirmPassword = req.body.confirmPassword;
-  user.passwordResetToken = undefined;
   user.resetTokenExp = undefined;
+  user.passwordResetToken = undefined;
   await user.save();
 
   CreateSendToken(user, 200, res);
 });
 
+// ✅ Update password
+const updatePassword = catchAsync(async (req, res, next) => {
+  const { currentPassword, password, confirmPassword } = req.body;
+  const { id } = req.user.id;
+
+  if (!currentPassword || !password || !confirmPassword) {
+    return next(new AppError("All fields are required", 400));
+  }
+
+  const user = await findUserById(id);
+  if (!user || !(await user.comparePassword(currentPassword, user.password))) {
+    return next(new AppError("Your current password is wrong.", 400));
+  }
+
+  user.password = password;
+  user.confirmPassword = confirmPassword;
+  await user.save();
+
+  res.status(200).json({
+    status: "success",
+    message: "Password updated successfully",
+  });
+});
+
+// ✅ Logout user
+const Logout = catchAsync(async (req, res, next) => {
+  res.cookie("token", "", { httpOnly: true, expires: new Date(0) });
+
+  res.status(200).json({
+    status: "success",
+    message: "Successfully logged out",
+  });
+});
+
 module.exports = {
   Register,
   Login,
-  Logout,
   forgottenPassword,
   resetPassword,
+  updatePassword,
+  Logout,
 };

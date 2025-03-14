@@ -1,43 +1,77 @@
 const Appointment = require("../models/Records/Appointment");
 const Notification = require("../models/Security/Notification");
+const Patient = require("../models/UserModels/Patient");
+const Doctor = require("../models/UserModels/Doctor");
+const Nurse = require("../models/UserModels/Nurse");
 
 const {
   AppError,
   catchAsync,
   handleNoResult,
   sendResponse,
+  handleNotFound,
 } = require("../Utils/reusableFunctions");
 
 const filterQuery = require("../Utils/filterQuery");
 
-//book an appointment
-exports.bookAppointment = catchAsync(async (req, res) => {
-  const { bookAppointment, department } = req.body;
-  const patientId = req.user._id;
-
-  const appointment = await Appointment.create({
-    patientId: patientId,
-    bookAppointment,
+// Book an appointment
+exports.bookAppointment = catchAsync(async (req, res, next) => {
+  const {
+    patientId,
+    doctorId,
+    nurseId,
+    appointmentDate,
+    timeSlot,
     department,
-  });
+    reason,
+  } = req.body;
 
-  if (!appointment) {
-    return next(new AppError("Appointment not booked", 400));
+  // Check if patient and doctor exist
+  const patient = await Patient.findById(patientId);
+  const doctor = await Doctor.findById(doctorId);
+  if (!patient || !doctor) {
+    return next(new AppError("Patient or Doctor not found", 404));
   }
 
-  //notify patient
-  await Notification.create({
-    user: patientId,
-    message:
-      "Your appointment request is pending, you will receive a notification when it is scheduled",
+  const newAppointment = await Appointment.create({
+    patientId,
+    doctorId,
+    nurseId: nurseId || null, // Optional
+    appointmentDate,
+    timeSlot,
+    department,
+    reason, // Optional
+    status: "Scheduled", // Default
   });
 
-  sendResponse(res, 200, "Appointment booked", appointment);
+  // Populate data after creating the appointment
+  const populatedAppointment = await Appointment.findById(newAppointment._id)
+    .populate("patientId", "name email")
+    .populate("doctorId", "name email")
+    .populate("nurseId", "name email");
+
+  // Notify patient
+  const notifyPatient = await Notification.create({
+    userId: patientId,
+    message:
+      "Your appointment request is pending, you will receive a notification when it is scheduled.",
+  });
+
+  const notify = await Notification.findById(notifyPatient._id).populate(
+    "userId",
+    "name"
+  );
+
+  sendResponse(res, 201, "success", "Appointment booked", populatedAppointment);
 });
 
-//get all appointments
+// Get all appointments
 exports.getAllAppointments = catchAsync(async (req, res, next) => {
-  const appointments = await Appointment.find();
+  const appointments = await Appointment.find()
+    .populate("patientId", "name email")
+    .populate("doctorId", "name email")
+    .populate("nurseId", "name email");
+
   handleNoResult(appointments, "No appointments found", next);
 
   res.status(200).json({
@@ -47,83 +81,80 @@ exports.getAllAppointments = catchAsync(async (req, res, next) => {
   });
 });
 
-//Schedule appointments
-exports.scheduleAppointment = catchAsync(async (req, res, next) => {
-  const { patientId } = req.body;
-  const user = await Appointment.findOne({ patientId });
+// Get appointment by ID
+exports.getAppointmentById = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const appointment = await Appointment.findById(id)
+    .populate("patientId", "name email")
+    .populate("doctorId", "name email")
+    .populate("nurseId", "name email");
 
-  if (!user || user.status !== "Pending") {
-    return next(new AppError("No Pending appointment found"));
-  }
+  handleNotFound(appointment, "Invalid ID", next);
 
-  user.status = "Scheduled";
-  user.save();
+  res.status(200).json({
+    status: "success",
+    appointment,
+  });
+});
+
+// Update appointment
+exports.updateAppointment = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const appointment = await Appointment.findByIdAndUpdate(id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  handleNotFound(appointment, "Appointment not found", next);
 
   // Send notification
   await Notification.create({
-    user: user._id,
-    message: `Your appointment request has been approved! Your appointment is now ${user.status}.`,
+    user: appointment.patientId,
+    message:
+      appointment.status === "Scheduled"
+        ? "Your appointment has been Scheduled"
+        : "Your appointment is Completed",
     isRead: true,
   });
 
-  sendResponse(res, 200, "Appointment scheduled", user);
+  sendResponse(
+    res,
+    200,
+    "success",
+    "Appointment updated successfully",
+    appointment
+  );
 });
 
-//Complete appointments
-exports.completeAppointment = catchAsync(async (req, res, next) => {
-  const { patientId } = req.body;
-  const user = await Appointment.findOne({ patientId });
+// Cancel appointment
+exports.cancelAppointment = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const appointment = await Appointment.findById(id);
 
-  if (!user || user.status !== "Scheduled") {
-    return next(new AppError("No Scheduled appointment found"));
+  if (!appointment) {
+    return next(new AppError("No appointment found", 404));
   }
 
-  user.status = "Completed";
-  user.save();
+  appointment.status = "Canceled";
+  await appointment.save(); // Ensure changes are saved
 
   // Send notification
   await Notification.create({
-    user: user._id,
-    message: `Your appointment request has been completed!`,
+    user: appointment.patientId,
+    message: "Your appointment request has been canceled!",
     isRead: true,
   });
 
-  sendResponse(res, 200, "Appointment completed", user);
+  sendResponse(res, 200, "success", "Appointment canceled", appointment);
 });
 
-//cancle appointment
-exports.cancleAppointment = catchAsync(async (req, res, next) => {
-  const { patientId } = req.body;
-  const user = await Appointment.find({ patientId });
-
-  if (!user || user.status) {
-    return next(new AppError("No appointment found"));
-  }
-
-  user.status = "Canceled";
-  user.save();
-
-  // Send notification
-  await Notification.create({
-    user: user._id,
-    message: `Your appointment request has been canceled!`,
-    isRead: true,
-  });
-
-  sendResponse(res, 200, "Appointment canceled", user);
-});
-
+// Query appointments by status
 exports.queryBySort = catchAsync(async (req, res, next) => {
   const status = req.query.sort;
 
-  if (
-    status === "Pending" ||
-    status === "Scheduled" ||
-    status === "Completed" ||
-    status === "Canceled"
-  ) {
-    await filterQuery(req, res, status, next);
+  if (["Pending", "Scheduled", "Completed", "Canceled"].includes(status)) {
+    return await filterQuery(req, res, status, next);
   }
 
-  return next(new AppError(`Invalid query request ${status}`, 404));
+  return next(new AppError(`Invalid query request: ${status}`, 404));
 });

@@ -1,4 +1,0 @@
-🖥️ The Three Dashboards
-1️⃣ Patient Dashboard (For booking appointments, viewing medical records, making payments)
-2️⃣ Doctor Dashboard (For checking schedules, updating prescriptions, viewing patient history)
-3️⃣ Admin Dashboard (For managing users, doctors, appointments, and billing)

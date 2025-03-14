@@ -1,7 +1,15 @@
 const mongoose = require("mongoose");
+const MailDev = require("maildev");
+
 require("dotenv").config({
   path: ".env",
 });
+
+const maildev = new MailDev({
+  smtp: 1025,
+  web: 1080,
+});
+
 const app = require("./app");
 const PORT = process.env.PORT;
 
@@ -28,4 +36,8 @@ mongoose
   });
 app.listen(PORT, () => {
   console.log(`🚀 Listening to server on port ${PORT}... `);
+});
+
+maildev.listen(() => {
+  console.log("maildev is running on http://localhost:1080");
 });

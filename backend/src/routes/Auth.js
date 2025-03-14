@@ -16,7 +16,7 @@ const {
 } = require("../controllers/User");
 
 const { Protect } = require("../middleware/protect");
-const { restrict } = require("../middleware/restrict");
+const { restrict } = require("../middleware/adminAuth");
 
 const router = express.Router();
 

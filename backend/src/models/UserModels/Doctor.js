@@ -2,11 +2,22 @@ const mongoose = require("mongoose");
 const User = require("./User");
 
 const doctorSchema = new mongoose.Schema({
-  specialization: {
+  department: {
     type: String,
+    enum: [
+      "General",
+      "Surgical",
+      "Medical",
+      "Emergency",
+      "Pediatric",
+      "Gynecology",
+      "Mental Health",
+      "Oncology",
+      "Dermatology",
+    ],
     required: true,
   },
-  department: {
+  specialization: {
     type: String,
     required: true,
   },

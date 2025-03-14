@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const roles = require("../config/roles");
 
 //APPERROR CLASS
 class AppError extends Error {
@@ -65,14 +66,6 @@ const CreateSendToken = (user, statusCode, res) => {
   });
 };
 
-//FIND USER IF TOKEN IS VALID
-const currentUser = async (user, passwordResetToken, resetTokenExp) => {
-  await user.findOne({
-    passwordResetToken,
-    resetTokenExp,
-  });
-};
-
 //OK RESPONSE
 
 const sendResponse = (res, statusCode, status, message, data) => {
@@ -83,14 +76,6 @@ const sendResponse = (res, statusCode, status, message, data) => {
   });
 };
 
-//FIND AND UPDATE USER
-const findAndUpdate = (model, id, reqId) => {
-  return model.findByIdAndUpdate(id, reqId, {
-    new: true,
-    runValidators: true,
-  });
-};
-
 module.exports = {
   AppError,
   catchAsync,
@@ -98,7 +83,5 @@ module.exports = {
   handleNoResult,
   handleNotFound,
   CreateSendToken,
-  currentUser,
-  findAndUpdate,
   sendResponse,
 };

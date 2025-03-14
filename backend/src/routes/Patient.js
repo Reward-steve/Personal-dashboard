@@ -1,27 +1,22 @@
 const express = require("express");
-
-const { getPatientNotification } = require("../controllers/Notification");
+const router = express.Router();
 
 const {
   getAllPatients,
+  getPatientById,
   updatePatientById,
   deletePatientById,
-  getPatientById,
 } = require("../controllers/Patient");
 
 const { Protect } = require("../middleware/protect");
-const { restrict } = require("../middleware/restrict");
-
-const router = express.Router();
+const { restrict } = require("../middleware/adminAuth");
 
 router.route("/").get(Protect, getAllPatients);
-
-router.route("/notification").get(getPatientNotification);
 
 router
   .route("/:id")
   .get(getPatientById)
-  .put(updatePatientById)
+  .patch(updatePatientById)
   .delete(Protect, restrict("admin"), deletePatientById);
 
 module.exports = router;

@@ -21,9 +21,6 @@ const testRequestSchema = new mongoose.Schema(
       enum: ["Pending", "In Progress", "Completed", "Canceled"],
       default: "Pending",
     },
-    results: {
-      type: String,
-    },
   },
   { timestamps: true }
 );

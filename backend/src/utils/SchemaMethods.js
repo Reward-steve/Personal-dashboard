@@ -19,7 +19,6 @@ const PreSave = async function (next) {
     // Only hash the password if it was modified
     if (this.isModified("password")) {
       this.password = await bcrypt.hash(this.password, 10);
-      this.confirmPassword = undefined; // Remove confirmPassword field
     }
 
     next();
@@ -43,8 +42,7 @@ const createPasswordResetToken = function () {
 
   //encrypted reset token
   this.passwordResetToken = hashedToken(resetToken);
-
-  this.resetTokenExp = process.env.RESET_TOKEN_EXP; //token expires in
+  this.tokenExp = 60000; //token expires in
 
   return resetToken;
 };
