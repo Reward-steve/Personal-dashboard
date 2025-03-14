@@ -1,12 +1,16 @@
 const mongoose = require("mongoose");
 const User = require("./User");
 
-const labTechnicianSchema = new mongoose.Schema({
+const nurseSchema = new mongoose.Schema({
   department: {
     type: String,
     required: true,
   },
-  qualifications: [String],
+  shift: {
+    type: String,
+    required: true,
+  },
+  qualifications: [String], // List of degrees/certifications
   workSchedules: [
     {
       day: {
@@ -20,6 +24,7 @@ const labTechnicianSchema = new mongoose.Schema({
           "Saturday",
           "Sunday",
         ],
+        required: true,
       },
     },
   ],
@@ -35,7 +40,6 @@ const labTechnicianSchema = new mongoose.Schema({
           message: (props) => `${props.value} is not a valid time format!`,
         },
       },
-
       endTime: {
         type: String,
         required: true,
@@ -48,8 +52,13 @@ const labTechnicianSchema = new mongoose.Schema({
       },
     },
   ],
-  assignedTests: [{ type: mongoose.Schema.Types.ObjectId, ref: "TestRequest" }],
+  assignedPatients: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Patient",
+    },
+  ],
 });
 
-const LabTechnician = User.discriminator("LabTechnician", labTechnicianSchema);
-module.exports = LabTechnician;
+const Nurse = User.discriminator("Nurse", nurseSchema);
+module.exports = Nurse;

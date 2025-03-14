@@ -38,6 +38,7 @@ Reports are generated for regulatory compliance.
 Doctors, nurses, and staff schedules are managed.
 Inventory of medical supplies and equipment is tracked.
 Compliance with hospital policies and government regulations is ensured.
+
 Key Technologies Used
 Frontend: React, Angular, Vue.js (for web) / React Native, Flutter (for mobile)
 Backend: Node.js, Django, Spring Boot
@@ -46,7 +47,6 @@ APIs: RESTful or GraphQL for integration
 Authentication: OAuth, JWT, Biometric Authentication
 Cloud Storage: AWS, Azure, Google Cloud
 Security & Compliance: HIPAA, GDPR compliance for data security
-Would you like a detailed breakdown of any specific module? 🚀
 
 You said:
 is there no admin
@@ -102,13 +102,7 @@ Reports & Analytics: Generate reports on hospital performance, patient stats, an
 System Logs: Monitor activity logs and security alerts.
 
 
-Technologies for Admin Panel
-Frontend: React.js, Vue.js, Angular (for a web-based admin dashboard)
-Backend: Node.js, Django, Laravel
-Database: PostgreSQL, MongoDB, Firebase
-Authentication: Role-based access control (RBAC), OAuth, JWT
-Cloud & Security: AWS, Google Cloud, Azure with HIPAA/GDPR compliance
-So yes, Admins play a critical role in managing the hospital's entire workflow! Do you want a detailed UI/UX breakdown for the admin dashboard? 🚀
+So yes, Admins play a critical role in managing the hospital's entire workflow! 
 
 You said:
 so if the backend was to be built how many models, routes and controllers will be needed to create it

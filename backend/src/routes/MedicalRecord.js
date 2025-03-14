@@ -9,7 +9,7 @@ const {
   updateMedicalRecord,
   deleteMedicalRecord,
   getAllMedicalRecord,
-} = require("../controllers/medicalHistoryController");
+} = require("../controllers/MedicalRecords");
 
 const { Protect } = require("../middleware/protect");
 const { restrict } = require("../middleware/restrict");
@@ -21,10 +21,10 @@ router
   .post(createMedicalRecord);
 
 // ✅ Get all medical records for a specific patient
-router.route("/patient/:patientId").get(getMedicalRecordsByPatient);
+router.route("/:patientId").get(getMedicalRecordsByPatient);
 
 // ✅ Get all medical records for a specific doctor
-router.route("/doctor/:doctorId").get(getMedicalRecordsByDoctor);
+router.route("/:doctorId").get(getMedicalRecordsByDoctor);
 
 // ✅ Get, update, or delete a specific medical history record by ID
 router

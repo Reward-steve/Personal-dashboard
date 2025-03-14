@@ -1,12 +1,15 @@
 const express = require("express");
 const cors = require("cors");
-const { AppError } = require("./src/utils/reusableFunctions.js");
-const authRouter = require("./src/routes/authRoute.js");
-const patientsRouter = require("./src/routes/patientRoutes.js");
-const doctorsRouter = require("./src/routes/doctorRoutes.js");
-const appointmentRouter = require("./src/routes/appointmentRoutes.js");
-const adminRouter = require("./src/routes/adminRoutes.js");
-const medicalHistoryRouter = require("./src/routes/medicalHistoryRoutes.js");
+const { AppError } = require("./src/Utils/reusableFunctions.js");
+const Auth = require("./src/Routes/Auth.js");
+const Patient = require("./src/Routes/Patient.js");
+const Doctor = require("./src/Routes/Doctor.js");
+const Lab = require("./src/Routes/Lab.js");
+const Appointment = require("./src/Routes/Appointment.js");
+const Admin = require("./src/Routes/Admin.js");
+const MedicalRecord = require("./src/Routes/MedicalRecord.js");
+const Billing = require("./src/Routes/Billing.js");
+const Pharmacy = require("./src/Routes/Pharmacy.js");
 const errorHandler = require("./src/middleware/errorHandler.js");
 const cookieParser = require("cookie-parser");
 
@@ -26,12 +29,15 @@ app.use(
 
 app.options("*", cors());
 
-app.use("/api/auth", authRouter);
-app.use("/api/patients", patientsRouter);
-app.use("/api/doctors", doctorsRouter);
-app.use("/api/appointments", appointmentRouter);
-app.use("/api/admin", adminRouter);
-app.use("/api/medical-history", medicalHistoryRouter);
+app.use("/auth", Auth);
+app.use("/admin", Admin);
+app.use("/patients", Patient);
+app.use("/doctors", Doctor);
+// app.use("/pharmacy", Pharmacy);
+// app.use("/lab-tests", Lab);
+// app.use("/billing", Billing);
+app.use("/records", MedicalRecord);
+app.use("/appointments", Appointment);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Cannot find ${req.originalUrl} on server`, 404));

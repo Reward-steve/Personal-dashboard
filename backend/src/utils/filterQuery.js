@@ -1,4 +1,4 @@
-const Appointment = require("../models/Appointment");
+const Appointment = require("../models/Records/Appointment");
 
 module.exports = filterQuery = async (req, res, status, next) => {
   //check if status exist

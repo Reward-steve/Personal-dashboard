@@ -5,7 +5,7 @@ const {
   createPasswordResetToken,
   changedPasswordAfter,
   comparePassword,
-} = require("../utils/SchemaMethods");
+} = require("../../Utils/SchemaMethods");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -29,7 +29,14 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     lowercase: true,
-    enum: ["admin", "doctor", "patient", "nurse", "receptionist", "pharmacist"],
+    enum: [
+      "admin",
+      "doctor",
+      "patient",
+      "nurse",
+      "labtechnician",
+      "pharmacist",
+    ],
     default: "patient",
   },
 

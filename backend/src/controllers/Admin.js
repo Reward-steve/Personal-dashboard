@@ -1,8 +1,8 @@
-const Patient = require("../models/Patient");
-const Doctor = require("../models/Doctor");
-const User = require("../models/User");
+const Patient = require("../models/UserModels/Patient");
+const Doctor = require("../models/UserModels/Doctor");
+const User = require("../models/UserModels/User");
 
-const { catchAsync } = require("../utils/reusableFunctions");
+const { catchAsync } = require("../Utils/reusableFunctions");
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const doctor = await Doctor.find({});

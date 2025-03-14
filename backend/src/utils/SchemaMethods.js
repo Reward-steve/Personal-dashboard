@@ -2,7 +2,7 @@ const validate = require("validator");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 
-const { AppError, hashedToken } = require("./reusableFunctions");
+const { AppError, hashedToken } = require("../Utils/reusableFunctions");
 
 const PreSave = async function (next) {
   try {
@@ -15,11 +15,6 @@ const PreSave = async function (next) {
     if (!validate.isEmail(this.email)) {
       return next(new AppError("Invalid Email Address", 400));
     }
-
-    // // Confirm password
-    // if (this.password !== this.confirmPassword) {
-    //   return next(new AppError("Passwords do not match", 400));
-    // }
 
     // Only hash the password if it was modified
     if (this.isModified("password")) {

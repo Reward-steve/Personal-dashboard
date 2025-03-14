@@ -73,6 +73,24 @@ const currentUser = async (user, passwordResetToken, resetTokenExp) => {
   });
 };
 
+//OK RESPONSE
+
+const sendResponse = (res, statusCode, status, message, data) => {
+  return res.status(statusCode).json({
+    status,
+    message,
+    data,
+  });
+};
+
+//FIND AND UPDATE USER
+const findAndUpdate = (model, id, reqId) => {
+  return model.findByIdAndUpdate(id, reqId, {
+    new: true,
+    runValidators: true,
+  });
+};
+
 module.exports = {
   AppError,
   catchAsync,
@@ -81,4 +99,6 @@ module.exports = {
   handleNotFound,
   CreateSendToken,
   currentUser,
+  findAndUpdate,
+  sendResponse,
 };

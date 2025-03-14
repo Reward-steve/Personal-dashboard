@@ -1,12 +1,13 @@
-const MedicalHistory = require("../models/MedicalHistory");
-const Patient = require("../models/Patient");
+const MedicalHistory = require("../models/Records/MedicalHistory");
+const Patient = require("../models/UserModels/Patient");
 
 const {
   catchAsync,
   handleNoResult,
   handleNotFound,
-} = require("../utils/reusableFunctions");
+} = require("../Utils/reusableFunctions");
 
+// ✅ Get all medical records
 exports.getAllMedicalRecord = catchAsync(async (req, res, next) => {
   const medicalRecords = await MedicalHistory.find({});
   handleNoResult(medicalRecords, "No medical records found", next);
@@ -19,15 +20,12 @@ exports.getAllMedicalRecord = catchAsync(async (req, res, next) => {
 
 // ✅ Create a new medical record
 exports.createMedicalRecord = catchAsync(async (req, res, next) => {
-  // Extract patientId from the request body
   const { patientId, doctorId, diagnosis, treatments, medications, notes } =
     req.body;
 
-  // Check if patient exists
   const patient = await Patient.findById(patientId);
   handleNotFound(patient, "Patient not found", next);
 
-  // Create and save the medical history record
   const newRecord = await MedicalHistory.create({
     patientId,
     doctorId,
@@ -37,8 +35,7 @@ exports.createMedicalRecord = catchAsync(async (req, res, next) => {
     notes,
   });
 
-  // Add the record reference to the patient
-  patient.medicalRecords.push(newRecord._id);
+  patient.medicalHistory.push(newRecord._id);
   await patient.save();
 
   res.status(201).json({
@@ -96,13 +93,6 @@ exports.getMedicalRecordById = catchAsync(async (req, res, next) => {
     .populate("patientId", "fullName")
     .populate("doctorId", "fullName");
 
-  if (record === null) {
-    return res.status(404).json({
-      status: "error",
-      message: "Invalid ID provided",
-    });
-  }
-
   handleNotFound(record, "Medical record not found", next);
 
   res.status(200).json({
@@ -138,7 +128,6 @@ exports.deleteMedicalRecord = catchAsync(async (req, res) => {
 
   handleNotFound(record, "Medical record not found", next);
 
-  // Remove the record reference from the patient's document
   await Patient.findByIdAndUpdate(record.patientId, {
     $pull: { medicalRecords: id },
   });
