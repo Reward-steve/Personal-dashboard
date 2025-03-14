@@ -1,11 +1,11 @@
 const { promisify } = require("node:util");
 const jwt = require("jsonwebtoken");
 
-const User = require("../models/User");
-const Doctor = require("../models/Doctor");
-const Patient = require("../models/Patient");
+const User = require("../models/UserModels/User.js");
+const Doctor = require("../models/UserModels/Doctor.js");
+const Patient = require("../models/UserModels/Patient.js");
 
-const { AppError, catchAsync } = require("../utils/reusableFunctions.js");
+const { AppError, catchAsync } = require("../Utils/reusableFunctions.js");
 
 //Protected middleware to allow access to only authorized users
 exports.Protect = catchAsync(async (req, res, next) => {

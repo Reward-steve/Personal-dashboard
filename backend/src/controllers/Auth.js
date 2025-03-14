@@ -1,6 +1,10 @@
-const Doctor = require("../models/Doctor.js");
-const Patient = require("../models/Patient.js");
-const User = require("../models/User.js");
+const User = require("../models/UserModels/User");
+const Admin = require("../models/UserModels/Admin");
+const Doctor = require("../models/UserModels/Doctor");
+const LabTechnician = require("../models/UserModels/LabTechnician");
+const Pharmacist = require("../models/UserModels/Pharmacist");
+const Nurse = require("../models/UserModels/Nurse");
+const Patient = require("../models/UserModels/Patient");
 
 const {
   AppError,
@@ -9,7 +13,7 @@ const {
   handleNotFound,
   CreateSendToken,
   currentUser,
-} = require("../utils/reusableFunctions.js");
+} = require("../Utils/reusableFunctions.js");
 
 const sendEmail = require("../mail/sendEmail.js");
 const emailCard = require("../template/emailCard.js");
@@ -28,9 +32,13 @@ const Register = catchAsync(async (req, res, next) => {
 
   // check if email already exists in the database.
   const existingUser = await Promise.all([
-    Doctor.findOne({ email }),
-    Patient.findOne({ email }),
     User.findOne({ email }),
+    Admin.findOne({ email }),
+    Doctor.findOne({ email }),
+    LabTechnician.findOne({ email }),
+    Pharmacist.findOne({ email }),
+    Nurse.findOne({ email }),
+    Patient.findOne({ email }),
   ]);
 
   if (existingUser.some((user) => user)) {
@@ -50,6 +58,7 @@ const Register = catchAsync(async (req, res, next) => {
       dateOfBirth: req.body.dateOfBirth,
       gender: req.body.gender,
       address: req.body.address,
+      age: req.body.age,
       emergencyContact: req.body.emergencyContact,
       role,
     });
@@ -67,13 +76,43 @@ const Register = catchAsync(async (req, res, next) => {
       salary: req.body.salary,
       role,
     });
-  } else {
-    newUser = await User.create({
+  } else if (role === "labtechnician") {
+    newUser = await LabTechnician.create({
+      name,
+      email,
+      password,
+      department,
+      qualifications: req.body.qualifications,
+      role,
+    });
+  } else if (role === "pharmacist") {
+    newUser = await Pharmacist.create({
+      name,
+      email,
+      password,
+      licenseNumber,
+      qualifications: req.body.qualifications,
+      role,
+    });
+  } else if (role === "nurse") {
+    newUser = await Nurse.create({
+      name,
+      email,
+      password,
+      department,
+      qualifications: req.body.qualifications,
+      shift: req.body.shift,
+      role,
+    });
+  } else if (role === "admin") {
+    newUser = await Admin.create({
       name,
       email,
       password,
       role,
     });
+  } else {
+    return next();
   }
 
   // Generate and send JWT token to the client.
@@ -92,8 +131,12 @@ const Login = catchAsync(async (req, res, next) => {
   // Check all role-based collections for user
   const user =
     (await User.findOne({ email }).select("+password")) ||
+    (await Admin.findOne({ email }).select("+password")) ||
     (await Doctor.findOne({ email }).select("+password")) ||
-    (await Patient.findOne({ email }).select("+password"));
+    (await Nurse.findOne({ email }).select("+password")) ||
+    (await Patient.findOne({ email }).select("+password")) ||
+    (await LabTechnician.findOne({ email }).select("+password")) ||
+    (await Pharmacist.findOne({ email }).select("+password"));
 
   const isMatch = await user.comparePassword(password, user.password);
 
@@ -113,9 +156,13 @@ const forgottenPassword = catchAsync(async (req, res, next) => {
   !email ? next(new AppError("Please provide an email address")) : email;
 
   const user =
-    (await User.findOne({ email })) ||
-    (await Doctor.findOne({ email })) ||
-    (await Patient.findOne({ email }));
+    (await User.findOne({ email }).select("+password")) ||
+    (await Admin.findOne({ email }).select("+password")) ||
+    (await Doctor.findOne({ email }).select("+password")) ||
+    (await Nurse.findOne({ email }).select("+password")) ||
+    (await Patient.findOne({ email }).select("+password")) ||
+    (await LabTechnician.findOne({ email }).select("+password")) ||
+    (await Pharmacist.findOne({ email }).select("+password"));
 
   //check if user still exist
   handleNotFound(user, `No user found with email: ${email} found`, next);
@@ -160,8 +207,12 @@ const resetPassword = catchAsync(async (req, res, next) => {
 
   const user =
     (await currentUser(User, encryptedToken, { $gt: Date.now() })) ||
+    (await currentUser(Admin, encryptedToken, { $gt: Date.now() })) ||
     (await currentUser(Doctor, encryptedToken, { $gt: Date.now() })) ||
-    (await currentUser(Patient, encryptedToken, { $gt: Date.now() }));
+    (await currentUser(Nurse, encryptedToken, { $gt: Date.now() })) ||
+    (await currentUser(Patient, encryptedToken, { $gt: Date.now() })) ||
+    (await currentUser(LabTechnician, encryptedToken, { $gt: Date.now() })) ||
+    (await currentUser(Pharmacist, encryptedToken, { $gt: Date.now() }));
 
   //If token has not expired and user is found, set new password
   if (!user) {
@@ -182,14 +233,22 @@ const resetPassword = catchAsync(async (req, res, next) => {
 const updatePassword = catchAsync(async (req, res, next) => {
   const { currentPassword, password, confirmPassword } = req.body;
 
+  //get user id
+  const { id } = req.user.id;
+
   if (!currentPassword || !password || !confirmPassword) {
     return next(new AppError("All fields are require", 500));
   }
+
   //get user from collection
   const user =
-    (await User.findById(req.user.id).select("+password")) ||
-    (await Doctor.findById(req.user.id).select("+password")) ||
-    (await Patient.findById(req.user.id).select("+password"));
+    (await User.findById({ id }).select("+password")) ||
+    (await Admin.findById({ id }).select("+password")) ||
+    (await Doctor.findById({ id }).select("+password")) ||
+    (await Nurse.findById({ id }).select("+password")) ||
+    (await Patient.findById({ id }).select("+password")) ||
+    (await LabTechnician.findById({ id }).select("+password")) ||
+    (await Pharmacist.findById({ id }).select("+password"));
 
   //check if currentPassword is correct
   const isMatch = await user.comparePassword(currentPassword, user.password);
@@ -209,18 +268,23 @@ const updatePassword = catchAsync(async (req, res, next) => {
 });
 
 const Logout = catchAsync(async (req, res, next) => {
+  //get user id
+  const { id } = req.user.id;
+
   const currentUser =
-    (await User.findById(req.user.id).select("+password")) ||
-    (await Doctor.findById(req.user.id).select("+password")) ||
-    (await Patient.findById(req.user.id).select("+password"));
+    (await User.findById({ id }).select("+password")) ||
+    (await Admin.findById({ id }).select("+password")) ||
+    (await Doctor.findById({ id }).select("+password")) ||
+    (await Nurse.findById({ id }).select("+password")) ||
+    (await Patient.findById({ id }).select("+password")) ||
+    (await LabTechnician.findById({ id }).select("+password")) ||
+    (await Pharmacist.findById({ id }).select("+password"));
 
   if (!currentUser) {
     next(new AppError("User not found", 404));
   }
 
   res.cookie("token", "", { httpOnly: true, expires: new Date(0) });
-
-  token = "";
 
   res.status(200).json({
     status: "success",

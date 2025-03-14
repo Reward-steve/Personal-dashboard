@@ -1,4 +1,4 @@
-const { AppError } = require("../utils/reusableFunctions");
+const { AppError } = require("../Utils/reusableFunctions");
 
 exports.adminMiddleware = (req, res, next) => {
   if (req.user.role !== "admin") {

@@ -1,13 +1,16 @@
-const Patient = require("../models/Patient");
+const Patient = require("../models/UserModels/Patient");
 
 const {
   catchAsync,
   handleNoResult,
   handleNotFound,
-} = require("../utils/reusableFunctions");
+  findAndUpdate,
+  sendResponse,
+} = require("../Utils/reusableFunctions");
 
 exports.getAllPatients = catchAsync(async (req, res, next) => {
-  const patients = await Patient.find({});
+  const patients = await Patient.find();
+
   handleNoResult(patients, "No patients found", next);
 
   res.status(200).json({
@@ -22,11 +25,13 @@ exports.getAllPatients = catchAsync(async (req, res, next) => {
 exports.createPatient = catchAsync(async (req, res) => {
   const newPatient = await Patient.create(req.body);
 
-  res.status(201).json({
-    status: "success",
-    message: "New patient created successfully",
-    data: { newPatient },
-  });
+  sendResponse(
+    res,
+    201,
+    "success",
+    "New patient created successfully",
+    newPatient
+  );
 });
 
 exports.getPatientById = catchAsync(async (req, res, next) => {
@@ -34,32 +39,22 @@ exports.getPatientById = catchAsync(async (req, res, next) => {
   const patient = await Patient.findOne({ patientID });
   handleNotFound(patient, `No patient with ID ${patientID} found`, next);
 
-  res.status(200).json({
-    status: "success",
-    data: { patient },
-  });
+  sendResponse(res, 200, "success", "patient retrieved successfully", patient);
 });
 
 exports.updatePatientById = catchAsync(async (req, res, next) => {
-  const patient = await Patient.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const { id } = req.params.id;
+
+  const patient = await findAndUpdate(Patient, id, req.body);
+
   handleNotFound(patient, `No patient with ID ${req.params.id} found`, next);
 
-  res.status(200).json({
-    status: "success",
-    message: "Patient updated successfully",
-    patient,
-  });
+  sendResponse(res, 200, "success", "Patient updated successfully", patient);
 });
 
 exports.deletePatientById = catchAsync(async (req, res, next) => {
   const patient = await Patient.find(req.params.id);
   handleNotFound(patient, `No patient with ID ${req.params.id} found`, next);
 
-  res.status(204).json({
-    status: "success",
-    message: "Patient deleted successfully",
-  });
+  sendResponse(res, 204, "success", "Patient deleted successfully");
 });

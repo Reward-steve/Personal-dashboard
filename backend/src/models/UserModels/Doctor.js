@@ -16,8 +16,47 @@ const doctorSchema = new mongoose.Schema({
   },
   qualifications: [String], // List of degrees/certifications
   availability: {
-    days: [String], // ["Monday", "Wednesday", "Friday"]
-    timeSlots: [String], // ["10:00 AM - 12:00 PM", "2:00 PM - 4:00 PM"]
+    workSchedules: [
+      {
+        day: {
+          type: String,
+          enum: [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+          ],
+          required: true,
+        },
+      },
+    ],
+    timeSlots: [
+      {
+        startTime: {
+          type: String,
+          required: true,
+          validate: {
+            validator: function (v) {
+              return /^([01]\d|2[0-3]):([0-5]\d)$/.test(v);
+            },
+            message: (props) => `${props.value} is not a valid time format!`,
+          },
+        },
+        endTime: {
+          type: String,
+          required: true,
+          validate: {
+            validator: function (v) {
+              return /^([01]\d|2[0-3]):([0-5]\d)$/.test(v);
+            },
+            message: (props) => `${props.value} is not a valid time format!`,
+          },
+        },
+      },
+    ],
   },
   patients: [
     {

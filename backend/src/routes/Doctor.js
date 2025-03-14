@@ -10,15 +10,12 @@ const {
   getDoctorsPatient,
   assignPatientToDoctor,
   unassignPatientFromDoctor,
-} = require("../controllers/doctorsController");
+} = require("../controllers/Doctor");
 
 const { Protect } = require("../middleware/protect");
 const { restrict } = require("../middleware/restrict");
 
-const {
-  getAllPatients,
-  getPatientById,
-} = require("../controllers/patientsController");
+const { getAllPatients, getPatientById } = require("../controllers/Patient");
 
 // Fetch doctors and their details
 router.route("/").get(Protect, restrict("admin"), getAllDoctors);
