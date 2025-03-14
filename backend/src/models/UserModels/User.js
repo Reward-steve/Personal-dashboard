@@ -26,27 +26,28 @@ const userSchema = new mongoose.Schema({
     maxlength: [60, "A password must have less than or equal to 60 characters"],
     select: false,
   },
+  profilePicture: { type: String },
   role: {
     type: String,
-    lowercase: true,
     enum: [
-      "admin",
-      "doctor",
-      "patient",
-      "nurse",
-      "labtechnician",
-      "pharmacist",
+      "Admin",
+      "Doctor",
+      "Patient",
+      "Nurse",
+      "Labtechnician",
+      "Pharmacist",
     ],
-    default: "patient",
+    default: "Patient",
   },
+
+  passwordChangedAt: Date,
+  passwordResetToken: String,
+  tokenExp: Date,
 
   createdAt: {
     type: Date,
     default: Date.now,
   },
-  passwordChangedAt: Date,
-  passwordResetToken: String,
-  resetTokenExp: Date,
 });
 
 userSchema.pre("save", PreSave);

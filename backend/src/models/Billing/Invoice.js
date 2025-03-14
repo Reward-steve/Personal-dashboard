@@ -7,18 +7,7 @@ const invoiceSchema = new mongoose.Schema(
       ref: "Patient",
       required: true,
     },
-    services: [
-      {
-        description: {
-          type: String,
-          required: true,
-        },
-        amount: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
+    description: { type: String, required: true },
     totalAmount: {
       type: Number,
       required: true,

@@ -14,12 +14,21 @@ const patientSchema = new mongoose.Schema({
   age: { type: Number, required: true },
   phone: String,
   address: {
-    city: String,
-    country: String,
+    street: String,
+    country: { type: String, default: "Nigeria", required: true },
+    city: { type: String, default: "Lagos", required: true },
   },
   emergencyContact: {
-    name: String,
-    phone: String,
+    name: {
+      type: String,
+    },
+    phone: {
+      type: String,
+    },
+    relationship: {
+      type: String,
+      enum: ["Parent", "Sibling", "Spouse", "Friend", "Other"],
+    },
   },
   insuranceId: { type: mongoose.Schema.Types.ObjectId, ref: "Insurance" },
   patientID: {

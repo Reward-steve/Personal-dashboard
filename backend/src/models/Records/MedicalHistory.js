@@ -11,6 +11,11 @@ const medicalHistorySchema = new mongoose.Schema({
     ref: "Doctor",
     required: true,
   },
+  nurseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Diagnosis",
+    required: true,
+  },
   diagnosis: {
     type: String,
     required: true,
@@ -25,12 +30,14 @@ const medicalHistorySchema = new mongoose.Schema({
   },
   treatments: [String],
   medications: [String],
+  status: {
+    type: String,
+    enum: ["Ongoing", "Recovered", "Critical", "Deceased"],
+    default: "Ongoing",
+  },
   visitDate: {
     type: Date,
     default: Date.now,
-  },
-  notes: {
-    type: String,
   },
   createdAt: {
     type: Date,

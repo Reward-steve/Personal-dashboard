@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const PrescriptionSchema = new mongoose.Schema(
+const prescriptionSchema = new mongoose.Schema(
   {
     patientId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -12,16 +12,29 @@ const PrescriptionSchema = new mongoose.Schema(
       ref: "Doctor",
       required: true,
     },
-    medicine: {
-      type: String,
-      required: true,
-    },
-    dosage: {
-      type: String,
-      required: true,
+    medicines: [
+      {
+        name: {
+          type: String,
+          required: true,
+        },
+        dosage: {
+          type: String,
+          required: true,
+        },
+        frequency: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+    date: {
+      type: Date,
+      default: Date.now,
     },
   },
   { timestamps: true }
-); // Automatically adds createdAt and updatedAt fields
+);
 
-module.exports = mongoose.model("Prescription", PrescriptionSchema);
+const Prescription = mongoose.model("Prescription", prescriptionSchema);
+module.exports = Prescription;

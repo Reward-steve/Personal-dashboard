@@ -4,33 +4,27 @@ const router = express.Router();
 const {
   createMedicalRecord,
   getMedicalRecordsByPatient,
-  getMedicalRecordsByDoctor,
-  getMedicalRecordById,
   updateMedicalRecord,
   deleteMedicalRecord,
   getAllMedicalRecord,
 } = require("../controllers/MedicalRecords");
 
 const { Protect } = require("../middleware/protect");
-const { restrict } = require("../middleware/restrict");
+const { restrict } = require("../middleware/adminAuth");
 
 // ✅ Create a new medical history record
 router
   .route("/")
-  .get(Protect, restrict("admin"), getAllMedicalRecord)
-  .post(createMedicalRecord);
+  .get(Protect, restrict("Admin", "Doctor", "Nurse"), getAllMedicalRecord)
+  .post(Protect, restrict("Doctor"), createMedicalRecord);
 
 // ✅ Get all medical records for a specific patient
 router.route("/:patientId").get(getMedicalRecordsByPatient);
 
-// ✅ Get all medical records for a specific doctor
-router.route("/:doctorId").get(getMedicalRecordsByDoctor);
-
 // ✅ Get, update, or delete a specific medical history record by ID
 router
   .route("/:id")
-  .get(getMedicalRecordById)
-  .put(updateMedicalRecord)
-  .delete(Protect, restrict("admin", "doctor"), deleteMedicalRecord);
+  .patch(Protect, restrict("Nurse"), updateMedicalRecord)
+  .delete(Protect, restrict("Admin", "Doctor"), deleteMedicalRecord);
 
 module.exports = router;

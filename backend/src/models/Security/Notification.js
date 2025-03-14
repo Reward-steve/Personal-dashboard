@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const NotificationSchema = new mongoose.Schema(
   {
-    user: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Reference to the User model (can be generalized to any user)
       required: true,
@@ -19,4 +19,5 @@ const NotificationSchema = new mongoose.Schema(
   { timestamps: true }
 ); // Automatically adds createdAt and updatedAt fields
 
-module.exports = mongoose.model("Notification", NotificationSchema);
+const Notification = mongoose.model("Notification", NotificationSchema);
+module.exports = Notification;

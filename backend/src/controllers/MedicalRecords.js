@@ -38,6 +38,12 @@ exports.createMedicalRecord = catchAsync(async (req, res, next) => {
   patient.medicalHistory.push(newRecord._id);
   await patient.save();
 
+  // await patient.findByIdAndUpdate(
+  //   patientId,
+  //   { $push: { MedicalHistory: newRecord._id } },
+  //   { new: true, runValidators: false }
+  // );
+
   res.status(201).json({
     status: "success",
     message: "Medical record created successfully",
@@ -63,42 +69,6 @@ exports.getMedicalRecordsByPatient = catchAsync(async (req, res, next) => {
     message: "Medical records retrieved successfully",
     result: records.length,
     data: { records },
-  });
-});
-
-// ✅ Get all medical records created by a specific doctor
-exports.getMedicalRecordsByDoctor = catchAsync(async (req, res, next) => {
-  const { doctorId } = req.params;
-
-  const records = await MedicalHistory.find({ doctorId }).populate(
-    "patientId",
-    "fullName"
-  );
-
-  handleNoResult(records, "No medical records found for this doctor", next);
-
-  res.status(200).json({
-    status: "success",
-    message: "Medical records retrieved successfully",
-    result: records.length,
-    data: { records },
-  });
-});
-
-// ✅ Get a single medical history record by ID
-exports.getMedicalRecordById = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-
-  const record = await MedicalHistory.findById(id)
-    .populate("patientId", "fullName")
-    .populate("doctorId", "fullName");
-
-  handleNotFound(record, "Medical record not found", next);
-
-  res.status(200).json({
-    status: "success",
-    message: "Medical record retrieved successfully",
-    data: { record },
   });
 });
 

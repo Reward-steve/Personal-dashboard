@@ -13,12 +13,12 @@ const {
 } = require("../controllers/Doctor");
 
 const { Protect } = require("../middleware/protect");
-const { restrict } = require("../middleware/restrict");
+const { restrict } = require("../middleware/adminAuth");
 
 const { getAllPatients, getPatientById } = require("../controllers/Patient");
 
 // Fetch doctors and their details
-router.route("/").get(Protect, restrict("admin"), getAllDoctors);
+router.route("/").get(Protect, restrict("Admin"), getAllDoctors);
 
 router.route("/patients").get(getAllPatients);
 

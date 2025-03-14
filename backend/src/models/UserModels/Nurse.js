@@ -4,6 +4,7 @@ const User = require("./User");
 const nurseSchema = new mongoose.Schema({
   department: {
     type: String,
+    enum: ["General", "Surgical", "Pediatric", "Emergency", "Oncology"],
     required: true,
   },
   shift: {

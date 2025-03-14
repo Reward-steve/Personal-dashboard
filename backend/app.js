@@ -1,17 +1,24 @@
 const express = require("express");
 const cors = require("cors");
-const { AppError } = require("./src/Utils/reusableFunctions.js");
-const Auth = require("./src/Routes/Auth.js");
-const Patient = require("./src/Routes/Patient.js");
-const Doctor = require("./src/Routes/Doctor.js");
-const Lab = require("./src/Routes/Lab.js");
-const Appointment = require("./src/Routes/Appointment.js");
-const Admin = require("./src/Routes/Admin.js");
-const MedicalRecord = require("./src/Routes/MedicalRecord.js");
-const Billing = require("./src/Routes/Billing.js");
-const Pharmacy = require("./src/Routes/Pharmacy.js");
-const errorHandler = require("./src/middleware/errorHandler.js");
 const cookieParser = require("cookie-parser");
+
+const { AppError } = require("./src/Utils/reusableFunctions.js");
+const errorHandler = require("./src/middleware/errorHandler.js");
+
+const Auth = require("./src/Routes/Auth.js");
+const Admin = require("./src/Routes/Admin.js");
+const Doctor = require("./src/Routes/Doctor.js");
+const Patient = require("./src/Routes/Patient.js");
+const Appointment = require("./src/Routes/Appointment.js");
+const MedicalRecord = require("./src/Routes/MedicalRecord.js");
+const Lab = require("./src/Routes/Lab.js");
+const Pharmacy = require("./src/Routes/Pharmacy.js");
+const Pharmacist = require("./src/Routes/Pharmacist.js");
+const Prescription = require("./src/Routes/Prescription.js");
+const Billing = require("./src/Routes/Billing.js");
+const Notification = require("./src/Routes/Notification.js");
+const Message = require("./src/Routes/Message.js");
+const Profile = require("./src/Routes/Profile.js");
 
 const app = express();
 app.use(express.json());
@@ -29,15 +36,20 @@ app.use(
 
 app.options("*", cors());
 
-app.use("/auth", Auth);
-app.use("/admin", Admin);
-app.use("/patients", Patient);
-app.use("/doctors", Doctor);
-// app.use("/pharmacy", Pharmacy);
-// app.use("/lab-tests", Lab);
-// app.use("/billing", Billing);
-app.use("/records", MedicalRecord);
-app.use("/appointments", Appointment);
+app.use("/api/v1/auth", Auth);
+app.use("/api/v1/admin", Admin);
+app.use("/api/v1/patients", Patient);
+app.use("/api/v1/doctors", Doctor);
+app.use("/api/v1/pharmacy", Pharmacy);
+app.use("/api/v1/pharmacist", Pharmacist);
+app.use("/api/v1/prescription", Prescription);
+app.use("/api/v1/lab-tests", Lab);
+app.use("/api/v1/billing", Billing);
+app.use("/api/v1/records", MedicalRecord);
+app.use("/api/v1/appointments", Appointment);
+app.use("/api/v1/notification", Notification);
+app.use("/api/v1/message", Message);
+app.use("/api/v1/profile", Profile);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Cannot find ${req.originalUrl} on server`, 404));
