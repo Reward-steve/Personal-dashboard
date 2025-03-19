@@ -82,26 +82,25 @@
 .loginForm label {
   width: 90%;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   background-color: aliceblue;
 }
 
-.loginForm label:nth-last-child(1) {
+/* .loginForm label:nth-last-child(1) {
   background-color: white;
-}
+} */
 
 .navlink {
   background-color: #1e9ef4;
   font-weight: normal;
   color: white;
   text-align: center;
+  cursor: pointer;
 }
 
-.loginForm input[name="fullName"],
-.loginForm input[name="email"],
+.loginForm input[name="Info"],
 .loginForm input[name="password"],
-.loginForm input[name="confirmPassword"],
 .loginForm select[name="role"],
 .navlink {
   width: 100%;
@@ -116,9 +115,7 @@
   transition: outline 0.4s linear;
 }
 
-.loginForm input[name="password"],
-.loginForm input[name="confirmPassword"],
-.loginForm select[name="role"] {
+.loginForm input[name="password"] {
   border-radius: 10px 0 0 10px;
 }
 

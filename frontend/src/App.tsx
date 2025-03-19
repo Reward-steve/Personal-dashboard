@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeProvider";
 import Authentication from "./pages/Authentication/Authentication";
 import MainContent from "./components/Main/MainContent";
-import routerObject from "./router/mainRoutes"; // Import the routes
+import routerObject from "./router/mainRoutes";
 import SignUp from "./components/Signup/Signup";
 import Login from "./components/Signup/Login";
 import { ApiProvider } from "./context/ApiProvider";

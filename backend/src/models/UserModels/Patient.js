@@ -8,24 +8,26 @@ const patientSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ["Male", "Female", "Other"],
+    enum: ["Male", "Female"],
     required: true,
   },
-  age: { type: Number, required: true },
-  phone: String,
   address: {
-    street: String,
-    country: { type: String, default: "Nigeria", required: true },
-    city: { type: String, default: "Lagos", required: true },
+    country: { type: String, required: true },
+    state: { type: String, required: true },
+    city: { type: String, required: true },
+    street: { type: String, required: true },
   },
   emergencyContact: {
     name: {
       type: String,
+      required: true,
     },
     phone: {
       type: String,
+      required: true,
     },
     relationship: {
+      required: true,
       type: String,
       enum: ["Parent", "Sibling", "Spouse", "Friend", "Other"],
     },
