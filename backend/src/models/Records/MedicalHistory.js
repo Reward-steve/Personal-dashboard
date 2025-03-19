@@ -13,7 +13,7 @@ const medicalHistorySchema = new mongoose.Schema({
   },
   nurseId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Diagnosis",
+    ref: "Nurse",
     required: true,
   },
   diagnosis: {

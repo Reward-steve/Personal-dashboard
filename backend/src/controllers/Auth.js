@@ -32,7 +32,7 @@ const Register = catchAsync(async (req, res, next) => {
   const existingUser = await findByEmail(email);
 
   if (existingUser) {
-    return next(new AppError("Email already in user", 400));
+    return next(new AppError("Email already in use", 400));
   }
 
   // Create new User

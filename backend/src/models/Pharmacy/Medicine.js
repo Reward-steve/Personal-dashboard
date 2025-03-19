@@ -21,7 +21,8 @@ const MedicineSchema = new mongoose.Schema({
   supplier: { type: String },
 });
 
-module.exports = mongoose.model("Medicine", MedicineSchema);
+const Medicine = mongoose.model("Medicine", MedicineSchema);
+module.exports = Medicine;
 
 /*
 

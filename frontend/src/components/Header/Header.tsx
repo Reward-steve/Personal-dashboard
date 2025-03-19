@@ -7,9 +7,7 @@ import img from "../../assets/img/jwtLogo.jpg";
 import Dropdown from "./Dropdown";
 
 const Header: React.FC = () => {
-  const [search, setSearch] = useState<string>("");
   const [active, setActive] = useState<boolean>(false);
-  console.log(search);
 
   return (
     <nav>

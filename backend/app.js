@@ -38,10 +38,10 @@ app.options("*", cors());
 
 app.use("/api/v1/auth", Auth);
 app.use("/api/v1/admin", Admin);
-app.use("/api/v1/patients", Patient);
 app.use("/api/v1/doctors", Doctor);
-app.use("/api/v1/pharmacy", Pharmacy);
+app.use("/api/v1/patients", Patient);
 app.use("/api/v1/pharmacist", Pharmacist);
+app.use("/api/v1/pharmacy", Pharmacy);
 app.use("/api/v1/prescription", Prescription);
 app.use("/api/v1/lab-tests", Lab);
 app.use("/api/v1/billing", Billing);

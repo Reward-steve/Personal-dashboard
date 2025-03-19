@@ -12,11 +12,10 @@ const {
 const { Protect } = require("../middleware/protect");
 const { restrict } = require("../middleware/adminAuth");
 
-// ✅ Create a new medical history record
 router
   .route("/")
   .get(Protect, restrict("Admin", "Doctor", "Nurse"), getAllMedicalRecord)
-  .post(Protect, restrict("Doctor"), createMedicalRecord);
+  .post(Protect, restrict("Doctor"), createMedicalRecord); // ✅ Create a new medical history record
 
 // ✅ Get all medical records for a specific patient
 router.route("/:patientId").get(getMedicalRecordsByPatient);

@@ -1,11 +1,11 @@
 const Order = require("../models/Pharmacy/Order");
 const Medicine = require("../models/Pharmacy/Medicine");
+const Notification = require("../models/Security/Notification");
 const {
   catchAsync,
   handleNoResult,
   handleNotFound,
 } = require("../Utils/reusableFunctions");
-const Notification = require("../models/Security/Notification");
 
 // ✅ Order medicine
 exports.orderMedicine = catchAsync(async (req, res, next) => {
@@ -16,10 +16,13 @@ exports.orderMedicine = catchAsync(async (req, res, next) => {
     medicines,
   });
 
+  const populateNewOrder = await newOrder.populate("patientId", "name");
+  await newOrder.save();
+
   handleNotFound(newOrder, "Medicine order failed", next);
 
   await Notification.create({
-    user: patientId,
+    userId: patientId,
     message: "Your medicine order has been placed successfully",
     isRead: true,
   });
@@ -27,7 +30,7 @@ exports.orderMedicine = catchAsync(async (req, res, next) => {
   res.status(201).json({
     status: "success",
     message: "Medicine order placed successfully",
-    data: { newOrder },
+    data: populateNewOrder,
   });
 });
 
