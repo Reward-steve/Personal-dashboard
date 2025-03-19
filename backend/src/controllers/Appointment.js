@@ -41,7 +41,7 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
     timeSlot,
     department,
     reason, // Optional
-    status: "Scheduled", // Default
+    status: "Pending", // Default
   });
 
   // Populate data after creating the appointment
@@ -50,6 +50,18 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
     .populate("doctorId", "name email")
     .populate("nurseId", "name email");
 
+  // Add appointment to patient's record
+  patient.appointments.push(populatedAppointment);
+  doctor.appointments.push(populatedAppointment);
+  await patient.save();
+  await doctor.save();
+
+  // Notify doctor
+  const notifyDoctor = await Notification.create({
+    userId: doctorId,
+    message: "You have a new appointment request",
+  });
+
   // Notify patient
   const notifyPatient = await Notification.create({
     userId: patientId,
@@ -57,10 +69,8 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
       "Your appointment request is pending, you will receive a notification when it is scheduled.",
   });
 
-  const notify = await Notification.findById(notifyPatient._id).populate(
-    "userId",
-    "name"
-  );
+  await Notification.findById(notifyPatient._id).populate("userId", "name");
+  await Notification.findById(notifyDoctor._id).populate("userId", "name");
 
   sendResponse(res, 201, "success", "Appointment booked", populatedAppointment);
 });

@@ -20,8 +20,16 @@ exports.getAllMedicalRecord = catchAsync(async (req, res, next) => {
 
 // ✅ Create a new medical record
 exports.createMedicalRecord = catchAsync(async (req, res, next) => {
-  const { patientId, doctorId, diagnosis, treatments, medications, notes } =
-    req.body;
+  const {
+    patientId,
+    doctorId,
+    nurseId,
+    diagnosis,
+    medicalHistory,
+    treatments,
+    medications,
+    notes,
+  } = req.body;
 
   const patient = await Patient.findById(patientId);
   handleNotFound(patient, "Patient not found", next);
@@ -29,7 +37,9 @@ exports.createMedicalRecord = catchAsync(async (req, res, next) => {
   const newRecord = await MedicalHistory.create({
     patientId,
     doctorId,
+    nurseId,
     diagnosis,
+    medicalHistory,
     treatments,
     medications,
     notes,
