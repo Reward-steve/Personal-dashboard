@@ -2,6 +2,7 @@ import * as React from "react";
 
 export interface IAppProps {
   type: string;
+  name: string;
   placeholder: string;
   value: string;
   change: React.ChangeEventHandler<HTMLInputElement>;
@@ -12,7 +13,7 @@ export function Input(props: IAppProps) {
     <label>
       <input
         type={props.type}
-        name="Info"
+        name={props.name}
         placeholder={props.placeholder}
         value={props.value}
         onChange={props.change}
