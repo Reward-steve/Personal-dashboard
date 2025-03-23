@@ -1,15 +1,24 @@
 import { useState } from "react";
 import { ApiContext } from "./createApi";
+import apiClient from "../utils/apiClient";
+import axios from "axios";
 
 export interface ApiContexType {
   message: string;
   data: object | null;
   isLoading: boolean;
   error: { message: string };
-  api: (body: object, method: string, urlRoute: string) => Promise<void>;
+  api: (
+    method: string,
+    url: string,
+    body?: object
+  ) => Promise<{
+    data: object;
+    message: string;
+    stats: object;
+    status: string;
+  }>;
 }
-
-const API_URL = "http://localhost:5000/api/v1/";
 
 export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -19,26 +28,25 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<{ message: string }>({ message: "" });
 
-  const api = async (body: object, method: string, urlRoute: string) => {
+  const api = async (method: string, url: string, body?: object) => {
     setIsLoading(true);
+    setError({ message: "" });
     try {
-      const response = await fetch(`${API_URL}${urlRoute}`, {
-        method,
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(body),
-      });
+      const response = await apiClient.request({ method, url, data: body });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! ${response.status}`);
-      }
+      setMessage(response.data.message || "success");
+      setData(response.data);
 
-      const data = await response.json();
-      setMessage(data.message);
-      setData(data);
-    } catch (error) {
-      setError({
-        message: error instanceof Error ? error.message : "Unknown error",
-      });
+      return response.data;
+    } catch (error: string | unknown) {
+      const errorMessage =
+        axios.isAxiosError(error) && error.response?.data?.message
+          ? error.response.data.message
+          : "An unknown error occured";
+
+      setError(errorMessage);
+      return null;
+    } finally {
       setIsLoading(false);
     }
   };

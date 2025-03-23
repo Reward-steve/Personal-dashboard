@@ -99,9 +99,8 @@
   cursor: pointer;
 }
 
-.loginForm input[name="Info"],
-.loginForm input[name="password"],
-.loginForm select[name="role"],
+.loginForm input,
+.loginForm select,
 .navlink {
   width: 100%;
   padding: 15px 10px;

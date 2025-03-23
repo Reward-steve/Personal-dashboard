@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import style from "../../styles/LoginPage.module.css";
 import { motion } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -16,30 +16,37 @@ export interface LoginType {
 export default function Login(): JSX.Element {
   const [hide, setHide] = useState<boolean>(true);
   const [next, setNext] = useState<boolean>(false);
-  const Icon: IconType = hide ? FaEye : FaEyeSlash;
-  const hidePassword = useRef<HTMLInputElement>(null);
-
-  const { api } = useApi();
+  const navigate = useNavigate();
 
   const [currentUser, setCurrentUser] = useState<LoginType>({
     email: "",
     password: "",
   });
 
-  const OnchangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentUser((c) => ({ ...c, email: e.target.value }));
-  };
-  const OnchangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentUser((c) => ({ ...c, password: e.target.value }));
+  const Icon: IconType = hide ? FaEye : FaEyeSlash;
+  const hidePassword = useRef<HTMLInputElement>(null);
+  const { api, error } = useApi();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCurrentUser((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleUserLogin = async () => {
-    if (currentUser.email && currentUser.password) {
-      await api(
-        { email: currentUser.email, password: currentUser.password },
-        "POST",
-        "auth/login"
-      );
+  const handleUserLogin = async (): Promise<void> => {
+    if (!currentUser.email || !currentUser.password) {
+      alert("All input fields are required");
+      return;
+    }
+
+    const response = await api("POST", "auth/login", {
+      email: currentUser.email,
+      password: currentUser.password,
+    });
+
+    if (!response) alert(error);
+    if (response) {
+      alert("Login successful");
+      navigate("/dashboard/dashboard");
     }
   };
 
@@ -51,15 +58,15 @@ export default function Login(): JSX.Element {
 
   return (
     <form className={style.loginForm}>
-      <h3>Log in</h3>
+      {!next ? <h3>Log in</h3> : <h3>Forgotten Password</h3>}
       {!next ? (
         <>
-          {" "}
           <Input
+            name="email"
             type="email"
             value={currentUser.email}
             placeholder="Email address"
-            change={OnchangeEmail}
+            change={handleInputChange}
           />
           <label>
             <input
@@ -67,7 +74,7 @@ export default function Login(): JSX.Element {
               type="password"
               value={currentUser.password}
               placeholder="Password"
-              onChange={OnchangePassword}
+              onChange={handleInputChange}
               ref={hidePassword}
             />
 
@@ -94,42 +101,40 @@ export default function Login(): JSX.Element {
             }
           </label>
           <label>
-            <NavLink
+            <div
               className={style.navlink}
-              to="/dashboard/dashboard"
               onClick={handleUserLogin}
               style={{
                 textDecoration: "none",
               }}
             >
               Login
-            </NavLink>
+            </div>
           </label>
         </>
       ) : (
         <>
           <Input
+            name="email"
             type="email"
             value={currentUser.email}
             placeholder="Email address"
-            change={OnchangeEmail}
+            change={handleInputChange}
           />
           <label>
-            <NavLink
+            <div
               className={style.navlink}
-              to="/dashboard/dashboard"
               onClick={handleUserLogin}
               style={{
                 textDecoration: "none",
               }}
             >
               Reset Password
-            </NavLink>
+            </div>
           </label>
         </>
       )}
-      <NavLink
-        to="/"
+      <p
         onClick={() => setNext(!next)}
         style={{
           color: "rgb(0 16 255)",
@@ -138,10 +143,11 @@ export default function Login(): JSX.Element {
           display: "flex",
           justifyContent: "right",
           alignItems: "center",
+          cursor: "pointer",
         }}
       >
-        Forgotten password
-      </NavLink>
+        {!next ? "Forgotten password" : "Login"}
+      </p>
       <p>or log in with</p>
 
       <NavLink to={"/Signup"} className={style.signup}>
