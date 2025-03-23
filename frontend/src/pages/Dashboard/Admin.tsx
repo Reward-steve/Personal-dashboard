@@ -1,13 +1,15 @@
 import * as React from "react";
 import { PersistentDatePicker } from "../../components/StyleComponent/PersistentDatePicker";
-import { ComponentProps } from "../../router/mainRoutes";
+import { ComponentProps } from "../../router/Admin";
 import styles from "./../../styles/styledComponent.module.css";
 import PageTitle from "../../components/StyleComponent/PageTitle";
 import { IoHome } from "react-icons/io5";
 import { FaUsers } from "react-icons/fa";
-import { FaStar } from "react-icons/fa";
+// import { FaStar } from "react-icons/fa";
+import { FaHandshake } from "react-icons/fa";
 import { FaComments } from "react-icons/fa";
 import { MdMonitorHeart } from "react-icons/md";
+import { useState, useEffect } from "react";
 import SectionName from "../../components/StyleComponent/SectionName";
 import MainComponent from "../../components/StyleComponent/MainComponent";
 import DailyOverview from "../../components/StyleComponent/DailyOverview";
@@ -19,8 +21,28 @@ import img1 from "../../assets/img/home.jpg";
 import img2 from "../../assets/img/medical-record.png";
 import img3 from "../../assets/img/signin.jpg";
 import img4 from "../../assets/img/userprofile.jpg";
+import { useApi } from "../../hooks/useApi";
 
 const Dashboard: React.FC<ComponentProps> = () => {
+  const [stat, setStats] = useState(Object);
+
+  const { api } = useApi();
+
+  const getStatistics = async () => {
+    const url = await api("GET", "admin/users");
+    console.log(url.data);
+    setStats((prevStats: object) => ({ ...prevStats, ...url.stats }));
+
+    return url.stats;
+  };
+
+  useEffect(() => {
+    async function stats() {
+      return await getStatistics();
+    }
+    stats();
+  }, []);
+
   return (
     <>
       <PageTitle Title={"Dashboard"} Icon={<IoHome />} />
@@ -32,19 +54,19 @@ const Dashboard: React.FC<ComponentProps> = () => {
             <aside className={styles.flex}>
               <DailyOverview
                 cl="skyblue"
-                Result="78"
+                Result={stat.patients}
                 Details="patients"
                 Icon={FaUsers}
               />
               <DailyOverview
                 cl="skyblue"
-                Result="12"
-                Details="reviews"
-                Icon={FaStar}
+                Result={stat.doctors}
+                Details="doctors"
+                Icon={FaHandshake}
               />
               <DailyOverview
                 cl="skyblue"
-                Result="13"
+                Result={stat.appointments}
                 Details="appointments"
                 Icon={FaComments}
               />
@@ -73,7 +95,12 @@ const Dashboard: React.FC<ComponentProps> = () => {
           <SectionName Name={"Upcoming Appointments"} />
           <main className={styles.mainHolder}>
             <MainComponent>
-              <AppointmentTable />
+              <AppointmentTable
+                Name="dsdsd"
+                Time="dfsadf"
+                Diagnosis="adsfasdf"
+                Notes="-"
+              />
             </MainComponent>
           </main>
         </GrayBg>

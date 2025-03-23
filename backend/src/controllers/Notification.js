@@ -21,18 +21,16 @@ exports.getAllNotification = catchAsync(async (req, res, next) => {
 
 exports.getNotificationByUserId = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-  const notification = await Notification.find({ user: id });
+  const notification = await Notification.find({
+    userId: id,
+  });
+
+  handleNotFound(notification, `No Notification found with id ${id}`, next);
 
   let message;
   for (let i = 0; i < notification.length; i++) {
     message = notification[i].message;
   }
-
-  handleNotFound(
-    notification,
-    `No Notification found for patient with id ${id}`,
-    next
-  );
 
   res.status(200).json({
     status: "success",

@@ -3,7 +3,7 @@ import Calender from "../pages/Calender/Calender";
 import Patients from "../pages/Patients/Patients";
 import StaffSchedule from "../pages/StaffSchedule/StaffSchedule";
 import Settings from "../pages/Settings/Settings";
-import Dashboard from "../pages/Dashboard/Dashboard";
+import Dashboard from "../pages/Dashboard/Admin";
 import Doctors from "../pages/Doctors/Doctors";
 import Departments from "../pages/Department/Department";
 import Stock from "../pages/Stock/Stock";

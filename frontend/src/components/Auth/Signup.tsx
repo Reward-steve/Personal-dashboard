@@ -7,30 +7,12 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { IconType } from "react-icons";
 import { Input } from "../Inputs";
 import { useApi } from "../../hooks/useApi";
-
-export interface UserTypes {
-  name: string;
-  email: string;
-  password: string;
-  gender: string;
-  dateOfBirth: string;
-  address: {
-    country: string;
-    state: string;
-    city: string;
-    street: string;
-  };
-  emergencyContact: {
-    name: string;
-    phone: string;
-    relationship: string;
-  };
-}
+import handleInputChange from "../../utils/handleInputChange";
 
 export default function SignUp(): JSX.Element {
   const [hidePassword, setHidePassword] = useState<boolean>(true);
   const [next, setNext] = useState<boolean>(false);
-  const { api } = useApi();
+  const { api, data } = useApi();
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -46,14 +28,6 @@ export default function SignUp(): JSX.Element {
     emergencyPhone: "",
     relationship: "",
   });
-
-  // **Reusable onChange handler**
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setUserInfo((prev) => ({ ...prev, [name]: value }));
-  };
 
   const handleAuth = async () => {
     const {
@@ -85,23 +59,20 @@ export default function SignUp(): JSX.Element {
       emergencyPhone &&
       relationship
     ) {
-      await api(
-        {
-          name,
-          email,
-          password,
-          dateOfBirth,
-          gender,
-          address: { country, state, city, street },
-          emergencyContact: {
-            name: emergencyName,
-            phone: emergencyPhone,
-            relationship,
-          },
+      await api("POST", "auth/register", {
+        name,
+        email,
+        password,
+        dateOfBirth,
+        gender,
+        address: { country, state, city, street },
+        emergencyContact: {
+          name: emergencyName,
+          phone: emergencyPhone,
+          relationship,
         },
-        "POST",
-        "auth/register"
-      );
+      });
+      console.log(data);
     }
   };
 
@@ -126,14 +97,14 @@ export default function SignUp(): JSX.Element {
             name="name"
             placeholder="Full Name"
             value={userInfo.name}
-            change={handleInputChange}
+            change={(e) => handleInputChange(e, setUserInfo)}
           />
           <Input
             type="email"
             name="email"
             placeholder="Email address"
             value={userInfo.email}
-            change={handleInputChange}
+            change={(e) => handleInputChange(e, setUserInfo)}
           />
           <label>
             <input
@@ -141,7 +112,7 @@ export default function SignUp(): JSX.Element {
               name="password"
               placeholder="Password"
               value={userInfo.password}
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e, setUserInfo)}
               ref={passwordRef}
               required
             />
@@ -166,7 +137,7 @@ export default function SignUp(): JSX.Element {
                 name="gender"
                 value="Male"
                 checked={userInfo.gender === "Male"}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e, setUserInfo)}
               />
             </label>
             <label>
@@ -176,7 +147,7 @@ export default function SignUp(): JSX.Element {
                 name="gender"
                 value="Female"
                 checked={userInfo.gender === "Female"}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e, setUserInfo)}
               />
             </label>
           </label>
@@ -187,81 +158,102 @@ export default function SignUp(): JSX.Element {
               name="dateOfBirth"
               placeholder="D.O.B"
               value={userInfo.dateOfBirth}
-              change={handleInputChange}
+              change={(e) => handleInputChange(e, setUserInfo)}
             />
           </label>
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.95 }}
-            className={style.navlink}
-            onClick={() => setNext(true)}
-          >
-            Next
-          </motion.button>
+          <label>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.95 }}
+              className={style.navlink}
+              onClick={() => setNext(true)}
+            >
+              Next
+            </motion.button>
+          </label>
         </>
       ) : (
         <>
-          <Input
-            type="text"
-            name="country"
-            placeholder="Country"
-            value={userInfo.country}
-            change={handleInputChange}
-          />
-          <Input
-            type="text"
-            name="state"
-            placeholder="State"
-            value={userInfo.state}
-            change={handleInputChange}
-          />
-          <Input
-            type="text"
-            name="city"
-            placeholder="City"
-            value={userInfo.city}
-            change={handleInputChange}
-          />
-          <Input
-            type="text"
-            name="street"
-            placeholder="Street"
-            value={userInfo.street}
-            change={handleInputChange}
-          />
+          <label>
+            <Input
+              type="text"
+              name="country"
+              placeholder="Country"
+              value={userInfo.country}
+              change={(e) => handleInputChange(e, setUserInfo)}
+            />
+            <Input
+              type="text"
+              name="state"
+              placeholder="State"
+              value={userInfo.state}
+              change={(e) => handleInputChange(e, setUserInfo)}
+            />
+          </label>
+          <label>
+            <Input
+              type="text"
+              name="city"
+              placeholder="City"
+              value={userInfo.city}
+              change={(e) => handleInputChange(e, setUserInfo)}
+            />
+            <Input
+              type="text"
+              name="street"
+              placeholder="Street"
+              value={userInfo.street}
+              change={(e) => handleInputChange(e, setUserInfo)}
+            />
+          </label>
           <p style={{ margin: 7 }}> Emergency Contact Information</p>
           <Input
             type="text"
             name="emergencyName"
             placeholder="Emergency Contact Name"
             value={userInfo.emergencyName}
-            change={handleInputChange}
+            change={(e) => handleInputChange(e, setUserInfo)}
           />
-          <select
-            name="relationship"
-            required
-            value={userInfo.relationship}
-            onChange={handleInputChange}
-          >
-            <option disabled value="">
-              Relationship
-            </option>
-            <option value="Parent">Parent</option>
-            <option value="Sibling">Sibling</option>
-            <option value="Spouse">Spouse</option>
-            <option value="Friend">Friend</option>
-            <option value="Other">Other</option>
-          </select>
-          <Input
-            type="number"
-            name="emergencyPhone"
-            placeholder="Phone Number"
-            value={userInfo.emergencyPhone}
-            change={handleInputChange}
-          />
-          <NavLink className={style.navlink} onClick={handleAuth} to="/">
-            Signup
-          </NavLink>
+          <label>
+            <label>
+              <select
+                name="relationship"
+                required
+                value={userInfo.relationship}
+                onChange={(e) => handleInputChange(e, setUserInfo)}
+              >
+                <option disabled value="">
+                  Relationship
+                </option>
+                <option value="Parent">Parent</option>
+                <option value="Sibling">Sibling</option>
+                <option value="Spouse">Spouse</option>
+                <option value="Friend">Friend</option>
+                <option value="Other">Other</option>
+              </select>
+            </label>
+            <Input
+              type="number"
+              name="emergencyPhone"
+              placeholder="Phone Number"
+              value={userInfo.emergencyPhone}
+              change={(e) => handleInputChange(e, setUserInfo)}
+            />
+          </label>
+          <label>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.95 }}
+              className={style.navlink}
+              onClick={() => setNext(!true)}
+            >
+              Prev
+            </motion.button>
+
+            <NavLink className={style.navlink} onClick={handleAuth} to="/">
+              Signup
+            </NavLink>
+          </label>
         </>
       )}
 

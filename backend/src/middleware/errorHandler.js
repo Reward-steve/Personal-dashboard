@@ -15,6 +15,10 @@ const handleJWTError = () => {
   return new AppError("Invalid token. Please log in again!", 401);
 };
 
+// const handleTypeError = () => {
+//   return new AppError("Invalid email or password", 401);
+// };
+
 const SendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -48,6 +52,7 @@ module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
   if (process.env.NODE_ENV === "development") {
+    // if (err.name === "TypeError") err = handleTypeError();
     SendErrorDev(err, res);
   } else if (process.env.NODE_ENV === "production") {
     if (err.name === "ValidationError") err = handleValidatorErrorDB(err);
@@ -55,6 +60,8 @@ module.exports = (err, req, res, next) => {
     if (err.name === "TokenExpiredError") err = handleTokenExpiredError();
 
     if (err.name === "JsonWebTokenError") err = handleJWTError();
+
+    // if (err.name === "TypeError") err = handleTypeError();
     SendErrorProd(err, res);
   }
 };

@@ -236,3 +236,28 @@ Database: PostgreSQL / MongoDB / MySQL
 Authentication: JWT / OAuth / Firebase Auth
 Cloud Storage: AWS S3 / Google Cloud
 Security: Role-based access control (RBAC), Encryption (AES-256)
+
+
+📢 Final Summary
+Patient books appointment → Status pending
+Doctor/Admin gets notified → Reviews appointment
+Admin confirms/schedules it → Status confirmed
+Patient & doctor are notified
+
+📝 Summary
+Field	                  Should it be in req.body?	          Required?	        Default Value
+
+patientId	                ✅ Yes	                        ✅ Required	        -
+doctorId	                ✅ Yes	                        ✅ Required	        -
+nurseId	                    ✅ Yes	                        ❌ Optional	        null
+appointmentDate         	✅ Yes	                        ✅ Required	        -
+timeSlot	                ✅ Yes	                        ✅ Required	        -
+department	                ✅ Yes	                        ✅ Required	        -
+reason	                    ✅ Yes	                        ✅ Required	        -
+previousVisit	            ✅ Yes	                        ❌ Optional	        false
+preferredTimeRange	        ✅ Yes	                        ❌ Optional	        null
+translatorRequired	        ✅ Yes	                        ❌ Optional	        false
+healthInsuranceType	        ✅ Yes	                        ❌ Optional	        null
+allergies	                ✅ Yes	                        ❌ Optional	        []
+existingMedicalConditions	✅ Yes	                        ❌ Optional	        []
+recentSurgeries	            ✅ Yes	                        ❌ Optional	        []

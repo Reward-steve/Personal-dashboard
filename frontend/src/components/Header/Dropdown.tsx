@@ -7,6 +7,19 @@ import { NavLink } from "react-router-dom";
 import { CiLogout } from "react-icons/ci";
 
 const Dropdown: React.FC = () => {
+  const dropdown = [
+    {
+      link: "/dashboard/Profile",
+      message: "View profile",
+      icon: <motion.img src={img} alt="profile_image" />,
+    },
+    {
+      link: "/dashboard/Settings",
+      message: "Settings",
+      icon: <CiSettings className={style.icon} />,
+    },
+    { link: "/", message: "Logout", icon: <CiLogout className={style.icon} /> },
+  ];
   return (
     <>
       <motion.ul
@@ -15,30 +28,16 @@ const Dropdown: React.FC = () => {
         }}
         className={style.dropdown}
       >
-        <NavLink to={"/dashboard/Settings"} className={style.dropdownHolder}>
-          <motion.li className={style.dropdown_content}>
-            <div className={style.dropdown_img_holder}>
-              <motion.img src={img} alt="k" />
-            </div>
-            <p className={style.msg}> {"View Profile"}</p>
-          </motion.li>
-        </NavLink>
-        <NavLink to={"/dashboard/Settings"} className={style.dropdownHolder}>
-          <motion.li className={style.dropdown_content}>
-            <div className={style.dropdown_img_holder}>
-              <CiSettings className={style.icon} />
-            </div>
-            <p className={style.msg}> {"Settings"}</p>
-          </motion.li>
-        </NavLink>
-        <NavLink to={"/"} className={style.dropdownHolder}>
-          <motion.li className={style.dropdown_content}>
-            <div className={style.dropdown_img_holder}>
-              <CiLogout className={style.icon} />
-            </div>
-            <p className={style.msg}>{"Log Out"}</p>
-          </motion.li>
-        </NavLink>
+        {dropdown.map((el, i) => {
+          return (
+            <NavLink key={i} to={el.link} className={style.dropdownHolder}>
+              <motion.li className={style.dropdown_content}>
+                <div className={style.dropdown_img_holder}>{el.icon}</div>
+                <p className={style.msg}> {el.message}</p>
+              </motion.li>
+            </NavLink>
+          );
+        })}
       </motion.ul>
     </>
   );
