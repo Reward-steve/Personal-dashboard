@@ -53,14 +53,20 @@ const Login = catchAsync(async (req, res, next) => {
 
   // check if email and password exist
   if (!email || !password) {
-    return next(new AppError("Please provide email and password", 400));
+    return next(new AppError("Email and password are required", 400));
   }
 
+  //find user by email
   const user = await findByEmail(email);
 
+  if (!user) {
+    return next(new AppError("Incorrect email or password", 401));
+  }
+
+  //compare user password
   const isMatch = await user.comparePassword(password, user.password);
 
-  if (!user || !isMatch) {
+  if (!isMatch) {
     return next(new AppError("Incorrect email or password", 401));
   }
 

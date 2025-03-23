@@ -3,6 +3,7 @@ const Notification = require("../models/Security/Notification");
 const Patient = require("../models/UserModels/Patient");
 const Doctor = require("../models/UserModels/Doctor");
 const Nurse = require("../models/UserModels/Nurse");
+const Admin = require("../models/UserModels/Admin");
 
 const {
   AppError,
@@ -24,11 +25,23 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
     timeSlot,
     department,
     reason,
+    previousVisit,
+    preferredTimeRange,
+    translatorRequired,
+    healthInsuranceType,
+    allergies,
+    existingMedicalConditions,
+    recentSurgeries,
   } = req.body;
 
   // Check if patient and doctor exist
   const patient = await Patient.findById(patientId);
   const doctor = await Doctor.findById(doctorId);
+  // const nurse = await Nurse.findById(nurseId);
+  const admin = await Admin.find({
+    adminRole: "SuperAdmin",
+  });
+  const allAdminId = admin.map((admin) => admin._id);
   if (!patient || !doctor) {
     return next(new AppError("Patient or Doctor not found", 404));
   }
@@ -42,6 +55,13 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
     department,
     reason, // Optional
     status: "Pending", // Default
+    previousVisit,
+    preferredTimeRange,
+    translatorRequired,
+    healthInsuranceType,
+    allergies,
+    existingMedicalConditions,
+    recentSurgeries,
   });
 
   // Populate data after creating the appointment
@@ -56,6 +76,11 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
   await patient.save();
   await doctor.save();
 
+  //Notify Admin
+  const notifyAdmin = await Notification.create({
+    userId: allAdminId,
+    message: "You have a new appointment request",
+  });
   // Notify doctor
   const notifyDoctor = await Notification.create({
     userId: doctorId,
@@ -69,6 +94,18 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
       "Your appointment request is pending, you will receive a notification when it is scheduled.",
   });
 
+  //notify nurse
+  if (nurseId) {
+    const notifyNurse = await Notification.create({
+      userId: nurseId,
+      message: "You have been assigned to a new appointment",
+    });
+    await Notification.findById(notifyNurse._id).populate("userId", "name");
+  }
+
+  // Populate notifications
+
+  await Notification.findById(notifyAdmin._id).populate("userId", "name");
   await Notification.findById(notifyPatient._id).populate("userId", "name");
   await Notification.findById(notifyDoctor._id).populate("userId", "name");
 

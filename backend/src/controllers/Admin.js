@@ -5,6 +5,7 @@ const LabTechnician = require("../models/UserModels/LabTechnician");
 const Pharmacist = require("../models/UserModels/Pharmacist");
 const Nurse = require("../models/UserModels/Nurse");
 const Patient = require("../models/UserModels/Patient");
+const Appointment = require("../models/Records/Appointment");
 
 const {
   catchAsync,
@@ -69,6 +70,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   const pharmacist = await Pharmacist.find({});
   const labTechnician = await LabTechnician.find({});
   const patient = await Patient.find({});
+  const appointment = await Appointment.find({});
 
   res.status(200).json({
     status: "success",
@@ -79,7 +81,8 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
       nurses: nurse.length,
       pharmacists: pharmacist.length,
       labtechnicians: labTechnician.length,
-      patient: patient.length,
+      patients: patient.length,
+      appointments: appointment.length,
       allSignedIn: users.length,
     },
     data: {
@@ -89,6 +92,8 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
       labTechnicians:
         labTechnician.length === 0 ? "No labtechnician found" : labTechnician,
       patients: patient.length === 0 ? "No patient found" : patient,
+      appointments:
+        appointment.length === 0 ? "No appointment found" : appointment,
     },
   });
 });

@@ -22,17 +22,22 @@ const Profile = require("./src/Routes/Profile.js");
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
 app.use(cookieParser());
 
-app.use(
-  cors({
-    origin: true,
-    // methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
+const corsOptionsDelegate = (req, callback) => {
+  let corsOption;
+  const origin = req.header("Origin");
+
+  if (origin && origin.startsWith("http://localhost")) {
+    corsOption = { origin: origin, credentials: true };
+  } else {
+    corsOption = { origin: false };
+  }
+  callback(null, corsOption);
+};
+
+app.use(cors(corsOptionsDelegate));
 
 app.options("*", cors());
 
