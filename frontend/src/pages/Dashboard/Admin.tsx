@@ -18,29 +18,58 @@ import AppointmentTable from "../../components/StyleComponent/Table";
 import Notification from "../../components/StyleComponent/Notification";
 
 import img1 from "../../assets/img/home.jpg";
-import img2 from "../../assets/img/medical-record.png";
-import img3 from "../../assets/img/signin.jpg";
-import img4 from "../../assets/img/userprofile.jpg";
+// import img2 from "../../assets/img/medical-record.png";
+// import img3 from "../../assets/img/signin.jpg";
+// import img4 from "../../assets/img/userprofile.jpg";
 import { useApi } from "../../hooks/useApi";
-
+interface typeObj {
+  data: object;
+  message: string;
+  stats: object;
+  status: string;
+}
 const Dashboard: React.FC<ComponentProps> = () => {
-  const [stat, setStats] = useState(Object);
+  const [stat, setStats] = useState<{
+    patients: number;
+    doctors: number;
+    appointments: number;
+  }>({
+    patients: 0,
+    doctors: 0,
+    appointments: 0,
+  });
 
+  const [notification, setNotification] = useState<typeObj | null>(null);
   const { api } = useApi();
 
   const getStatistics = async () => {
-    const url = await api("GET", "admin/users");
-    console.log(url.data);
-    setStats((prevStats: object) => ({ ...prevStats, ...url.stats }));
+    try {
+      const url = await api("GET", "admin/users");
 
-    return url.stats;
+      setStats(
+        (url.stats as {
+          patients: number;
+          doctors: number;
+          appointments: number;
+        }) || { patients: 0, doctors: 0, appointments: 0 }
+      );
+    } catch (error) {
+      console.error("Error fetching statistics:", error);
+    }
+  };
+
+  const getNotification = async () => {
+    try {
+      const url = await api("GET", `notification`);
+      setNotification(url || null);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
   };
 
   useEffect(() => {
-    async function stats() {
-      return await getStatistics();
-    }
-    stats();
+    getStatistics();
+    getNotification();
   }, []);
 
   return (
@@ -54,19 +83,19 @@ const Dashboard: React.FC<ComponentProps> = () => {
             <aside className={styles.flex}>
               <DailyOverview
                 cl="skyblue"
-                Result={stat.patients}
+                Result={`${stat.patients}`}
                 Details="patients"
                 Icon={FaUsers}
               />
               <DailyOverview
                 cl="skyblue"
-                Result={stat.doctors}
+                Result={`${stat.doctors}`}
                 Details="doctors"
                 Icon={FaHandshake}
               />
               <DailyOverview
                 cl="skyblue"
-                Result={stat.appointments}
+                Result={`${stat.appointments}`}
                 Details="appointments"
                 Icon={FaComments}
               />
@@ -79,20 +108,7 @@ const Dashboard: React.FC<ComponentProps> = () => {
             </aside>
           </div>
 
-          <SectionName Name={"Schedule"} />
-          <main className={styles.mainHolder}>
-            <MainComponent>
-              <div>
-                <ul>
-                  <li>Maria</li>
-                  <li>Patrick</li>
-                  <li>Norris</li>
-                </ul>
-              </div>
-            </MainComponent>
-          </main>
-
-          <SectionName Name={"Upcoming Appointments"} />
+          <SectionName Name={"Pending Appointments"} />
           <main className={styles.mainHolder}>
             <MainComponent>
               <AppointmentTable
@@ -104,6 +120,8 @@ const Dashboard: React.FC<ComponentProps> = () => {
             </MainComponent>
           </main>
         </GrayBg>
+
+        {/* Notifications */}
         <div
           style={{
             width: "25%",
@@ -131,26 +149,22 @@ const Dashboard: React.FC<ComponentProps> = () => {
               }}
             >
               <MainComponent>
-                <Notification
-                  image={img1}
-                  altImg="img"
-                  message="You have 38 appointment requests."
-                />
-                <Notification
-                  image={img2}
-                  altImg="img"
-                  message="Your vacation request was denied."
-                />
-                <Notification
-                  image={img3}
-                  altImg="img"
-                  message="Tom Daley cancelled his appointment."
-                />
-                <Notification
-                  image={img4}
-                  altImg="img"
-                  message="Someone wants to become you patient"
-                />
+                {notification?.data ? (
+                  (notification.data as { message: string }[]).map(
+                    (n, index) => {
+                      return (
+                        <Notification
+                          key={index}
+                          image={img1}
+                          altImg="img"
+                          message={n.message}
+                        />
+                      );
+                    }
+                  )
+                ) : (
+                  <p>No notification found</p>
+                )}
               </MainComponent>
             </div>
           </GrayBg>
@@ -159,4 +173,5 @@ const Dashboard: React.FC<ComponentProps> = () => {
     </>
   );
 };
+
 export default Dashboard;

@@ -1,9 +1,12 @@
 import { useState } from "react";
 import styles from "./../../styles/Header.module.css";
 import img from "../../assets/img/jwtLogo.jpg";
+import { FaBell } from "react-icons/fa";
 import Dropdown from "./Dropdown";
-
-const Header: React.FC = () => {
+interface countType {
+  count: string;
+}
+const Header = ({ count }: countType) => {
   const [active, setActive] = useState<boolean>(false);
 
   return (
@@ -35,6 +38,10 @@ const Header: React.FC = () => {
 
             {active && <Dropdown />}
           </ul>
+        </div>
+        <div className={styles.icon}>
+          <div className={styles.notification}>{count}</div>
+          <FaBell size={25} />
         </div>
       </header>
     </nav>
