@@ -48,9 +48,14 @@
   transition: 0.5s;
 } */
 
+/* Add this to your global CSS file or the CSS file for the home page */
+input[type="text"] {
+  z-index: 1000; /* Ensure the input field is on top */
+  position: relative; /* Ensure the input field is positioned correctly */
+}
+
 .icon {
   font-size: 1.3rem;
-  margin-right: 10px;
   transition: 0.2s ease-in-out;
   cursor: pointer;
   position: relative;

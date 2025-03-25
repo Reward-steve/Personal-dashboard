@@ -1,11 +1,10 @@
 import * as React from "react";
-import { PersistentDatePicker } from "../../components/StyleComponent/PersistentDatePicker";
+// import CustomCalendar from "../../components/StyleComponent/customCalender";
 import { ComponentProps } from "../../router/Admin";
 import styles from "./../../styles/styledComponent.module.css";
 import PageTitle from "../../components/StyleComponent/PageTitle";
 import { IoHome } from "react-icons/io5";
 import { FaUsers } from "react-icons/fa";
-// import { FaStar } from "react-icons/fa";
 import { FaHandshake } from "react-icons/fa";
 import { FaComments } from "react-icons/fa";
 import { MdMonitorHeart } from "react-icons/md";
@@ -18,16 +17,15 @@ import AppointmentTable from "../../components/StyleComponent/Table";
 import Notification from "../../components/StyleComponent/Notification";
 
 import img1 from "../../assets/img/home.jpg";
-// import img2 from "../../assets/img/medical-record.png";
-// import img3 from "../../assets/img/signin.jpg";
-// import img4 from "../../assets/img/userprofile.jpg";
 import { useApi } from "../../hooks/useApi";
+
 interface typeObj {
   data: object;
   message: string;
   stats: object;
   status: string;
 }
+
 const Dashboard: React.FC<ComponentProps> = () => {
   const [stat, setStats] = useState<{
     patients: number;
@@ -38,7 +36,6 @@ const Dashboard: React.FC<ComponentProps> = () => {
     doctors: 0,
     appointments: 0,
   });
-
   const [notification, setNotification] = useState<typeObj | null>(null);
   const { api } = useApi();
 
@@ -72,10 +69,10 @@ const Dashboard: React.FC<ComponentProps> = () => {
     getNotification();
   }, []);
 
+  console.log("Rendering Dashboard component");
   return (
     <>
       <PageTitle Title={"Dashboard"} Icon={<IoHome />} />
-
       <div className={styles.containerHolder}>
         <GrayBg width="70%" height="auto">
           <SectionName Name={"Daily overview"} />
@@ -131,9 +128,9 @@ const Dashboard: React.FC<ComponentProps> = () => {
             flexDirection: "column",
           }}
         >
-          <GrayBg width="100%" height="auto">
-            <PersistentDatePicker />
-          </GrayBg>
+          {/* <GrayBg width="100%" height="auto">
+           
+          </GrayBg> */}
           <GrayBg width="100%" height="300px">
             <SectionName Name={"Notifications"} />
             <div
@@ -170,6 +167,7 @@ const Dashboard: React.FC<ComponentProps> = () => {
           </GrayBg>
         </div>
       </div>
+      {/* <CustomCalendar /> */}
     </>
   );
 };

@@ -6,10 +6,9 @@ import logo from "../../assets/img/medical-team.png";
 export default function Authentication() {
   return (
     <div className={style.loginPageBackground}>
-      <h2>Joveth Temple of Health (JTH)</h2>
-
       <main className={style.loginPage}>
         <section className={style.loginpageIntro}>
+          <h2>Joveth Temple of Health (JTH)</h2>
           <div className={style.logo}>
             <img src={logo} alt="logo" />
           </div>
