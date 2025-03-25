@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import style from "../../styles/LoginPage.module.css";
 import { motion } from "framer-motion";
@@ -12,7 +12,7 @@ import handleInputChange from "../../utils/handleInputChange";
 export default function SignUp(): JSX.Element {
   const [hidePassword, setHidePassword] = useState<boolean>(true);
   const [next, setNext] = useState<boolean>(false);
-  const { api, data } = useApi();
+  const { api } = useApi();
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -72,19 +72,10 @@ export default function SignUp(): JSX.Element {
           relationship,
         },
       });
-      console.log(data);
     }
   };
 
   const PasswordIcon: IconType = hidePassword ? FaEye : FaEyeSlash;
-  const passwordRef = useRef<HTMLInputElement>(null);
-
-  const togglePasswordVisibility = () => {
-    if (passwordRef.current) {
-      passwordRef.current.type = hidePassword ? "text" : "password";
-      setHidePassword(!hidePassword);
-    }
-  };
 
   return (
     <form className={style.loginForm}>
@@ -108,23 +99,22 @@ export default function SignUp(): JSX.Element {
           />
           <label>
             <input
-              type="password"
+              type={hidePassword ? "password" : "text"}
               name="password"
               placeholder="Password"
               value={userInfo.password}
               onChange={(e) => handleInputChange(e, setUserInfo)}
-              ref={passwordRef}
               required
             />
             <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
               <PasswordIcon
+                onClick={() => setHidePassword(!hidePassword)}
                 style={{
                   marginRight: "10px",
                   color: "gray",
                   fontSize: "1.5em",
                   cursor: "pointer",
                 }}
-                onClick={togglePasswordVisibility}
               />
             </motion.div>
           </label>

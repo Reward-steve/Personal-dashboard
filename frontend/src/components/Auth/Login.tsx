@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import style from "../../styles/LoginPage.module.css";
 import { motion } from "framer-motion";
@@ -24,7 +24,7 @@ export default function Login(): JSX.Element {
   });
 
   const Icon: IconType = hide ? FaEye : FaEyeSlash;
-  const hidePassword = useRef<HTMLInputElement>(null);
+
   const { api, error } = useApi();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +34,7 @@ export default function Login(): JSX.Element {
 
   const handleUserLogin = async (): Promise<void> => {
     if (!currentUser.email || !currentUser.password) {
-      alert("All input fields are required");
+      alert("Please fill in all fields");
       return;
     }
 
@@ -43,16 +43,10 @@ export default function Login(): JSX.Element {
       password: currentUser.password,
     });
 
-    if (!response) alert(error);
+    if (!response) alert(await error);
     if (response) {
       alert("Login successful");
       navigate("/dashboard/dashboard");
-    }
-  };
-
-  const onclickHidePassword = () => {
-    if (hidePassword.current) {
-      hidePassword.current.type = hide ? "text" : "password";
     }
   };
 
@@ -71,11 +65,10 @@ export default function Login(): JSX.Element {
           <label>
             <input
               name="password"
-              type="password"
+              type={hide ? "password" : "text"}
               value={currentUser.password}
               placeholder="Password"
               onChange={handleInputChange}
-              ref={hidePassword}
             />
 
             {
@@ -92,10 +85,7 @@ export default function Login(): JSX.Element {
                     fontSize: "1.5em",
                     cursor: "pointer",
                   }}
-                  onClick={() => {
-                    setHide(!hide);
-                    onclickHidePassword();
-                  }}
+                  onClick={() => setHide(!hide)}
                 />
               </motion.div>
             }

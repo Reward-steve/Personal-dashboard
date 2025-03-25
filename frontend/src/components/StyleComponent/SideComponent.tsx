@@ -5,7 +5,7 @@ import style from "../../styles/styledComponent.module.css";
 interface SideComponentProps {
   children: React.ReactNode;
   width: string;
-  pad: string;
+  pad?: string;
 }
 
 export default function SideComponent({
