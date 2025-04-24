@@ -38,7 +38,6 @@ const Dashboard: React.FC<ComponentProps> = () => {
   });
   const [notification, setNotification] = useState<typeObj | null>(null);
   const { api } = useApi();
-
   const getStatistics = async () => {
     try {
       const url = await api("GET", "admin/users");
@@ -69,10 +68,9 @@ const Dashboard: React.FC<ComponentProps> = () => {
     getNotification();
   }, []);
 
-  console.log("Rendering Dashboard component");
   return (
     <>
-      <PageTitle Title={"Dashboard"} Icon={<IoHome />} />
+      <PageTitle Title={`Dashboard`} Icon={<IoHome />} />
       <div className={styles.containerHolder}>
         <GrayBg width="70%" height="auto">
           <SectionName Name={"Daily overview"} />

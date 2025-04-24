@@ -1,6 +1,7 @@
 import { useState } from "react";
+import styles from "./../../styles/Header.module.css";
 import img from "../../assets/img/jwtLogo.jpg";
-import { FaBell } from "react-icons/fa";
+import { FaBell, FaSearch } from "react-icons/fa";
 import Dropdown from "./Dropdown";
 
 interface countType {
@@ -9,95 +10,58 @@ interface countType {
 
 const Header = ({ count }: countType) => {
   const [active, setActive] = useState<boolean>(false);
-  const [input, setInput] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>("");
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("Input changed:", e.target.value);
-    setInput(e.target.value);
-  };
-
-  const handleInputClick = () => {
-    console.log("Input clicked");
-    setInput("");
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
   };
 
   return (
     <nav>
-      <header
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "20px",
-          background: "#1e3a5f",
-        }}
-      >
-        <input
-          type="text"
-          value={input}
-          onChange={handleInputChange}
-          onClick={handleInputClick}
-          placeholder="Search for anything"
-          style={{ padding: "10px", border: "1px solid black", width: "200px" }}
-        />
+      <header className={`${styles.header}`}>
+        <div className={styles.searchContainer}>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            onClick={() => setInputValue("")}
+            placeholder="Search for anything"
+            className={styles.searchInput}
+            style={{ padding: "10px", border: "1px solid black" }} // Added inline styles
+          />
+          <FaSearch size={25} />
+        </div>
+
         <div
-          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+          className={styles.profile}
           onClick={() => {
             setActive(!active);
           }}
         >
-          <ul
-            style={{
-              display: "flex",
-              alignItems: "center",
-              listStyle: "none",
-              padding: 0,
-              margin: 0,
-            }}
-          >
-            <li style={{ marginRight: "10px" }}>
-              <img
-                src={img}
-                alt={"altImg"}
-                style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-              />
+          <ul className={styles.profile_content}>
+            <li className={styles.pro_pic}>
+              <img src={img} alt={"altImg"} />
             </li>
+
             <li
               style={{
                 display: "flex",
-                flexDirection: "column",
+                justifyContent: "center",
                 alignItems: "center",
+                flexDirection: "column",
+                width: "70%",
               }}
             >
               visit profile
-              <h4 style={{ margin: 0, color: "white" }}>Dr.kawasaki</h4>
+              <h4 className={styles.msg}>Dr.kawasaki</h4>
             </li>
+
             {active && <Dropdown />}
           </ul>
         </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <div style={{ position: "relative", marginRight: "10px" }}>
-            <div
-              style={{
-                position: "absolute",
-                right: 0,
-                top: 0,
-                width: "15px",
-                height: "15px",
-                borderRadius: "50%",
-                background: "red",
-                color: "white",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                fontSize: "10px",
-                fontWeight: "bold",
-              }}
-            >
-              {count}
-            </div>
-            <FaBell size={25} />
-          </div>
+        <div className={styles.icon}>
+          <div className={styles.notification}>{count}</div>
+          <FaBell size={25} />
         </div>
       </header>
     </nav>

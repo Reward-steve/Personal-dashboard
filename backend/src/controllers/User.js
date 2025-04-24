@@ -31,7 +31,7 @@ const getUserById = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     result: user.length,
-    data: { users: user },
+    user,
   });
 });
 

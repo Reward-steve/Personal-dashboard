@@ -34,8 +34,8 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await apiClient.request({ method, url, data: body });
 
-      setMessage(response.data.message || "success");
-      setData(response.data);
+      setMessage((await response.data.message) || "success");
+      setData((await response.data) as { data: object });
 
       return response.data;
     } catch (error: string | unknown) {
@@ -44,7 +44,7 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
           ? error.response.data.message
           : "An unknown error occured";
 
-      setError(errorMessage);
+      setError(await errorMessage);
       return null;
     } finally {
       setIsLoading(false);

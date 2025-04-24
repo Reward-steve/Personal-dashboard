@@ -24,7 +24,7 @@ const PORT = process.env.PORT;
 //   .catch((err) => {
 //     console.error("❌ Database connection failed", err.message);
 //   });
-console.log(process.env.LOCAL_DB);
+// console.log(process.env.LOCAL_DB);
 
 mongoose
   .connect(process.env.LOCAL_DB)

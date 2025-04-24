@@ -7,6 +7,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { IconType } from "react-icons";
 import { Input } from "../Inputs";
 import { useApi } from "../../hooks/useApi";
+import UserInfo from "../../api/userInfo";
 
 export interface LoginType {
   email: string;
@@ -26,6 +27,7 @@ export default function Login(): JSX.Element {
   const Icon: IconType = hide ? FaEye : FaEyeSlash;
 
   const { api, error } = useApi();
+  const user = UserInfo();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,7 +46,9 @@ export default function Login(): JSX.Element {
     });
 
     if (!response) alert(await error);
+
     if (response) {
+      console.log(await user);
       alert("Login successful");
       navigate("/dashboard/dashboard");
     }
