@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const roles = require("../config/roles");
+// const roles = require("../config/roles");
 
 //APPERROR CLASS
 class AppError extends Error {
@@ -62,10 +62,7 @@ const CreateSendToken = (user, statusCode, res) => {
   //if ok send response
   res.status(statusCode).json({
     status: "success",
-    token,
-    data: {
-      user,
-    },
+    user,
   });
 };
 

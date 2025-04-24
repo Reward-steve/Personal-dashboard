@@ -1,25 +1,13 @@
 // import { Navigate, Outlet } from "react-router-dom";
-// import { useEffect, useState } from "react";
-// import axios from "axios";
+// import { useEffect } from "react";
+// import useAuth from "../hooks/useAuth";
 
 // export function ProtectedRoute() {
-//   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-
+//   const { user } = useAuth();
 //   useEffect(() => {
-//     const verifyUser = async () => {
-//       try {
-//         await axios.get("http://localhost:5000/api/v1/pharmarcist", {
-//           withCredentials: true, // ✅ Sends the cookie automatically
-//         });
-//         setIsAuthenticated(true);
-//       } catch {
-//         setIsAuthenticated(false);
-//       }
-//     };
+//     const user = sessionStorage.getItem("user");
 
-//     verifyUser();
-//   }, []);
-
-//   if (isAuthenticated === null) return <p>Loading...</p>;
-//   return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
+//   }, [user]);
+//     if (user === null) return <p>Loading...</p>;
+//     return user ? <Outlet /> : <Navigate to="/" />;
 // }

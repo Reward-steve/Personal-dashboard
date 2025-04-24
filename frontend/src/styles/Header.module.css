@@ -16,11 +16,14 @@
   font-weight: bold;
 }
 
-/* .searchContainer {
+.searchContainer {
   display: flex;
   align-items: center;
-} */
-/* 
+  border: 1px solid aliceblue;
+  border-radius: 10px;
+  padding-right: 10px;
+}
+
 .searchInputHolder {
   display: flex;
   align-items: center;
@@ -28,12 +31,11 @@
   width: 30%;
   background-color: rgb(0, 86, 143);
   border-radius: 10px;
-} */
+}
 
-/* .searchInput {
+.searchInput {
   color: black;
-  padding: 15px 12px;
-  width: 96%;
+  padding: 10px;
   font-size: 1em;
   margin-right: 16px;
   border: none;
@@ -46,7 +48,7 @@
   outline: 1px solid skyblue;
   border-radius: 10px;
   transition: 0.5s;
-} */
+}
 
 /* Add this to your global CSS file or the CSS file for the home page */
 input[type="text"] {
@@ -114,7 +116,7 @@ input[type="text"] {
 
 .msg {
   color: white;
-  width: 55%;
+  font-weight: bold;
 }
 
 .dropdown {

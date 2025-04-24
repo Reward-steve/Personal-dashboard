@@ -173,7 +173,7 @@ const Logout = catchAsync(async (req, res, next) => {
 
   res.cookie("token", "", { httpOnly: true, expires: new Date(0) });
 
-  sendResponse(res, 200, "success", "successfully loged out");
+  sendResponse(res, 200, "success", "successfully logged out");
 });
 
 module.exports = {

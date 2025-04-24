@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import style from "../../styles/Header.module.css";
-import img from "../../assets/img/jwtLogo.jpg";
+import img from "../../assets/img/profile.jpg";
 import { CiSettings } from "react-icons/ci";
 import { NavLink } from "react-router-dom";
 import { CiLogout } from "react-icons/ci";

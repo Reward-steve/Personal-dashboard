@@ -12,7 +12,7 @@ import handleInputChange from "../../utils/handleInputChange";
 export default function SignUp(): JSX.Element {
   const [hidePassword, setHidePassword] = useState<boolean>(true);
   const [next, setNext] = useState<boolean>(false);
-  const { api } = useApi();
+  const { api, error } = useApi();
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -44,6 +44,11 @@ export default function SignUp(): JSX.Element {
       emergencyPhone,
       relationship,
     } = userInfo;
+
+    if (!userInfo) {
+      console.log(userInfo);
+      alert(error);
+    }
 
     if (
       name &&
@@ -90,6 +95,7 @@ export default function SignUp(): JSX.Element {
             value={userInfo.name}
             change={(e) => handleInputChange(e, setUserInfo)}
           />
+
           <Input
             type="email"
             name="email"
@@ -120,8 +126,8 @@ export default function SignUp(): JSX.Element {
           </label>
           <label style={{ color: "gray", padding: "15px" }}>
             <h4>Gender:</h4>
-            <label>
-              <span>Male</span>
+            <div className={style.flex_form}>
+              <p>Male</p>
               <input
                 type="radio"
                 name="gender"
@@ -129,9 +135,8 @@ export default function SignUp(): JSX.Element {
                 checked={userInfo.gender === "Male"}
                 onChange={(e) => handleInputChange(e, setUserInfo)}
               />
-            </label>
-            <label>
-              <span>Female</span>
+
+              <p>Female</p>
               <input
                 type="radio"
                 name="gender"
@@ -139,7 +144,7 @@ export default function SignUp(): JSX.Element {
                 checked={userInfo.gender === "Female"}
                 onChange={(e) => handleInputChange(e, setUserInfo)}
               />
-            </label>
+            </div>
           </label>
           <label style={{ color: "gray", padding: "0 15px" }}>
             <h4>D.O.B:</h4>
