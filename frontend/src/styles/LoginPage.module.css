@@ -158,3 +158,8 @@ input[type="email"]:focus {
   color: gray;
   transition: background-color 0.4s linear;
 }
+
+.error {
+  font-style: italic;
+  padding-bottom: 10px;
+}
