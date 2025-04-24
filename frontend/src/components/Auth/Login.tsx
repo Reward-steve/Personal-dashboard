@@ -1,13 +1,12 @@
 import * as React from "react";
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import style from "../../styles/LoginPage.module.css";
 import { motion } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { IconType } from "react-icons";
 import { Input } from "../Inputs";
-import { useApi } from "../../hooks/useApi";
-import UserInfo from "../../api/userInfo";
+import { useAuth } from "../../hooks/useAuth";
 
 export interface LoginType {
   email: string;
@@ -17,7 +16,8 @@ export interface LoginType {
 export default function Login(): JSX.Element {
   const [hide, setHide] = useState<boolean>(true);
   const [next, setNext] = useState<boolean>(false);
-  const navigate = useNavigate();
+
+  const { login } = useAuth();
 
   const [currentUser, setCurrentUser] = useState<LoginType>({
     email: "",
@@ -26,31 +26,23 @@ export default function Login(): JSX.Element {
 
   const Icon: IconType = hide ? FaEye : FaEyeSlash;
 
-  const { api, error } = useApi();
-  const user = UserInfo();
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCurrentUser((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleUserLogin = async (): Promise<void> => {
-    if (!currentUser.email || !currentUser.password) {
-      alert("Please fill in all fields");
-      return;
-    }
-
-    const response = await api("POST", "auth/login", {
-      email: currentUser.email,
-      password: currentUser.password,
-    });
-
-    if (!response) alert(await error);
-
-    if (response) {
-      console.log(await user);
-      alert("Login successful");
-      navigate("/dashboard/dashboard");
+    try {
+      if (!currentUser.email || !currentUser.password) {
+        alert("Please fill in all fields");
+        return;
+      }
+      await login({
+        email: currentUser.email,
+        password: currentUser.password,
+      });
+    } catch (error) {
+      console.log("Error:", error);
     }
   };
 

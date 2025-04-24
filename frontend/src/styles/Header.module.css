@@ -19,6 +19,9 @@
 .searchContainer {
   display: flex;
   align-items: center;
+  border: 1px solid aliceblue;
+  border-radius: 10px;
+  padding-right: 10px;
 }
 
 .searchInputHolder {
@@ -32,8 +35,7 @@
 
 .searchInput {
   color: black;
-  padding: 15px 12px;
-  width: 96%;
+  padding: 10px;
   font-size: 1em;
   margin-right: 16px;
   border: none;
@@ -114,7 +116,7 @@ input[type="text"] {
 
 .msg {
   color: white;
-  width: 55%;
+  font-weight: bold;
 }
 
 .dropdown {

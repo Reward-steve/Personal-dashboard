@@ -35,7 +35,7 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
       const response = await apiClient.request({ method, url, data: body });
 
       setMessage((await response.data.message) || "success");
-      setData((await response.data) as { data: object });
+      setData(await response.data);
 
       return response.data;
     } catch (error: string | unknown) {

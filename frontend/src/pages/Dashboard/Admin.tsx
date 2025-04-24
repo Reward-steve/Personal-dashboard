@@ -1,23 +1,24 @@
 import * as React from "react";
-// import CustomCalendar from "../../components/StyleComponent/customCalender";
 import { ComponentProps } from "../../router/Admin";
+import { useState, useEffect } from "react";
 import styles from "./../../styles/styledComponent.module.css";
-import PageTitle from "../../components/StyleComponent/PageTitle";
+import styleNotification from "./../../styles/Header.module.css";
 import { IoHome } from "react-icons/io5";
 import { FaUsers } from "react-icons/fa";
 import { FaHandshake } from "react-icons/fa";
 import { FaComments } from "react-icons/fa";
 import { MdMonitorHeart } from "react-icons/md";
-import { useState, useEffect } from "react";
+import PageTitle from "../../components/StyleComponent/PageTitle";
 import SectionName from "../../components/StyleComponent/SectionName";
 import MainComponent from "../../components/StyleComponent/MainComponent";
 import DailyOverview from "../../components/StyleComponent/DailyOverview";
 import GrayBg from "../../components/StyleComponent/GrayBg";
 import AppointmentTable from "../../components/StyleComponent/Table";
 import Notification from "../../components/StyleComponent/Notification";
-
+import { FaBell } from "react-icons/fa";
 import img1 from "../../assets/img/home.jpg";
 import { useApi } from "../../hooks/useApi";
+import { useAuth } from "../../hooks/useAuth";
 
 interface typeObj {
   data: object;
@@ -37,7 +38,10 @@ const Dashboard: React.FC<ComponentProps> = () => {
     appointments: 0,
   });
   const [notification, setNotification] = useState<typeObj | null>(null);
+
   const { api } = useApi();
+  const { user } = useAuth();
+
   const getStatistics = async () => {
     try {
       const url = await api("GET", "admin/users");
@@ -70,7 +74,10 @@ const Dashboard: React.FC<ComponentProps> = () => {
 
   return (
     <>
-      <PageTitle Title={`Dashboard`} Icon={<IoHome />} />
+      <PageTitle
+        Title={`Dashboard ${user?.name || " Loading..."}`}
+        Icon={<IoHome />}
+      />
       <div className={styles.containerHolder}>
         <GrayBg width="70%" height="auto">
           <SectionName Name={"Daily overview"} />
@@ -126,11 +133,24 @@ const Dashboard: React.FC<ComponentProps> = () => {
             flexDirection: "column",
           }}
         >
-          {/* <GrayBg width="100%" height="auto">
-           
-          </GrayBg> */}
-          <GrayBg width="100%" height="300px">
-            <SectionName Name={"Notifications"} />
+          <GrayBg width="100%" height="400px">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <div
+                className={styleNotification.icon}
+                style={{ color: "#1e3a5f" }}
+              >
+                <div className={styleNotification.notification}>1</div>
+                <FaBell size={25} />
+              </div>
+              <SectionName Name={"Notifications"} />
+            </div>
             <div
               style={{
                 width: "100%",
@@ -165,7 +185,6 @@ const Dashboard: React.FC<ComponentProps> = () => {
           </GrayBg>
         </div>
       </div>
-      {/* <CustomCalendar /> */}
     </>
   );
 };

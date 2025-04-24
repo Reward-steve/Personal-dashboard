@@ -19,7 +19,7 @@ const MainContent: React.FC = () => {
         transition={{ duration: 0.4, ease: "easeInOut" }}
       >
         <div className={styles.content}>
-          <Header count={"1"} />
+          <Header />
 
           <Outlet />
         </div>

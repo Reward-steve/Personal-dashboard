@@ -7,17 +7,21 @@ export default function Authentication() {
   return (
     <div className={style.loginPageBackground}>
       <main className={style.loginPage}>
-        <section className={style.loginpageIntro}>
-          <h2>Joveth Temple of Health (JTH)</h2>
-          <div className={style.logo}>
-            <img src={logo} alt="logo" />
-          </div>
-          <p>
-            Discover the power of personalized health insights and seamless
-            tracking with Joveth Temple of Health
-          </p>
-        </section>
-        <Outlet />
+        <div className={style.flex_form}>
+          <section className={style.loginpageIntro}>
+            <h2>Joveth Temple of Health (JTH)</h2>
+            <div className={style.logo}>
+              <img src={logo} alt="logo" />
+            </div>
+            <p>
+              Discover the power of personalized health insights and seamless
+              tracking with Joveth Temple of Health
+            </p>
+          </section>
+        </div>
+        <div className={style.flex_form}>
+          <Outlet />
+        </div>
       </main>
     </div>
   );

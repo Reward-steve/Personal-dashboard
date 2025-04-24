@@ -1,14 +1,10 @@
 import { useState } from "react";
 import styles from "./../../styles/Header.module.css";
-import img from "../../assets/img/jwtLogo.jpg";
-import { FaBell, FaSearch } from "react-icons/fa";
+import img from "../../assets/img/profile.jpg";
+import { FaSearch } from "react-icons/fa";
 import Dropdown from "./Dropdown";
 
-interface countType {
-  count: string;
-}
-
-const Header = ({ count }: countType) => {
+const Header = () => {
   const [active, setActive] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -27,9 +23,8 @@ const Header = ({ count }: countType) => {
             onClick={() => setInputValue("")}
             placeholder="Search for anything"
             className={styles.searchInput}
-            style={{ padding: "10px", border: "1px solid black" }} // Added inline styles
           />
-          <FaSearch size={25} />
+          <FaSearch size={18} cursor={"pointer"} />
         </div>
 
         <div
@@ -49,19 +44,14 @@ const Header = ({ count }: countType) => {
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "column",
-                width: "70%",
               }}
             >
               visit profile
-              <h4 className={styles.msg}>Dr.kawasaki</h4>
+              <p className={styles.msg}>Mr. Reward_St</p>
             </li>
 
             {active && <Dropdown />}
           </ul>
-        </div>
-        <div className={styles.icon}>
-          <div className={styles.notification}>{count}</div>
-          <FaBell size={25} />
         </div>
       </header>
     </nav>
