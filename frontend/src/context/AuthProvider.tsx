@@ -5,12 +5,14 @@ import apiClient from "../utils/apiClient";
 
 export interface AuthContextType {
   user: userType | null | undefined;
+  isAuthenticated: boolean;
   login: (credentials: { email: string; password: string }) => Promise<void>;
   logout: () => Promise<void>;
 }
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<userType | null | undefined>(undefined);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const login = async ({
     email,
@@ -25,9 +27,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(user);
       if (user) {
         sessionStorage.setItem("user", JSON.stringify(user));
+        setIsAuthenticated(true);
         console.log("🚀 User from backend:", user);
       } else console.warn("❌ No user data returned");
     } catch (err) {
+      setIsAuthenticated(false);
       console.error("Login failed:", err);
       throw err;
     }
@@ -52,7 +56,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

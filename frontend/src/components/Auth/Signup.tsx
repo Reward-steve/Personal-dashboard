@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import style from "../../styles/LoginPage.module.css";
 import { motion } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -12,7 +12,9 @@ import handleInputChange from "../../utils/handleInputChange";
 export default function SignUp(): JSX.Element {
   const [hidePassword, setHidePassword] = useState<boolean>(true);
   const [next, setNext] = useState<boolean>(false);
-  const { api, error } = useApi();
+  const [err, setErr] = useState("");
+  const { api, error, isLoading } = useApi();
+  const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -44,12 +46,6 @@ export default function SignUp(): JSX.Element {
       emergencyPhone,
       relationship,
     } = userInfo;
-
-    if (!userInfo) {
-      console.log(userInfo);
-      alert(error);
-    }
-
     if (
       name &&
       email &&
@@ -64,7 +60,7 @@ export default function SignUp(): JSX.Element {
       emergencyPhone &&
       relationship
     ) {
-      await api("POST", "auth/register", {
+      const res = await api("POST", "auth/register", {
         name,
         email,
         password,
@@ -77,6 +73,9 @@ export default function SignUp(): JSX.Element {
           relationship,
         },
       });
+      if (res) navigate("/dashboard/admin");
+    } else {
+      setErr(error.message || "All fields are required");
     }
   };
 
@@ -169,6 +168,11 @@ export default function SignUp(): JSX.Element {
         </>
       ) : (
         <>
+          {err && (
+            <p className={style.error} style={{ color: "red" }}>
+              {err}
+            </p>
+          )}
           <label>
             <Input
               type="text"
@@ -244,10 +248,9 @@ export default function SignUp(): JSX.Element {
             >
               Prev
             </motion.button>
-
-            <NavLink className={style.navlink} onClick={handleAuth} to="/">
-              Signup
-            </NavLink>
+            <button className={style.navlink} onClick={handleAuth}>
+              {isLoading ? "Signup..." : "   Signup"}
+            </button>
           </label>
         </>
       )}
