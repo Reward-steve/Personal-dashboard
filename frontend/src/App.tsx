@@ -17,6 +17,12 @@ const App: React.FC = () => {
         <ApiProvider>
           <ThemeProvider>
             <Routes>
+              {/* Signup Page */}
+              <Route path="/*" element={<Authentication />}>
+                <Route index element={<Login />} />
+                <Route path="Signup" element={<SignUp />} />
+              </Route>
+
               {/* Dashboard Page */}
               <Route element={<ProtectedRoute />}>
                 <Route path="/admin/*" element={<MainContent />}>
@@ -28,11 +34,6 @@ const App: React.FC = () => {
                     />
                   ))}
                 </Route>
-              </Route>
-              {/* Signup Page */}
-              <Route path="/*" element={<Authentication />}>
-                <Route index element={<Login />} />
-                <Route path="Signup" element={<SignUp />} />
               </Route>
             </Routes>
           </ThemeProvider>

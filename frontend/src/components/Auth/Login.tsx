@@ -13,9 +13,14 @@ export interface LoginType {
   password: string;
 }
 
+interface ErrorType {
+  response: { data: { message: string } };
+}
+
 export default function Login(): JSX.Element {
   const [hide, setHide] = useState<boolean>(true);
   const [next, setNext] = useState<boolean>(false);
+  const [error, setError] = useState<ErrorType | string>();
 
   const { login } = useAuth();
 
@@ -34,15 +39,21 @@ export default function Login(): JSX.Element {
   const handleUserLogin = async (): Promise<void> => {
     try {
       if (!currentUser.email || !currentUser.password) {
-        alert("Please fill in all fields");
+        setError("Please fill in all fields");
         return;
       }
       await login({
         email: currentUser.email,
         password: currentUser.password,
       });
-    } catch (error) {
-      console.log("Error:", error);
+      setError("");
+    } catch (error: unknown) {
+      console.error("Error:", error);
+      if ((error as ErrorType)?.response?.data?.message) {
+        setError((error as ErrorType).response.data.message);
+      } else {
+        setError("Something went wrong");
+      }
     }
   };
 
@@ -51,6 +62,13 @@ export default function Login(): JSX.Element {
       {!next ? <h3>Log in</h3> : <h3>Forgotten Password</h3>}
       {!next ? (
         <>
+          {error && (
+            <p style={{ color: "red" }} className={style.error}>
+              {typeof error === "string"
+                ? error
+                : "An unexpected error occured"}
+            </p>
+          )}
           <Input
             name="email"
             type="email"
