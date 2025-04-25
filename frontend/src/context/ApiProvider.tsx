@@ -30,13 +30,12 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const api = async (method: string, url: string, body?: object) => {
     setIsLoading(true);
-    setError({ message: "" });
     try {
       const response = await apiClient.request({ method, url, data: body });
 
       setMessage((await response.data.message) || "success");
       setData(await response.data);
-
+      setError({ message: "" });
       return response.data;
     } catch (error: string | unknown) {
       const errorMessage =
