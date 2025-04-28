@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import style from "../../styles/LoginPage.module.css";
 import { motion } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -21,8 +21,11 @@ export default function Login(): JSX.Element {
   const [hide, setHide] = useState<boolean>(true);
   const [next, setNext] = useState<boolean>(false);
   const [error, setError] = useState<ErrorType | string>();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { user, login } = useAuth();
+
+  const navigate = useNavigate();
 
   const [currentUser, setCurrentUser] = useState<LoginType>({
     email: "",
@@ -38,6 +41,7 @@ export default function Login(): JSX.Element {
 
   const handleUserLogin = async (): Promise<void> => {
     try {
+      setIsLoading(true);
       if (!currentUser.email || !currentUser.password) {
         setError("Please fill in all fields");
         return;
@@ -46,7 +50,11 @@ export default function Login(): JSX.Element {
         email: currentUser.email,
         password: currentUser.password,
       });
-      setError("");
+
+      if (user) {
+        navigate("/*");
+        setError("");
+      }
     } catch (error: unknown) {
       console.error("Error:", error);
       if ((error as ErrorType)?.response?.data?.message) {
@@ -54,6 +62,8 @@ export default function Login(): JSX.Element {
       } else {
         setError("Something went wrong");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -105,15 +115,17 @@ export default function Login(): JSX.Element {
             }
           </label>
           <label>
-            <div
+            <button
+              disabled={isLoading}
               className={style.navlink}
               onClick={handleUserLogin}
               style={{
                 textDecoration: "none",
+                background: `${isLoading ? "#1e9eb2" : "#1e9ef4"}`,
               }}
             >
-              Login
-            </div>
+              {isLoading ? "Loging in..." : "Login"}
+            </button>
           </label>
         </>
       ) : (
@@ -131,6 +143,7 @@ export default function Login(): JSX.Element {
               onClick={handleUserLogin}
               style={{
                 textDecoration: "none",
+                background: "#1e9ef4",
               }}
             >
               Reset Password
@@ -154,7 +167,7 @@ export default function Login(): JSX.Element {
       </p>
       <p>or log in with</p>
 
-      <NavLink to={"/Signup"} className={style.signup}>
+      <NavLink to={"/auth/signup"} className={style.signup}>
         Need an account? Sign up
       </NavLink>
     </form>

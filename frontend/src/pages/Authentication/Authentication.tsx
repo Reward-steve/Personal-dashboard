@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Outlet } from "react-router-dom";
 import style from "../../styles/LoginPage.module.css";
 import logo from "../../assets/img/medical-team.png";

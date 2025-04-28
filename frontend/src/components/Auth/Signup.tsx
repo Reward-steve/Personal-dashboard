@@ -256,7 +256,7 @@ export default function SignUp(): JSX.Element {
       )}
 
       <p>or sign up with</p>
-      <NavLink to={"/"} className={style.signup}>
+      <NavLink to={"/auth"} className={style.signup}>
         Already have an account? Log in
       </NavLink>
     </form>
