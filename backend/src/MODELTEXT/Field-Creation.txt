@@ -16,7 +16,7 @@
     },
     "emergencyContact": {
         "name": "John Weather",
-        "relation": "Father",
+        "relationship": "Parent",
         "phone": "+123-555-789"
     }
 }

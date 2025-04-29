@@ -1,9 +1,5 @@
 const Prescription = require("../models/Records/Prescription");
-const {
-  catchAsync,
-  handleNoResult,
-  handleNotFound,
-} = require("../Utils/reusableFunctions");
+const { catchAsync, handleNotFound } = require("../Utils/reusableFunctions");
 
 // ✅ Add a prescription
 exports.addPrescription = catchAsync(async (req, res, next) => {

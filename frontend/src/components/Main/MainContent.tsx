@@ -20,7 +20,6 @@ const MainContent: React.FC = () => {
       >
         <div className={styles.content}>
           <Header />
-
           <Outlet />
         </div>
       </motion.section>

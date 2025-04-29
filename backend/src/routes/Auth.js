@@ -33,9 +33,9 @@ router.route("/updatepassword").patch(Protect, updatePassword);
 router.route("/logout").post(Protect, Logout);
 
 router
-  .route("/users/:id")
+  .route("/user/:id")
   .get(getUserById)
-  .put(updateUserById)
+  .patch(updateUserById)
   .delete(Protect, restrict("admin"), deleteUserById);
 
 module.exports = router;
