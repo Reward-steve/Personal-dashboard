@@ -22,9 +22,10 @@ export default function Login(): JSX.Element {
   const [next, setNext] = useState<boolean>(false);
   const [error, setError] = useState<ErrorType | string>();
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const { user, login } = useAuth();
-
+  
+  document.title= !next ? "Auth | Login" : "Auth | Forgotten Password"
   const navigate = useNavigate();
 
   const [currentUser, setCurrentUser] = useState<LoginType>({
@@ -129,6 +130,7 @@ export default function Login(): JSX.Element {
           </label>
         </>
       ) : (
+        
         <>
           <Input
             name="email"

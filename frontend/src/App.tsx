@@ -1,10 +1,9 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Authentication from "./pages/Authentication/Authentication";
 import MainContent from "./components/Main/MainContent";
 import routerObject from "./router/Admin";
-// import SignUp from "./components/Auth/Signup";
-// import Login from "./components/Auth/Login";
 import { ApiProvider } from "./context/ApiProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { ProtectedRoute } from "./utils/ProtectedRoute"; // Adjust the path as needed
