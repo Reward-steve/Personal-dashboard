@@ -44,6 +44,7 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
           : "An unknown error occured";
 
       setError(await errorMessage);
+      console.error(errorMessage)
       return null;
     } finally {
       setIsLoading(false);

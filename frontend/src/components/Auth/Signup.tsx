@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import style from "../../styles/LoginPage.module.css";
 import { motion } from "framer-motion";
@@ -10,10 +10,12 @@ import { useApi } from "../../hooks/useApi";
 import handleInputChange from "../../utils/handleInputChange";
 
 export default function SignUp(): JSX.Element {
+  document.title="Auth | Signup"
   const [hidePassword, setHidePassword] = useState<boolean>(true);
   const [next, setNext] = useState<boolean>(false);
   const [err, setErr] = useState("");
-  const { api, error, isLoading } = useApi();
+  const [isLoading,setIsLoading]=useState(false)
+  const { api, error } = useApi();
   const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
@@ -31,7 +33,9 @@ export default function SignUp(): JSX.Element {
     relationship: "",
   });
 
-  const handleAuth = async () => {
+  const handleAuth = async (e:FormEvent) => {
+try{
+      e.preventDefault()
     const {
       name,
       email,
@@ -46,6 +50,8 @@ export default function SignUp(): JSX.Element {
       emergencyPhone,
       relationship,
     } = userInfo;
+
+    
     if (
       name &&
       email &&
@@ -60,7 +66,7 @@ export default function SignUp(): JSX.Element {
       emergencyPhone &&
       relationship
     ) {
-      const res = await api("POST", "auth/register", {
+      const res=  await api("POST", "auth/register", {
         name,
         email,
         password,
@@ -73,10 +79,15 @@ export default function SignUp(): JSX.Element {
           relationship,
         },
       });
-      if (res) navigate("/dashboard/admin");
+      console.log(await error)
+      setErr(await error)
+      // navigate("/auth");
     } else {
-      setErr(error.message || "All fields are required");
+      setErr(await error || "All fields are required");
     }
+}catch(e){
+
+}
   };
 
   const PasswordIcon: IconType = hidePassword ? FaEye : FaEyeSlash;
@@ -161,6 +172,7 @@ export default function SignUp(): JSX.Element {
               whileTap={{ scale: 0.95 }}
               className={style.navlink}
               onClick={() => setNext(true)}
+              style={{ background: "#1e9ef4"}}
             >
               Next
             </motion.button>
@@ -244,11 +256,12 @@ export default function SignUp(): JSX.Element {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.95 }}
               className={style.navlink}
+              style={{ background: "#1e9ef4"}}
               onClick={() => setNext(!true)}
             >
               Prev
             </motion.button>
-            <button className={style.navlink} onClick={handleAuth}>
+            <button className={style.navlink} onClick={handleAuth} style={{ background: "#1e9ef4"}}>
               {isLoading ? "Signup..." : "   Signup"}
             </button>
           </label>
