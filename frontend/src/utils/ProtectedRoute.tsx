@@ -36,5 +36,5 @@ export function ProtectedRoute() {
 
   if (isAuthenticated === null) return <h2>Loading...</h2>;
 
-  return isAuthenticated ? <Outlet /> : <Navigate to={"/auth"} />;
+  return !isAuthenticated ? <Outlet /> : <Navigate to={"login"} />;
 }

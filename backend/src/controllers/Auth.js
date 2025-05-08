@@ -138,12 +138,12 @@ const resetPassword = catchAsync(async (req, res, next) => {
 });
 
 const updatePassword = catchAsync(async (req, res, next) => {
-  const { currentPassword, password, confirmPassword } = req.body;
+  const { currentPassword, password } = req.body;
 
   //get user id
   const { id } = req.user.id;
 
-  if (!currentPassword || !password || !confirmPassword) {
+  if (!currentPassword || !password) {
     return next(new AppError("All fields are require", 500));
   }
 

@@ -7,7 +7,7 @@ export interface ApiContexType {
   message: string;
   data: object | null;
   isLoading: boolean;
-  error: { message: string };
+  error: string;
   api: (
     method: string,
     url: string,
@@ -26,7 +26,7 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
   const [message, setMessage] = useState<string>("");
   const [data, setData] = useState<object | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<{ message: string }>({ message: "" });
+  const [error, setError] = useState("");
 
   const api = async (method: string, url: string, body?: object) => {
     setIsLoading(true);
@@ -35,7 +35,7 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
 
       setMessage((await response.data.message) || "success");
       setData(await response.data);
-      setError({ message: "" });
+      setError("");
       return response.data;
     } catch (error: string | unknown) {
       const errorMessage =
@@ -44,7 +44,6 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
           : "An unknown error occured";
 
       setError(await errorMessage);
-      console.error(errorMessage)
       return null;
     } finally {
       setIsLoading(false);

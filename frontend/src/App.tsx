@@ -1,7 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Authentication from "./pages/Authentication/Authentication";
 import MainContent from "./components/Main/MainContent";
 import routerObject from "./router/Admin";
 import { ApiProvider } from "./context/ApiProvider";
@@ -18,13 +16,12 @@ const App: React.FC = () => {
         <ApiProvider>
           <ThemeProvider>
             <Routes>
-              {/* Signup Page */}
-              <Route path="/auth/*" element={<Authentication />}>
-                <Route index element={<Login />} />
-                <Route path="signup" element={<SignUp />} />
-              </Route>
-
               <Route element={<ProtectedRoute />}>
+                {/* Authentication Page */}
+                <Route path="/auth/login" element={<Login />}></Route>
+                <Route path="/auth/signup" element={<SignUp />}></Route>
+
+                {/* Dashboard Page */}
                 <Route path="/*" element={<MainContent />}>
                   {routerObject.map((route, id) => (
                     <Route
