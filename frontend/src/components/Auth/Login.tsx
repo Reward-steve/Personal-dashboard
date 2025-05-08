@@ -1,12 +1,12 @@
 import * as React from "react";
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import style from "../../styles/LoginPage.module.css";
-import { motion } from "framer-motion";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { IconType } from "react-icons";
+import { FaHome } from "react-icons/fa";
 import { Input } from "../Inputs";
 import { useAuth } from "../../hooks/useAuth";
+import { AuthHolder } from "../../pages/Authentication/AuthHolder";
+import { TogglePassword } from "../TogglePassword";
 
 export interface LoginType {
   email: string;
@@ -18,22 +18,19 @@ interface ErrorType {
 }
 
 export default function Login(): JSX.Element {
-  const [hide, setHide] = useState<boolean>(true);
   const [next, setNext] = useState<boolean>(false);
   const [error, setError] = useState<ErrorType | string>();
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const { user, login } = useAuth();
-  
-  document.title= !next ? "Auth | Login" : "Auth | Forgotten Password"
+
+  document.title = !next ? "Auth | Login" : "Auth | Forgotten Password";
   const navigate = useNavigate();
 
   const [currentUser, setCurrentUser] = useState<LoginType>({
     email: "",
     password: "",
   });
-
-  const Icon: IconType = hide ? FaEye : FaEyeSlash;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -69,109 +66,132 @@ export default function Login(): JSX.Element {
   };
 
   return (
-    <form className={style.loginForm}>
-      {!next ? <h3>Log in</h3> : <h3>Forgotten Password</h3>}
-      {!next ? (
-        <>
-          {error && (
-            <p style={{ color: "red" }} className={style.error}>
-              {typeof error === "string"
-                ? error
-                : "An unexpected error occured"}
-            </p>
-          )}
-          <Input
-            name="email"
-            type="email"
-            value={currentUser.email}
-            placeholder="Email address"
-            change={handleInputChange}
-          />
-          <label>
-            <input
-              name="password"
-              type={hide ? "password" : "text"}
-              value={currentUser.password}
-              placeholder="Password"
-              onChange={handleInputChange}
-            />
-
-            {
-              <motion.div
-                whileHover={{
-                  scale: 1.1,
+    <AuthHolder>
+      <form className={style.loginForm}>
+        <div className={style.iconholder}>
+          {!next ? <h3>Log in</h3> : <h3>Forgotten Password</h3>}
+          <Link to={"#"} className={style.homeIcon}>
+            <FaHome size={20} />
+          </Link>
+        </div>
+        {!next ? (
+          <div
+            style={{
+              background: "aliceblue",
+              width: "90%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "20px 0",
+              borderRadius: "10px",
+              height: "100%",
+            }}
+          >
+            {error && (
+              <p style={{ color: "red" }} className={style.error}>
+                {typeof error === "string"
+                  ? error
+                  : "An unexpected error occured"}
+              </p>
+            )}
+            <label>
+              <Input
+                nameTitle="Email Address"
+                name="email"
+                type="email"
+                value={currentUser.email}
+                placeholder="ayojackson@example.com"
+                change={handleInputChange}
+              />
+            </label>
+            <label>
+              <TogglePassword
+                password={currentUser.password}
+                change={handleInputChange}
+              />
+            </label>
+            <label>
+              <button
+                disabled={isLoading}
+                className={style.navlink}
+                onClick={handleUserLogin}
+                style={{
+                  textDecoration: "none",
+                  background: `${isLoading ? "#1e9eb2" : "#1e9ef4"}`,
                 }}
-                whileTap={{ scale: 0.95 }}
               >
-                <Icon
-                  style={{
-                    marginRight: "10px",
-                    color: "gray",
-                    fontSize: "1.5em",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => setHide(!hide)}
-                />
-              </motion.div>
-            }
-          </label>
-          <label>
-            <button
-              disabled={isLoading}
-              className={style.navlink}
-              onClick={handleUserLogin}
-              style={{
-                textDecoration: "none",
-                background: `${isLoading ? "#1e9eb2" : "#1e9ef4"}`,
-              }}
-            >
-              {isLoading ? "Loging in..." : "Login"}
-            </button>
-          </label>
-        </>
-      ) : (
-        
-        <>
-          <Input
-            name="email"
-            type="email"
-            value={currentUser.email}
-            placeholder="Email address"
-            change={handleInputChange}
-          />
-          <label>
-            <div
-              className={style.navlink}
-              onClick={handleUserLogin}
-              style={{
-                textDecoration: "none",
-                background: "#1e9ef4",
-              }}
-            >
-              Reset Password
-            </div>
-          </label>
-        </>
-      )}
-      <p
-        onClick={() => setNext(!next)}
-        style={{
-          color: "rgb(0 16 255)",
-          width: " 80%",
-          height: "10%",
-          display: "flex",
-          justifyContent: "right",
-          alignItems: "center",
-          cursor: "pointer",
-        }}
-      >
-        {!next ? "Forgotten password" : "Login"}
-      </p>
-      <p>or log in with</p>
-
-      <NavLink to={"/auth/signup"} className={style.signup}>
-        Need an account? Sign up
-      </NavLink>
-    </form>
+                {isLoading ? "Loging in..." : "Login"}
+              </button>
+            </label>
+          </div>
+        ) : (
+          <div
+            style={{
+              background: "aliceblue",
+              width: "90%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "20px 0",
+              borderRadius: "10px",
+            }}
+          >
+            <label>
+              <Input
+                nameTitle="Email Address"
+                name="email"
+                type="email"
+                value={currentUser.email}
+                placeholder="ayojackson@example.com"
+                change={handleInputChange}
+              />
+            </label>
+            <label>
+              <div
+                className={style.navlink}
+                onClick={handleUserLogin}
+                style={{
+                  textDecoration: "none",
+                  background: "#1e9ef4",
+                }}
+              >
+                Reset Password
+              </div>
+            </label>
+          </div>
+        )}
+        <label>
+          <p
+            onClick={() => setNext(!next)}
+            style={{
+              color: "rgb(0 16 255)",
+              width: "95%",
+              padding: "10px",
+              display: "flex",
+              justifyContent: "end",
+              alignItems: "center",
+            }}
+          >
+            {!next ? "Forgotten password" : "Login"}
+          </p>
+        </label>
+        <label
+          style={{
+            display: "flex",
+            alignItems: "start",
+            width: "90%",
+            justifyContent: "space-between",
+            height: "50px",
+          }}
+        >
+          <p>Need an account? </p>
+          <NavLink style={{ color: "blue" }} to={"/auth/signup"}>
+            Sign up
+          </NavLink>
+        </label>
+      </form>
+    </AuthHolder>
   );
 }

@@ -1,22 +1,23 @@
 import * as React from "react";
-import { useState,useEffect } from "react";
-import { useNavigate, NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, Link } from "react-router-dom";
 import style from "../../styles/LoginPage.module.css";
 import { motion } from "framer-motion";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { IconType } from "react-icons";
+import { FaHome } from "react-icons/fa";
 import { Input } from "../Inputs";
 import { useApi } from "../../hooks/useApi";
 import handleInputChange from "../../utils/handleInputChange";
+import { AuthHolder } from "../../pages/Authentication/AuthHolder";
+import { TogglePassword } from "../TogglePassword";
 
 export default function SignUp(): JSX.Element {
-  document.title="Auth | Signup"
-  const [hidePassword, setHidePassword] = useState<boolean>(true);
+  document.title = "Auth | Signup";
+
   const [next, setNext] = useState<boolean>(false);
   const [err, setErr] = useState("");
-  const [isLoading,setIsLoading]=useState(false)
-  const { api, error } = useApi();
-  const navigate = useNavigate();
+  // const [isLoading, setIsLoading] = useState(false);
+  const { api, error, isLoading } = useApi();
+  // const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -33,9 +34,8 @@ export default function SignUp(): JSX.Element {
     relationship: "",
   });
 
-  const handleAuth = async (e:FormEvent) => {
-try{
-      e.preventDefault()
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
     const {
       name,
       email,
@@ -51,7 +51,6 @@ try{
       relationship,
     } = userInfo;
 
-    
     if (
       name &&
       email &&
@@ -66,7 +65,7 @@ try{
       emergencyPhone &&
       relationship
     ) {
-      const res=  await api("POST", "auth/register", {
+      await api("POST", "auth/register", {
         name,
         email,
         password,
@@ -79,153 +78,183 @@ try{
           relationship,
         },
       });
-      console.log(await error)
-      setErr(await error)
       // navigate("/auth");
+      // setErr(error.message);
+      console.log(error);
+      setErr(error);
     } else {
-      setErr(await error || "All fields are required");
+      setErr(error);
     }
-}catch(e){
-
-}
   };
 
-  const PasswordIcon: IconType = hidePassword ? FaEye : FaEyeSlash;
-
   return (
-    <form className={style.loginForm}>
-      <h3>Sign Up</h3>
-
-      {!next ? (
-        <>
-          <Input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            value={userInfo.name}
-            change={(e) => handleInputChange(e, setUserInfo)}
-          />
-
-          <Input
-            type="email"
-            name="email"
-            placeholder="Email address"
-            value={userInfo.email}
-            change={(e) => handleInputChange(e, setUserInfo)}
-          />
-          <label>
-            <input
-              type={hidePassword ? "password" : "text"}
-              name="password"
-              placeholder="Password"
-              value={userInfo.password}
-              onChange={(e) => handleInputChange(e, setUserInfo)}
-              required
-            />
-            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-              <PasswordIcon
-                onClick={() => setHidePassword(!hidePassword)}
-                style={{
-                  marginRight: "10px",
-                  color: "gray",
-                  fontSize: "1.5em",
-                  cursor: "pointer",
-                }}
+    <AuthHolder>
+      <form className={style.loginForm}>
+        <div className={style.iconholder}>
+          <h3>Sign Up</h3>
+          <Link to={"#"} className={style.homeIcon}>
+            <FaHome size={20} />
+          </Link>
+        </div>
+        {!next ? (
+          <div
+            style={{
+              background: "aliceblue",
+              width: "90%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "20px 0",
+              borderRadius: "10px",
+            }}
+          >
+            <label>
+              <Input
+                nameTitle="Full Name"
+                type="text"
+                name="name"
+                placeholder="Ayomideh Jackson David"
+                value={userInfo.name}
+                change={(e) => handleInputChange(e, setUserInfo)}
               />
-            </motion.div>
-          </label>
-          <label style={{ color: "gray", padding: "15px" }}>
-            <h4>Gender:</h4>
-            <div className={style.flex_form}>
-              <p>Male</p>
-              <input
-                type="radio"
-                name="gender"
-                value="Male"
-                checked={userInfo.gender === "Male"}
-                onChange={(e) => handleInputChange(e, setUserInfo)}
+            </label>
+            <label>
+              <Input
+                nameTitle="Email Address"
+                type="email"
+                name="email"
+                placeholder="ayojackson@example.com"
+                value={userInfo.email}
+                change={(e) => handleInputChange(e, setUserInfo)}
               />
+            </label>
+            <label>
+              <TogglePassword
+                password={userInfo.password}
+                change={(e) => handleInputChange(e, setUserInfo)}
+              />
+            </label>
+            <label>
+              {/* <h4>Gender:</h4> */}
+              <div className={style.gender}>
+                <Input
+                  nameTitle="Male"
+                  type="radio"
+                  name="gender"
+                  value="Male"
+                  placeholder="Male"
+                  check={userInfo.gender === "Male"}
+                  change={(e) => handleInputChange(e, setUserInfo)}
+                />
 
-              <p>Female</p>
-              <input
-                type="radio"
-                name="gender"
-                value="Female"
-                checked={userInfo.gender === "Female"}
-                onChange={(e) => handleInputChange(e, setUserInfo)}
-              />
-            </div>
-          </label>
-          <label style={{ color: "gray", padding: "0 15px" }}>
-            <h4>D.O.B:</h4>
+                <Input
+                  nameTitle="Female"
+                  type="radio"
+                  name="gender"
+                  value="Female"
+                  placeholder="Female"
+                  check={userInfo.gender === "Female"}
+                  change={(e) => handleInputChange(e, setUserInfo)}
+                />
+              </div>
+            </label>
+
             <Input
+              nameTitle="Date of Birth"
               type="date"
               name="dateOfBirth"
               placeholder="D.O.B"
               value={userInfo.dateOfBirth}
               change={(e) => handleInputChange(e, setUserInfo)}
             />
-          </label>
-          <label>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.95 }}
-              className={style.navlink}
-              onClick={() => setNext(true)}
-              style={{ background: "#1e9ef4"}}
-            >
-              Next
-            </motion.button>
-          </label>
-        </>
-      ) : (
-        <>
-          {err && (
-            <p className={style.error} style={{ color: "red" }}>
-              {err}
-            </p>
-          )}
-          <label>
-            <Input
-              type="text"
-              name="country"
-              placeholder="Country"
-              value={userInfo.country}
-              change={(e) => handleInputChange(e, setUserInfo)}
-            />
-            <Input
-              type="text"
-              name="state"
-              placeholder="State"
-              value={userInfo.state}
-              change={(e) => handleInputChange(e, setUserInfo)}
-            />
-          </label>
-          <label>
-            <Input
-              type="text"
-              name="city"
-              placeholder="City"
-              value={userInfo.city}
-              change={(e) => handleInputChange(e, setUserInfo)}
-            />
-            <Input
-              type="text"
-              name="street"
-              placeholder="Street"
-              value={userInfo.street}
-              change={(e) => handleInputChange(e, setUserInfo)}
-            />
-          </label>
-          <p style={{ margin: 7 }}> Emergency Contact Information</p>
-          <Input
-            type="text"
-            name="emergencyName"
-            placeholder="Emergency Contact Name"
-            value={userInfo.emergencyName}
-            change={(e) => handleInputChange(e, setUserInfo)}
-          />
-          <label>
+
+            <label>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.95 }}
+                className={style.navlink}
+                onClick={() => setNext(true)}
+                style={{ background: "#1e9ef4" }}
+              >
+                Next
+              </motion.button>
+            </label>
+          </div>
+        ) : (
+          <div
+            style={{
+              background: "aliceblue",
+              width: "90%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "20px 0",
+              borderRadius: "10px",
+            }}
+          >
+            {err && (
+              <p className={style.error} style={{ color: "red" }}>
+                {err}
+              </p>
+            )}
+            <label>
+              <Input
+                nameTitle="Country"
+                type="text"
+                name="country"
+                placeholder="Nigeria"
+                value={userInfo.country}
+                change={(e) => handleInputChange(e, setUserInfo)}
+              />
+              <Input
+                nameTitle="State"
+                type="text"
+                name="state"
+                placeholder="Lagos State"
+                value={userInfo.state}
+                change={(e) => handleInputChange(e, setUserInfo)}
+              />
+            </label>
+            <label>
+              <Input
+                nameTitle="City"
+                type="text"
+                name="city"
+                placeholder="Lagos"
+                value={userInfo.city}
+                change={(e) => handleInputChange(e, setUserInfo)}
+              />
+              <Input
+                nameTitle="Street"
+                type="text"
+                name="street"
+                placeholder="No.3 Okoko miko"
+                value={userInfo.street}
+                change={(e) => handleInputChange(e, setUserInfo)}
+              />
+            </label>
+
+            <label>
+              <Input
+                nameTitle="Emergency Number"
+                type="number"
+                name="emergencyPhone"
+                placeholder="+234 80 980 67 213"
+                value={userInfo.emergencyPhone}
+                change={(e) => handleInputChange(e, setUserInfo)}
+              />
+
+              <Input
+                nameTitle="Emergency Contact Name"
+                type="text"
+                name="emergencyName"
+                placeholder="Dandison Evelyn"
+                value={userInfo.emergencyName}
+                change={(e) => handleInputChange(e, setUserInfo)}
+              />
+            </label>
             <label>
               <select
                 name="relationship"
@@ -243,35 +272,43 @@ try{
                 <option value="Other">Other</option>
               </select>
             </label>
-            <Input
-              type="number"
-              name="emergencyPhone"
-              placeholder="Phone Number"
-              value={userInfo.emergencyPhone}
-              change={(e) => handleInputChange(e, setUserInfo)}
-            />
-          </label>
-          <label>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.95 }}
-              className={style.navlink}
-              style={{ background: "#1e9ef4"}}
-              onClick={() => setNext(!true)}
-            >
-              Prev
-            </motion.button>
-            <button className={style.navlink} onClick={handleAuth} style={{ background: "#1e9ef4"}}>
-              {isLoading ? "Signup..." : "   Signup"}
-            </button>
-          </label>
-        </>
-      )}
+            <label>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.95 }}
+                className={style.navlink}
+                style={{ background: "#1e9ef4" }}
+                onClick={() => setNext(!true)}
+              >
+                Prev
+              </motion.button>
+              <button
+                className={style.navlink}
+                onClick={handleAuth}
+                style={{ background: "#1e9ef4" }}
+              >
+                {isLoading ? "Signup..." : "   Signup"}
+              </button>
+            </label>
+          </div>
+        )}
 
-      <p>or sign up with</p>
-      <NavLink to={"/auth"} className={style.signup}>
-        Already have an account? Log in
-      </NavLink>
-    </form>
+        <label
+          style={{
+            display: "flex",
+            alignItems: "start",
+            width: "90%",
+            justifyContent: "space-between",
+            height: "50px",
+          }}
+        >
+          <p>Already have an account?</p>
+
+          <NavLink style={{ color: "blue" }} to={"/auth/login"}>
+            Log in
+          </NavLink>
+        </label>
+      </form>
+    </AuthHolder>
   );
 }
