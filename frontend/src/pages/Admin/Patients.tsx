@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ComponentProps } from "../../router/Admin";
+import { ComponentProps } from "./AdminData";
 // import PageIntro from "../../components/StyleComponent/PageIntroComponent";
 import { FaUsers } from "react-icons/fa";
 import PageTitle from "../../components/StyleComponent/PageTitle";

@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import { ThemeContext } from "./CreateTheme";
-
-// Define the shape of the context
-export interface ThemeContextType {
-  isDarkMode: boolean;
-  toggleTheme: () => void;
-}
+import { ThemeContext } from "../hooks/CreateTheme";
 
 // Create the provider
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({

@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { ThemeContextType } from "../context/ThemeProvider";
-import { ThemeContext } from "../context/CreateTheme";
+import { ThemeContextType } from "./CreateTheme";
+import { ThemeContext } from "./CreateTheme";
 
 // Custom hook for using the context
 export const useTheme = (): ThemeContextType => {

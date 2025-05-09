@@ -25,6 +25,7 @@
   height: auto;
   position: fixed;
   right: 0;
+  top: 0;
 }
 .gender {
   width: 45%;

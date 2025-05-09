@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainContent from "./components/Main/MainContent";
-import routerObject from "./router/Admin";
+import routerObject from "./pages/Admin/AdminData";
 import { ApiProvider } from "./context/ApiProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
-import { ProtectedRoute } from "./utils/ProtectedRoute"; // Adjust the path as needed
+import { ProtectedRoute } from "./utils/ProtectedRoute";
 import { AuthProvider } from "./context/AuthProvider";
 import SignUp from "./components/Auth/Signup";
 import Login from "./components/Auth/Login";
@@ -16,12 +16,12 @@ const App: React.FC = () => {
         <ApiProvider>
           <ThemeProvider>
             <Routes>
-              <Route element={<ProtectedRoute />}>
-                {/* Authentication Page */}
-                <Route path="/auth/login" element={<Login />}></Route>
-                <Route path="/auth/signup" element={<SignUp />}></Route>
+              {/* Public Authentication Routes - Accessible without authentication */}
+              <Route path="/auth/login" element={<Login />} />
+              <Route path="/auth/signup" element={<SignUp />} />
 
-                {/* Dashboard Page */}
+              {/* Protected Dashboard Routes - Require authentication */}
+              <Route element={<ProtectedRoute />}>
                 <Route path="/*" element={<MainContent />}>
                   {routerObject.map((route, id) => (
                     <Route

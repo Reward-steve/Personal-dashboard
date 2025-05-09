@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import styles from "./../../styles/Sidebar.module.css"; // Import your CSS module
 import { NavLink } from "react-router-dom";
-import navLinkRouter from "../../router/sidebarRoutes";
+import navLinkRouter from "../../pages/Admin/Sidebardata";
 import { IoMenu } from "react-icons/io5"; // Toggle icon
 
 interface SidebarProps {
