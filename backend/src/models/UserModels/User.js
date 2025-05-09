@@ -8,9 +8,16 @@ const {
 } = require("../../Utils/SchemaMethods");
 
 const userSchema = new mongoose.Schema({
-  name: {
+  firstname: {
     type: String,
-    required: [true, "Full Name is require"],
+    required: [true, "First Name is require"],
+    minlength: [10, "Full Name must have more than or 10 characters"],
+    maxlength: [40, "Full Name must have less than or 40 characters"],
+    unique: true,
+  },
+  lastname: {
+    type: String,
+    required: [true, "Last Name is require"],
     minlength: [10, "Full Name must have more than or 10 characters"],
     maxlength: [40, "Full Name must have less than or 40 characters"],
     unique: true,
