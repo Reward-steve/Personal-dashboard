@@ -1,4 +1,4 @@
-import style from "../styles/LoginPage.module.css";
+import style from "../styles/Authpages.module.css";
 
 export function AuthHolder({
   children,

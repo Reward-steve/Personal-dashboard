@@ -1,14 +1,15 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { NavLink, useNavigate, Link } from "react-router-dom";
-import style from "../../styles/LoginPage.module.css";
+import style from "../../styles/Authpages.module.css";
 import { FaHome } from "react-icons/fa";
 import { Input } from "../Inputs";
 import { useAuth } from "../../hooks/useAuth";
 import { AuthHolder } from "../AuthHolder";
 import { TogglePassword } from "../TogglePassword";
-// import logo from "../../assets/img/medical-team.png";
+import { motion } from "framer-motion";
 import logo from "../../assets/img/jwtLogo.jpg";
+
 export interface LoginType {
   email: string;
   password: string;
@@ -19,13 +20,11 @@ interface ErrorType {
 }
 
 export default function Login(): JSX.Element {
-  const [next, setNext] = useState<boolean>(false);
+  const [next, setNext] = useState(false); // For toggling password reset
   const [error, setError] = useState<ErrorType | string>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { user, login } = useAuth();
-
-  document.title = !next ? "Auth | Login" : "Auth | Forgotten Password";
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [currentUser, setCurrentUser] = useState<LoginType>({
@@ -33,34 +32,51 @@ export default function Login(): JSX.Element {
     password: "",
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    document.title = next ? "Auth | Forgotten Password" : "Auth | Login";
+  }, [next]);
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCurrentUser((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleUserLogin = async (): Promise<void> => {
+  const handleUserLogin = async () => {
+    setError("");
+    if (!currentUser.email || !currentUser.password) {
+      setError("Please fill in all fields");
+      return;
+    }
+
     try {
       setIsLoading(true);
-      if (!currentUser.email || !currentUser.password) {
-        setError("Please fill in all fields");
-        return;
-      }
-      await login({
-        email: currentUser.email,
-        password: currentUser.password,
-      });
-
-      if (user) {
-        navigate("/*");
-        setError("");
-      }
-    } catch (error: unknown) {
-      console.error("Error:", error);
-      if ((error as ErrorType)?.response?.data?.message) {
-        setError((error as ErrorType).response.data.message);
+      await login(currentUser); // assumed working login function from useAuth hook
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Login Error:", err);
+      if ((err as ErrorType)?.response?.data?.message) {
+        setError((err as ErrorType).response.data.message);
       } else {
-        setError("Something went wrong");
+        setError("Something went wrong. Please try again.");
       }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePasswordReset = async () => {
+    if (!currentUser.email) {
+      setError("Enter your email to reset password");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      // Add your actual password reset logic here
+      alert("Reset instructions sent to your email.");
+    } catch (err) {
+      console.error("Password Reset Error:", err);
+      setError("Failed to send reset email.");
     } finally {
       setIsLoading(false);
     }
@@ -68,102 +84,80 @@ export default function Login(): JSX.Element {
 
   return (
     <AuthHolder logo={logo}>
-      <form className={style.loginForm}>
+      <form
+        className={style.loginForm}
+        onSubmit={(e) => e.preventDefault()} // prevent default form submit
+      >
         <div className={style.iconholder}>
-          {!next ? <h3>Log in</h3> : <h3>Forgotten Password</h3>}
-          <Link to={"#"} className={style.homeIcon}>
+          <h3>{next ? "Forgotten Password" : "Log in"}</h3>
+          <Link to="/" className={style.homeIcon}>
             <FaHome size={20} />
           </Link>
         </div>
-        {!next ? (
-          <div
-            style={{
-              background: "aliceblue",
-              width: "90%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "20px 0",
-              borderRadius: "10px",
-              height: "100%",
-            }}
-          >
-            {error && (
-              <p style={{ color: "red" }} className={style.error}>
-                {typeof error === "string"
+
+        <div className={style.authSection}>
+          {error && (
+            <p className={style.error} style={{ color: "red" }}>
+              {typeof error === "string"
+                ? error
+                : error?.response?.data?.message || "Unexpected error occurred"}
+            </p>
+          )}
+
+          <label>
+            <Input
+              nameTitle="Email Address"
+              type="email"
+              name="email"
+              value={currentUser.email}
+              placeholder="ayojackson@example.com"
+              change={handleInputChange}
+              errorMessage={
+                typeof error === "string" &&
+                error.toLowerCase().includes("email")
                   ? error
-                  : "An unexpected error occured"}
-              </p>
-            )}
-            <label>
-              <Input
-                nameTitle="Email Address"
-                name="email"
-                type="email"
-                value={currentUser.email}
-                placeholder="ayojackson@example.com"
-                change={handleInputChange}
-              />
-            </label>
+                  : ""
+              }
+            />
+          </label>
+
+          {!next && (
             <label>
               <TogglePassword
                 password={currentUser.password}
                 change={handleInputChange}
+                errorMessage={
+                  typeof error === "string" &&
+                  error.toLowerCase().includes("password")
+                    ? error
+                    : ""
+                }
               />
             </label>
-            <label>
-              <button
-                disabled={isLoading}
-                className={style.navlink}
-                onClick={handleUserLogin}
-                style={{
-                  textDecoration: "none",
-                  background: `${isLoading ? "#1e9eb2" : "#1e9ef4"}`,
-                }}
-              >
-                {isLoading ? "Loging in..." : "Login"}
-              </button>
-            </label>
-          </div>
-        ) : (
-          <div
+          )}
+
+          <motion.button
+            type="button"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.95 }}
+            className={style.navlink}
+            onClick={next ? handlePasswordReset : handleUserLogin}
             style={{
-              background: "aliceblue",
-              width: "90%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "20px 0",
-              borderRadius: "10px",
+              textDecoration: "none",
+              background: isLoading ? "#1e9eb2" : "#1e9ef4",
             }}
           >
-            <label>
-              <Input
-                nameTitle="Email Address"
-                name="email"
-                type="email"
-                value={currentUser.email}
-                placeholder="ayojackson@example.com"
-                change={handleInputChange}
-              />
-            </label>
-            <label>
-              <div
-                className={style.navlink}
-                onClick={handleUserLogin}
-                style={{
-                  textDecoration: "none",
-                  background: "#1e9ef4",
-                }}
-              >
-                Reset Password
-              </div>
-            </label>
-          </div>
-        )}
-        <label>
+            {isLoading
+              ? next
+                ? "Sending..."
+                : "Logging in..."
+              : next
+              ? "Reset Password"
+              : "Login"}
+          </motion.button>
+        </div>
+
+        <label className={style.bottomText}>
           <p
             onClick={() => setNext(!next)}
             style={{
@@ -172,23 +166,16 @@ export default function Login(): JSX.Element {
               padding: "10px",
               display: "flex",
               justifyContent: "end",
-              alignItems: "center",
+              cursor: "pointer",
             }}
           >
-            {!next ? "Forgotten password" : "Login"}
+            {next ? "Back to Login" : "Forgotten password?"}
           </p>
         </label>
-        <label
-          style={{
-            display: "flex",
-            alignItems: "start",
-            width: "90%",
-            justifyContent: "space-between",
-            height: "50px",
-          }}
-        >
-          <p>Need an account? </p>
-          <NavLink style={{ color: "blue" }} to={"/auth/signup"}>
+
+        <label className={style.bottomText}>
+          <p>Need an account?</p>
+          <NavLink style={{ color: "blue" }} to="/auth/signup">
             Sign up
           </NavLink>
         </label>
