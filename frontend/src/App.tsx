@@ -16,12 +16,12 @@ const App: React.FC = () => {
         <ApiProvider>
           <ThemeProvider>
             <Routes>
-              <Route element={<ProtectedRoute />}>
-                {/* Authentication Page */}
-                <Route path="/auth/login" element={<Login />}></Route>
-                <Route path="/auth/signup" element={<SignUp />}></Route>
+              {/* Public Authentication Routes - Accessible without authentication */}
+              <Route path="/auth/login" element={<Login />} />
+              <Route path="/auth/signup" element={<SignUp />} />
 
-                {/* Dashboard Page */}
+              {/* Protected Dashboard Routes - Require authentication */}
+              <Route element={<ProtectedRoute />}>
                 <Route path="/*" element={<MainContent />}>
                   {routerObject.map((route, id) => (
                     <Route

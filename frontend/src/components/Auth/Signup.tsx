@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import style from "../../styles/LoginPage.module.css";
 import { motion } from "framer-motion";
 import { FaHome } from "react-icons/fa";
@@ -9,7 +9,6 @@ import { useApi } from "../../hooks/useApi";
 import handleInputChange from "../../utils/handleInputChange";
 import { AuthHolder } from "../AuthHolder";
 import { TogglePassword } from "../TogglePassword";
-// import logo from "../../assets/img/medical-report.png";
 import logo from "../../assets/img/jwtLogo.jpg";
 
 export default function SignUp(): JSX.Element {
@@ -17,9 +16,8 @@ export default function SignUp(): JSX.Element {
 
   const [next, setNext] = useState<boolean>(false);
   const [err, setErr] = useState("");
-  // const [isLoading, setIsLoading] = useState(false);
   const { api, error, isLoading } = useApi();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -80,7 +78,8 @@ export default function SignUp(): JSX.Element {
           relationship,
         },
       });
-      // navigate("/auth");
+      navigate("auth/login");
+      console.log(userInfo);
       // setErr(error.message);
       console.log(error);
       setErr(error);
@@ -91,7 +90,7 @@ export default function SignUp(): JSX.Element {
 
   return (
     <AuthHolder logo={logo}>
-      <form className={style.loginForm}>
+      <form onSubmit={handleAuth} className={style.loginForm}>
         <div className={style.iconholder}>
           <h3>Sign Up</h3>
           <Link to={"#"} className={style.homeIcon}>
