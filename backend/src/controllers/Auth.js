@@ -21,7 +21,8 @@ const {
 //REGISTER OR SIGNUP
 const Register = catchAsync(async (req, res, next) => {
   const {
-    name,
+    firstname,
+    lastname,
     email,
     password,
     role = "Patient", //default role
@@ -38,7 +39,8 @@ const Register = catchAsync(async (req, res, next) => {
   // Create new User
   const newUser = await createRoleSpecificDetails(
     role,
-    name,
+    firstname,
+    lastname,
     email,
     password,
     rest
