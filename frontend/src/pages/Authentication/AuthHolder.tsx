@@ -1,7 +1,12 @@
 import style from "../../styles/LoginPage.module.css";
-import logo from "../../assets/img/medical-team.png";
 
-export function AuthHolder({ children }: { children: React.ReactNode }) {
+export function AuthHolder({
+  children,
+  logo,
+}: {
+  children: React.ReactNode;
+  logo: string;
+}) {
   return (
     <main className={style.loginPageBackground}>
       <div className={style.loginpageholder}>{children}</div>

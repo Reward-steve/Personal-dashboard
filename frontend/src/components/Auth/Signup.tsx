@@ -9,6 +9,7 @@ import { useApi } from "../../hooks/useApi";
 import handleInputChange from "../../utils/handleInputChange";
 import { AuthHolder } from "../../pages/Authentication/AuthHolder";
 import { TogglePassword } from "../TogglePassword";
+import logo from "../../assets/img/medical-report.png";
 
 export default function SignUp(): JSX.Element {
   document.title = "Auth | Signup";
@@ -88,7 +89,7 @@ export default function SignUp(): JSX.Element {
   };
 
   return (
-    <AuthHolder>
+    <AuthHolder logo={logo}>
       <form className={style.loginForm}>
         <div className={style.iconholder}>
           <h3>Sign Up</h3>
