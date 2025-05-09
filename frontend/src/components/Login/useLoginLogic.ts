@@ -1,12 +1,17 @@
 import { useState, useEffect, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { LoginType, ErrorType } from "./types";
+import { LoginType, ErrorType, ValidationErrors } from "./types";
+import { validateLoginForm } from "../../utils/validateForm";
 
 export const useLoginLogic = () => {
   const [next, setNext] = useState(false);
   const [error, setError] = useState<ErrorType | string>();
   const [isLoading, setIsLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
+    {}
+  );
+
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -26,8 +31,12 @@ export const useLoginLogic = () => {
 
   const handleUserLogin = async () => {
     setError("");
-    if (!currentUser.email || !currentUser.password) {
-      setError("Please fill in all fields");
+    const errors = validateLoginForm(currentUser, next);
+    setValidationErrors(errors || {});
+
+    if (errors) {
+      // Don't convert to string, just show general error
+      setError("Please fix the errors before continuing.");
       return;
     }
 
@@ -36,6 +45,7 @@ export const useLoginLogic = () => {
       await login(currentUser);
       navigate("/dashboard");
     } catch (err) {
+      console.error("Login Error:", err);
       if ((err as ErrorType)?.response?.data?.message) {
         setError((err as ErrorType).response.data.message);
       } else {
@@ -47,17 +57,18 @@ export const useLoginLogic = () => {
   };
 
   const handlePasswordReset = async () => {
-    if (!currentUser.email) {
-      setError("Enter your email to reset password");
-      return;
-    }
+    setError("");
+    const errors = validateLoginForm(currentUser, next);
+    setValidationErrors(errors || {});
+
+    if (errors) return;
 
     try {
       setIsLoading(true);
       alert("Reset instructions sent to your email.");
     } catch (err) {
+      console.error("Password Reset Error:", err);
       setError("Failed to send reset email.");
-      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -72,5 +83,6 @@ export const useLoginLogic = () => {
     handleInputChange,
     handleUserLogin,
     handlePasswordReset,
+    validationErrors,
   };
 };

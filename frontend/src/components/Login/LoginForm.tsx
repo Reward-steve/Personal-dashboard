@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import style from "../../styles/Authpages.module.css";
 import { Input } from "../Inputs";
 import { TogglePassword } from "../TogglePassword";
-import { LoginType } from "./types";
+import { LoginType, ValidationErrors } from "./types";
 
 interface Props {
   next: boolean;
@@ -16,6 +16,7 @@ interface Props {
   handleUserLogin: () => void;
   handlePasswordReset: () => void;
   setNext: React.Dispatch<React.SetStateAction<boolean>>;
+  validateErrors: ValidationErrors;
 }
 
 export const LoginForm = ({
@@ -27,6 +28,7 @@ export const LoginForm = ({
   handleUserLogin,
   handlePasswordReset,
   setNext,
+  validateErrors,
 }: Props) => {
   return (
     <form className={style.loginForm} onSubmit={(e) => e.preventDefault()}>
@@ -39,9 +41,11 @@ export const LoginForm = ({
 
       <div className={style.authSection}>
         {error && (
-          <p className={style.error} style={{ color: "red" }}>
+          <div
+            style={{ color: "red", marginBottom: "1rem", textAlign: "center" }}
+          >
             {error}
-          </p>
+          </div>
         )}
 
         <label>
@@ -52,11 +56,7 @@ export const LoginForm = ({
             value={currentUser.email}
             placeholder="ayojackson@example.com"
             change={handleInputChange}
-            errorMessage={
-              typeof error === "string" && error.toLowerCase().includes("email")
-                ? error
-                : ""
-            }
+            errorMessage={validateErrors.email}
           />
         </label>
 
@@ -65,12 +65,7 @@ export const LoginForm = ({
             <TogglePassword
               password={currentUser.password}
               change={handleInputChange}
-              errorMessage={
-                typeof error === "string" &&
-                error.toLowerCase().includes("password")
-                  ? error
-                  : ""
-              }
+              errorMessage={validateErrors.password}
             />
           </label>
         )}

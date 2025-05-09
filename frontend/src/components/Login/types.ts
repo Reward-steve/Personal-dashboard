@@ -6,3 +6,8 @@ export interface LoginType {
 export interface ErrorType {
   response: { data: { message: string } };
 }
+
+export interface ValidationErrors {
+  email?: string;
+  password?: string;
+}

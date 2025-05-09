@@ -13,6 +13,7 @@ export default function Login(): JSX.Element {
     handleUserLogin,
     handlePasswordReset,
     setNext,
+    validationErrors,
   } = useLoginLogic();
 
   return (
@@ -26,6 +27,7 @@ export default function Login(): JSX.Element {
         handleUserLogin={handleUserLogin}
         handlePasswordReset={handlePasswordReset}
         setNext={setNext}
+        validateErrors={validationErrors || {}}
       />
     </AuthHolder>
   );
