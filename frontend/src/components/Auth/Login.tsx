@@ -7,6 +7,7 @@ import { Input } from "../Inputs";
 import { useAuth } from "../../hooks/useAuth";
 import { AuthHolder } from "../../pages/Authentication/AuthHolder";
 import { TogglePassword } from "../TogglePassword";
+import logo from "../../assets/img/medical-team.png";
 
 export interface LoginType {
   email: string;
@@ -66,7 +67,7 @@ export default function Login(): JSX.Element {
   };
 
   return (
-    <AuthHolder>
+    <AuthHolder logo={logo}>
       <form className={style.loginForm}>
         <div className={style.iconholder}>
           {!next ? <h3>Log in</h3> : <h3>Forgotten Password</h3>}
