@@ -7,8 +7,10 @@ import { useApi } from "../../hooks/useApi";
 import handleInputChange from "../../utils/handleInputChange";
 import { AuthHolder } from "../AuthHolder";
 import logo from "../../assets/img/jwtLogo.jpg";
-import { BasicForm } from "../Signup/BasicInfoForm";
-import { DetailsForm } from "../Signup/DetailsForm";
+import { BasicForm } from "./BasicInfoForm";
+import { DetailsForm } from "./DetailsForm";
+import { validateSignup } from "../../utils/validateSignup";
+import { initialUserInfo } from "../../constants/initialUserInfo";
 
 export default function SignUp(): JSX.Element {
   document.title = "Auth | Signup";
@@ -16,28 +18,18 @@ export default function SignUp(): JSX.Element {
   const [step, setStep] = useState<"basic" | "details">("basic");
   const [err, setErr] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
-
   const { api, error, isLoading } = useApi();
   const navigate = useNavigate();
-
-  const [userInfo, setUserInfo] = useState({
-    firstname: "",
-    lastname: "",
-    email: "",
-    password: "",
-    gender: "",
-    dateOfBirth: "",
-    country: "",
-    state: "",
-    city: "",
-    street: "",
-    emergencyName: "",
-    emergencyPhone: "",
-    relationship: "",
-  });
+  const [userInfo, setUserInfo] = useState(initialUserInfo);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    const validationErrors = validateSignup(userInfo);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setErr("Please fix the highlighted errors.");
+      return;
+    }
     const {
       firstname,
       lastname,
@@ -53,54 +45,6 @@ export default function SignUp(): JSX.Element {
       emergencyPhone,
       relationship,
     } = userInfo;
-
-    const isValid =
-      firstname &&
-      lastname &&
-      email &&
-      password &&
-      gender &&
-      dateOfBirth &&
-      country &&
-      state &&
-      city &&
-      street &&
-      emergencyName &&
-      emergencyPhone &&
-      relationship;
-
-    if (!isValid) {
-      setErr("Please fill in all fields.");
-      return;
-    }
-    const newErrors: Record<string, string> = {};
-
-    if (!firstname) newErrors.firstname = "First name is required.";
-    if (!lastname) newErrors.lastname = "Last name is required.";
-    if (!email || !/\S+@\S+\.\S+/.test(email))
-      newErrors.email = "Valid email is required.";
-    if (!password || password.length < 6)
-      newErrors.password = "Password must be at least 6 characters.";
-    if (!gender) newErrors.gender = "Please select your gender.";
-    if (!dateOfBirth) newErrors.dateOfBirth = "Date of birth is required.";
-    if (!country) newErrors.country = "Country is required.";
-    if (!state) newErrors.state = "State is required.";
-    if (!city) newErrors.city = "City is required.";
-    if (!street) newErrors.street = "Street is required.";
-    if (!emergencyName)
-      newErrors.emergencyName = "Emergency contact name is required.";
-    if (!emergencyPhone || emergencyPhone.length < 11)
-      newErrors.emergencyPhone = "Valid emergency phone is required.";
-    if (!relationship) newErrors.relationship = "Please select a relationship.";
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setErr("Please fix the highlighted errors.");
-      return;
-    } else {
-      setErrors({});
-      setErr("");
-    }
 
     await api("POST", "auth/register", {
       firstname,

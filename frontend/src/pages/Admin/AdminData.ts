@@ -8,7 +8,7 @@ import Doctors from "./Doctors";
 import Departments from "./Department";
 import Stock from "./Stock";
 import HelpCenter from "./HelpCenter";
-import Logout from "../../components/Auth/Logout";
+import Logout from "../../components/Logout";
 
 export interface PageIntroProps {
   children: React.ReactNode;

@@ -6,8 +6,8 @@ import { ApiProvider } from "./context/ApiProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { ProtectedRoute } from "./utils/ProtectedRoute";
 import { AuthProvider } from "./context/AuthProvider";
-import SignUp from "./components/Auth/Signup";
-import Login from "./components/Auth/Login";
+import { SignUp } from "./components/Signup";
+import { Login } from "./components/Login";
 
 const App: React.FC = () => {
   return (
