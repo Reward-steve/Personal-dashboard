@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ComponentProps } from "../../router/Admin";
+import { ComponentProps } from "./AdminData";
 import { useState, useEffect } from "react";
 import styles from "./../../styles/styledComponent.module.css";
 import styleNotification from "./../../styles/Header.module.css";

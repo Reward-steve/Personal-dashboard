@@ -1,4 +1,4 @@
-import style from "../../styles/LoginPage.module.css";
+import style from "../styles/LoginPage.module.css";
 
 export function AuthHolder({
   children,
@@ -15,7 +15,7 @@ export function AuthHolder({
           <h2>Joveth Temple of Health (JTH)</h2>
 
           <div className={style.logo}>
-            <img src={logo} alt="logo" />
+            <img src={logo} alt="logo" style={{ borderRadius: "10px" }} />
           </div>
           <p>
             Discover the power of personalized health insights and seamless

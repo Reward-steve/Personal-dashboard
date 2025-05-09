@@ -1,13 +1,13 @@
 import React from "react";
-import Calender from "../pages/Calender/Calender";
-import Patients from "../pages/Patients/Patients";
-import StaffSchedule from "../pages/StaffSchedule/StaffSchedule";
-import Settings from "../pages/Settings/Settings";
-import Dashboard from "../pages/Dashboard/Admin";
-import Doctors from "../pages/Doctors/Doctors";
-import Departments from "../pages/Department/Department";
-import Stock from "../pages/Stock/Stock";
-import HelpCenter from "../pages/HelpCenter/HelpCenter";
+import Calender from "./Calender";
+import Patients from "./Patients";
+import StaffSchedule from "./StaffSchedule";
+import Settings from "./Settings";
+import Dashboard from "./Dashboard";
+import Doctors from "./Doctors";
+import Departments from "./Department";
+import Stock from "./Stock";
+import HelpCenter from "./HelpCenter";
 
 export interface PageIntroProps {
   children: React.ReactNode;

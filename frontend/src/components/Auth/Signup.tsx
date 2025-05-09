@@ -7,9 +7,10 @@ import { FaHome } from "react-icons/fa";
 import { Input } from "../Inputs";
 import { useApi } from "../../hooks/useApi";
 import handleInputChange from "../../utils/handleInputChange";
-import { AuthHolder } from "../../pages/Authentication/AuthHolder";
+import { AuthHolder } from "../AuthHolder";
 import { TogglePassword } from "../TogglePassword";
-import logo from "../../assets/img/medical-report.png";
+// import logo from "../../assets/img/medical-report.png";
+import logo from "../../assets/img/jwtLogo.jpg";
 
 export default function SignUp(): JSX.Element {
   document.title = "Auth | Signup";

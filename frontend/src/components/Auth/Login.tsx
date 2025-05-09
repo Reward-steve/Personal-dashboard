@@ -5,10 +5,10 @@ import style from "../../styles/LoginPage.module.css";
 import { FaHome } from "react-icons/fa";
 import { Input } from "../Inputs";
 import { useAuth } from "../../hooks/useAuth";
-import { AuthHolder } from "../../pages/Authentication/AuthHolder";
+import { AuthHolder } from "../AuthHolder";
 import { TogglePassword } from "../TogglePassword";
-import logo from "../../assets/img/medical-team.png";
-
+// import logo from "../../assets/img/medical-team.png";
+import logo from "../../assets/img/jwtLogo.jpg";
 export interface LoginType {
   email: string;
   password: string;
