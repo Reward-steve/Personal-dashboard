@@ -3,7 +3,8 @@ const handleInputChange = (
   e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   setState: (
     value: React.SetStateAction<{
-      name: string;
+      firstname: string;
+      lastname: string;
       email: string;
       password: string;
       gender: string;

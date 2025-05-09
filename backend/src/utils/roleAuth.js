@@ -16,26 +16,69 @@ const findUserById = async (id) => {
 };
 
 // Helper function to create role-specific details
-const createRoleSpecificDetails = async (role, name, email, password, rest) => {
+const createRoleSpecificDetails = async (
+  role,
+  firstname,
+  lastname,
+  email,
+  password,
+  rest
+) => {
   switch (role) {
     case "Admin":
-      return await Admin.create({ role, name, email, password, ...rest });
+      return await Admin.create({
+        role,
+        firstname,
+        lastname,
+        email,
+        password,
+        ...rest,
+      });
     case "Doctor":
-      return await Doctor.create({ role, name, email, password, ...rest });
+      return await Doctor.create({
+        role,
+        firstname,
+        lastname,
+        email,
+        password,
+        ...rest,
+      });
     case "Nurse":
-      return await Nurse.create({ role, name, email, password, ...rest });
+      return await Nurse.create({
+        role,
+        firstname,
+        lastname,
+        email,
+        password,
+        ...rest,
+      });
     case "Patient":
-      return await Patient.create({ role, name, email, password, ...rest });
+      return await Patient.create({
+        role,
+        firstname,
+        lastname,
+        email,
+        password,
+        ...rest,
+      });
     case "LabTechnician":
       return await LabTechnician.create({
         role,
-        name,
+        firstname,
+        lastname,
         email,
         password,
         ...rest,
       });
     case "Pharmacist":
-      return await Pharmacist.create({ role, name, email, password, ...rest });
+      return await Pharmacist.create({
+        role,
+        firstname,
+        lastname,
+        email,
+        password,
+        ...rest,
+      });
     default:
       throw new Error(`Invalid role specified ${role}`);
   }

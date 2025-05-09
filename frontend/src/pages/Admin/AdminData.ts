@@ -8,6 +8,7 @@ import Doctors from "./Doctors";
 import Departments from "./Department";
 import Stock from "./Stock";
 import HelpCenter from "./HelpCenter";
+import Logout from "../../components/Auth/Logout";
 
 export interface PageIntroProps {
   children: React.ReactNode;
@@ -44,6 +45,11 @@ const routerObject: Router[] = [
   {
     path: "helpcenter",
     element: HelpCenter,
+    props: { name: "Help Center Page" },
+  },
+  {
+    path: "logout",
+    element: Logout,
     props: { name: "Help Center Page" },
   },
 ];

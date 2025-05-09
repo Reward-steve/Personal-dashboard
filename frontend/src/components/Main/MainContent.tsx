@@ -6,6 +6,7 @@ import Sidebar from "../Sidebar/Sidebar";
 import { Outlet } from "react-router-dom";
 
 const MainContent: React.FC = () => {
+  document.title = "Welcome | Dashboard";
   const [sidebarOpen, setSidebarOpen] = useState(true); // Sidebar state
 
   return (

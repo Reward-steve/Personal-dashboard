@@ -63,7 +63,7 @@ const navLinkRouter: Router[] = [
     icon: IoHelpCircleOutline,
   },
   {
-    to: "/auth/login",
+    to: "/logout",
     name: "Logout",
     icon: CiLogout,
   },

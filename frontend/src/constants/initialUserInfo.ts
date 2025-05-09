@@ -1,0 +1,15 @@
+export const initialUserInfo = {
+  firstname: "",
+  lastname: "",
+  email: "",
+  password: "",
+  gender: "",
+  dateOfBirth: "",
+  country: "",
+  state: "",
+  city: "",
+  street: "",
+  emergencyName: "",
+  emergencyPhone: "",
+  relationship: "",
+};

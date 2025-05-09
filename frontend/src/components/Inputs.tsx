@@ -1,55 +1,35 @@
 import * as React from "react";
-
+import style from "../styles/Authpages.module.css";
 export interface IAppProps {
   type: string;
   name: string;
-  placeholder: string;
+  style?: string;
+  placeholder?: string;
   value: string;
   check?: boolean;
   nameTitle: string;
+  errorMessage?: string;
   change: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 export function Input(props: IAppProps) {
   return (
-    <div
-      style={{
-        display: "flex",
-        width: "95%",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <p
-        style={{
-          width: "90%",
-          color: "red",
-          textAlign: "left",
-        }}
-      >
-        {/* Full Name is required  */}
-      </p>
-      <h4
-        style={{
-          color: "gray",
-          width: "100%",
-          padding: "0 20px 0",
-        }}
-      >
+    <div className={style.inputGroup}>
+      <label htmlFor={props.name}>
         {props.nameTitle} <span style={{ color: "red" }}>*</span>
-      </h4>
-      <label>
-        <input
-          type={props.type}
-          name={props.name}
-          placeholder={props.placeholder}
-          value={props.value}
-          onChange={props.change}
-          checked={props.check}
-          required
-        />
       </label>
+      <input
+        type={props.type}
+        name={props.name}
+        id={props.name}
+        placeholder={props.placeholder}
+        value={props.value}
+        onChange={props.change}
+        checked={props.check}
+      />
+      {props.errorMessage && (
+        <p className={style.errorText}>{props.errorMessage}</p>
+      )}
     </div>
   );
 }
