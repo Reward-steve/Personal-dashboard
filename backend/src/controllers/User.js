@@ -1,17 +1,16 @@
 const User = require("../models/UserModels/User");
-
-const {
-  catchAsync,
-  handleNotFound,
-  handleNoResult,
-} = require("../Utils/reusableFunctions");
+const { AppError } = require("../Utils/reusableFunctions");
+const { catchAsync } = require("../Utils/reusableFunctions");
 
 //GET USER BY ID
 const getUserById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
-  const user = await User.findById({ id });
-  handleNoResult(user, "No users found", next);
+  const user = await User.findById(id);
+
+  if (!user) {
+    return next(new AppError("No users found", 404));
+  }
 
   res.status(200).json({
     status: "success",
@@ -28,7 +27,9 @@ const updateUserById = catchAsync(async (req, res, next) => {
     runValidators: false,
   });
 
-  handleNotFound(user, `No user with ID ${req.params.id} found`, next);
+  if (!user) {
+    return next(new AppError("user not found", 400));
+  }
 
   res.status(201).json({
     status: "success",
@@ -41,7 +42,9 @@ const deleteUserById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const user = await User.findByIdAndDelete(id);
 
-  handleNotFound(user, `No user with ID ${id} found`, next);
+  if (!user) {
+    return next(new AppError(`No user with ID ${id} found`, 404));
+  }
 
   res.status(204).json({
     status: "success",

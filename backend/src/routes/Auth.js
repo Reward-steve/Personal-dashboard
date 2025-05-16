@@ -3,10 +3,12 @@ const express = require("express");
 const {
   Register,
   Login,
+  checkAuth,
   forgottenPassword,
   resetPassword,
   updatePassword,
   Logout,
+  verifyEmail,
 } = require("../controllers/Auth");
 
 const {
@@ -24,18 +26,22 @@ router.route("/register").post(Register);
 
 router.route("/login").post(Login);
 
+router.route("/check-auth").get(checkAuth);
+
 router.route("/forgotpassword").post(forgottenPassword);
 
-router.route("/resetpassword/:token").patch(resetPassword);
+router.route("/reset-password/:token").patch(resetPassword);
 
 router.route("/updatepassword").patch(Protect, updatePassword);
 
-router.route("/logout").post(Protect, Logout);
+router.route("/logout/:id").post(Protect, Logout);
+
+router.route("/verify-email/:token").get(verifyEmail);
 
 router
   .route("/user/:id")
   .get(getUserById)
   .patch(updateUserById)
-  .delete(Protect, restrict("admin"), deleteUserById);
+  .delete(Protect, restrict("Admin"), deleteUserById);
 
 module.exports = router;

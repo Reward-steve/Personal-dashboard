@@ -47,23 +47,28 @@ const SignToken = (ID) => {
   });
 };
 
-//CREATE SEND TOKEN
-const CreateSendToken = (user, statusCode, res) => {
-  //create token
-  const token = SignToken(user._id);
+const CreateSendToken = async (user, res) => {
+  try {
+    const token = SignToken(user._id.toString());
 
-  // set token to cookies
-  res.cookie("token", token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: true,
-  });
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
 
-  //if ok send response
-  res.status(statusCode).json({
-    status: "success",
-    user,
-  });
+    const { _id, firstname, lastname, email, role } = user;
+
+    res.status(200).json({
+      status: "success",
+      user: { _id, firstname, lastname, email, role },
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "failed",
+      message: error.message || "Something went wrong",
+    });
+  }
 };
 
 //OK RESPONSE
@@ -80,6 +85,7 @@ module.exports = {
   AppError,
   catchAsync,
   hashedToken,
+  SignToken,
   handleNoResult,
   handleNotFound,
   CreateSendToken,

@@ -11,17 +11,12 @@ const userSchema = new mongoose.Schema({
   firstname: {
     type: String,
     required: [true, "First Name is require"],
-    minlength: [10, "Full Name must have more than or 10 characters"],
-    maxlength: [40, "Full Name must have less than or 40 characters"],
-    unique: true,
   },
   lastname: {
     type: String,
-    required: [true, "Last Name is require"],
-    minlength: [10, "Full Name must have more than or 10 characters"],
-    maxlength: [40, "Full Name must have less than or 40 characters"],
-    unique: true,
+    required: [true, "lastname is require"],
   },
+  username: { type: String, required: [true, "Username is required"] },
   email: {
     type: String,
     required: true,
@@ -34,6 +29,15 @@ const userSchema = new mongoose.Schema({
     minlength: [8, "A password must have more than or equal to 8 characters"],
     maxlength: [60, "A password must have less than or equal to 60 characters"],
     select: false,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  verificationExp: {
+    type: Date,
+    default: Date.now(),
+    expires: "2m",
   },
   profilePicture: { type: String },
   role: {

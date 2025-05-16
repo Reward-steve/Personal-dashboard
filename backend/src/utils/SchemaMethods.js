@@ -42,7 +42,7 @@ const createPasswordResetToken = function () {
 
   //encrypted reset token
   this.passwordResetToken = hashedToken(resetToken);
-  this.tokenExp = 60000; //token expires in
+  this.tokenExp = process.env.JWT_EXPIRES_IN; //token expires in
 
   return resetToken;
 };

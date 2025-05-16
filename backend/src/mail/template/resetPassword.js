@@ -1,4 +1,4 @@
-module.exports = emailCard = (reqURL, userName, subject) => {
+module.exports = emailCard = (reqURL, username) => {
   return `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -78,22 +78,21 @@ module.exports = emailCard = (reqURL, userName, subject) => {
     <div class="email_card">
       <main>
         <header>
-          <h2>Reset password request</h2>
-        </header>
-        <h3 class="username">${userName}</h3>
+          <h2>Joveth Temple of Health</h2>
+          </header>
+          <h3 class="username">${username}</h3>
         <p class="message">
-          We received a request to reset your password. Click the button below
-          to reset it
+         We received a request to reset your password. Click the button below to reset it.
         </p>
         <a
           href="${reqURL}"
-          >Click to reset password</a
+          >Reset Password</a
         >
         <p>
           If you didn't request to change your password, you can ignore this
           email.
         </p>
-        <p id="subject">${subject}</p>
+       
       </main>
     </div>
   </body>

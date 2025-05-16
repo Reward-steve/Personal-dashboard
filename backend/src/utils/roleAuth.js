@@ -12,7 +12,7 @@ const findByEmail = async (email) => {
 };
 
 const findUserById = async (id) => {
-  return await User.findById({ id }).select("+password");
+  return await User.findById(id).select("+password");
 };
 
 // Helper function to create role-specific details
@@ -20,6 +20,7 @@ const createRoleSpecificDetails = async (
   role,
   firstname,
   lastname,
+  username,
   email,
   password,
   rest
@@ -30,6 +31,7 @@ const createRoleSpecificDetails = async (
         role,
         firstname,
         lastname,
+        username,
         email,
         password,
         ...rest,
@@ -39,6 +41,7 @@ const createRoleSpecificDetails = async (
         role,
         firstname,
         lastname,
+        username,
         email,
         password,
         ...rest,
@@ -48,6 +51,7 @@ const createRoleSpecificDetails = async (
         role,
         firstname,
         lastname,
+        username,
         email,
         password,
         ...rest,
@@ -57,6 +61,7 @@ const createRoleSpecificDetails = async (
         role,
         firstname,
         lastname,
+        username,
         email,
         password,
         ...rest,
@@ -66,6 +71,7 @@ const createRoleSpecificDetails = async (
         role,
         firstname,
         lastname,
+        username,
         email,
         password,
         ...rest,
@@ -75,6 +81,7 @@ const createRoleSpecificDetails = async (
         role,
         firstname,
         lastname,
+        username,
         email,
         password,
         ...rest,
