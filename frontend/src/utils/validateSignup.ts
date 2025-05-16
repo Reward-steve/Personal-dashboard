@@ -4,6 +4,7 @@ export function validateSignup(userInfo: Record<string, string>) {
 
   if (!userInfo.firstname) errors.firstname = "First name is required.";
   if (!userInfo.lastname) errors.lastname = "Last name is required.";
+  if (!userInfo.username) errors.lastname = "Username is required.";
   if (!userInfo.email || !emailRegex.test(userInfo.email))
     errors.email = "Valid email is required.";
   if (!userInfo.password || userInfo.password.length < 6)

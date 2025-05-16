@@ -1,13 +1,14 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainContent from "./components/Main/MainContent";
-import routerObject from "./pages/Admin/AdminData";
+import routerObject from "./components/Admin/AdminData";
 import { ApiProvider } from "./context/ApiProvider";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { ProtectedRoute } from "./utils/ProtectedRoute";
 import { AuthProvider } from "./context/AuthProvider";
-import { SignUp } from "./components/Signup";
-import { Login } from "./components/Login";
+import { SignUp } from "./pages/register";
+import { Login } from "./pages/login/index";
+import { VerifyEmail } from "./components/VerifyEmail";
 
 const App: React.FC = () => {
   return (
@@ -16,11 +17,12 @@ const App: React.FC = () => {
         <ApiProvider>
           <ThemeProvider>
             <Routes>
-              {/* Public Authentication Routes - Accessible without authentication */}
+              {/* ✅ Public Routes */}
               <Route path="/auth/login" element={<Login />} />
               <Route path="/auth/signup" element={<SignUp />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
 
-              {/* Protected Dashboard Routes - Require authentication */}
+              {/* ✅ Protected Routes */}
               <Route element={<ProtectedRoute />}>
                 <Route path="/*" element={<MainContent />}>
                   {routerObject.map((route, id) => (

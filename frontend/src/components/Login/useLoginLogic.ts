@@ -35,7 +35,6 @@ export const useLoginLogic = () => {
     setValidationErrors(errors || {});
 
     if (errors) {
-      // Don't convert to string, just show general error
       setError("Please fix the errors before continuing.");
       return;
     }

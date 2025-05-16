@@ -8,13 +8,13 @@ import { FaUsers } from "react-icons/fa";
 import { FaHandshake } from "react-icons/fa";
 import { FaComments } from "react-icons/fa";
 import { MdMonitorHeart } from "react-icons/md";
-import PageTitle from "../../components/StyleComponent/PageTitle";
-import SectionName from "../../components/StyleComponent/SectionName";
-import MainComponent from "../../components/StyleComponent/MainComponent";
-import DailyOverview from "../../components/StyleComponent/DailyOverview";
-import GrayBg from "../../components/StyleComponent/GrayBg";
-import AppointmentTable from "../../components/StyleComponent/Table";
-import Notification from "../../components/StyleComponent/Notification";
+import PageTitle from "../StyleComponent/PageTitle";
+import SectionName from "../StyleComponent/SectionName";
+import MainComponent from "../StyleComponent/MainComponent";
+import DailyOverview from "../StyleComponent/DailyOverview";
+import GrayBg from "../StyleComponent/GrayBg";
+import AppointmentTable from "../StyleComponent/Table";
+import Notification from "../StyleComponent/Notification";
 import { FaBell } from "react-icons/fa";
 import img1 from "../../assets/img/home.jpg";
 import { useApi } from "../../hooks/useApi";
@@ -47,7 +47,7 @@ const Dashboard: React.FC<ComponentProps> = () => {
       const url = await api("GET", "admin/users");
 
       setStats(
-        (url.stats as {
+        (url?.stats as {
           patients: number;
           doctors: number;
           appointments: number;

@@ -111,7 +111,9 @@
 
 .homeIcon:hover {
   transform: scale(1.05);
-  color: #0d8ae6;
+  color: #1e3a5f;
+  background: white;
+  border: 1px solid #1e3a5f;
 }
 
 /* Form */
@@ -466,6 +468,10 @@ input[type="email"]:focus {
   font-size: 0.85rem;
   padding-left: 5px;
   margin-top: 2px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 4px;
 }
 
 .genderGroup {

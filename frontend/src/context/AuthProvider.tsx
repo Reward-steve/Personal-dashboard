@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AuthContext } from "../hooks/AuthContext";
 import { userType } from "../types/User";
 import apiClient from "../utils/apiClient";
+import { RiLoader2Fill } from "react-icons/ri";
 
 export interface AuthContextType {
   user: userType | null; // Changed undefined to null for initial state consistency
@@ -19,10 +20,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const verifyAuthWithProtectedEndpoint = async () => {
     setLoading(true);
     try {
-      const response = await apiClient.get("/patients");
+      const response = await apiClient.get(`auth/check-auth`);
+      console.log(response);
       if (response.status === 200 && response.data.user) {
         setIsAuthenticated(true);
         setUser(response.data.user);
+        console.log(response.data.user);
       } else {
         setIsAuthenticated(false);
         setUser(null);
@@ -71,10 +74,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = async () => {
     setLoading(true); // Set loading to true on logout start
     try {
-      await apiClient.post("/auth/logout");
-      setUser(null);
-      setIsAuthenticated(false);
-      console.log("🚪 User logged out");
+      await apiClient.post(`/auth/logout/${user?._id}`);
+      // setUser(null);
+      // setIsAuthenticated(false);
+      console.log("🚪User logged out");
     } catch (err) {
       console.warn("Logout request failed:", err);
       setUser(null);
@@ -96,7 +99,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       value={{ user, login, logout, isAuthenticated, loading }}
     >
       {!loading && children}
-      {loading && <div>Loading authentication...</div>}
+      {loading && (
+        <div>
+          <RiLoader2Fill size={30} />
+        </div>
+      )}
     </AuthContext.Provider>
   );
 };

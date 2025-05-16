@@ -1,12 +1,7 @@
 import style from "../styles/Authpages.module.css";
+import logo from "../assets/img/jwtLogo.jpg";
 
-export function AuthHolder({
-  children,
-  logo,
-}: {
-  children: React.ReactNode;
-  logo: string;
-}) {
+export function AuthHolder({ children }: { children: React.ReactNode }) {
   return (
     <main className={style.loginPageBackground}>
       <div className={style.loginpageholder}>{children}</div>

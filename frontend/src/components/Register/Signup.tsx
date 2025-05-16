@@ -1,12 +1,11 @@
 import * as React from "react";
 import { useState } from "react";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import style from "../../styles/Authpages.module.css";
 import { FaHome } from "react-icons/fa";
 import { useApi } from "../../hooks/useApi";
 import handleInputChange from "../../utils/handleInputChange";
 import { AuthHolder } from "../AuthHolder";
-import logo from "../../assets/img/jwtLogo.jpg";
 import { BasicForm } from "./BasicInfoForm";
 import { DetailsForm } from "./DetailsForm";
 import { validateSignup } from "../../utils/validateSignup";
@@ -19,7 +18,6 @@ export default function SignUp(): JSX.Element {
   const [err, setErr] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { api, error, isLoading } = useApi();
-  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(initialUserInfo);
 
   const handleAuth = async (e: React.FormEvent) => {
@@ -33,6 +31,7 @@ export default function SignUp(): JSX.Element {
     const {
       firstname,
       lastname,
+      username,
       email,
       password,
       gender,
@@ -46,9 +45,10 @@ export default function SignUp(): JSX.Element {
       relationship,
     } = userInfo;
 
-    await api("POST", "auth/register", {
+    const res = await api("POST", "auth/register", {
       firstname,
       lastname,
+      username,
       email,
       password,
       dateOfBirth,
@@ -60,16 +60,16 @@ export default function SignUp(): JSX.Element {
         relationship,
       },
     });
-
+    console.log(res);
     if (!error) {
-      navigate("/auth/login");
+      alert("");
     } else {
       setErr(error || "An error occurred during signup.");
     }
   };
 
   return (
-    <AuthHolder logo={logo}>
+    <AuthHolder>
       <form onSubmit={handleAuth} className={style.loginForm}>
         <div className={style.iconholder}>
           <h3>Sign Up</h3>

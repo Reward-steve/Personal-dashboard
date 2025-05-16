@@ -1,5 +1,6 @@
 import * as React from "react";
 import style from "../styles/Authpages.module.css";
+import { FaInfoCircle } from "react-icons/fa";
 export interface IAppProps {
   type: string;
   name: string;
@@ -28,7 +29,10 @@ export function Input(props: IAppProps) {
         checked={props.check}
       />
       {props.errorMessage && (
-        <p className={style.errorText}>{props.errorMessage}</p>
+        <p className={style.errorText}>
+          <FaInfoCircle size={20} />
+          {props.errorMessage}
+        </p>
       )}
     </div>
   );

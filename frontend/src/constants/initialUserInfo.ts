@@ -1,6 +1,7 @@
 export const initialUserInfo = {
   firstname: "",
   lastname: "",
+  username: "",
   email: "",
   password: "",
   gender: "",

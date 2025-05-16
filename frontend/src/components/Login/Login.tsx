@@ -1,5 +1,4 @@
 import { AuthHolder } from "../AuthHolder";
-import logo from "../../assets/img/jwtLogo.jpg";
 import { LoginForm } from "./LoginForm";
 import { useLoginLogic } from "./useLoginLogic";
 
@@ -17,7 +16,7 @@ export default function Login(): JSX.Element {
   } = useLoginLogic();
 
   return (
-    <AuthHolder logo={logo}>
+    <AuthHolder>
       <LoginForm
         next={next}
         error={typeof error === "string" ? error : ""}

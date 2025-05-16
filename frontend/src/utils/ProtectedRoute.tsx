@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { RiLoader2Line } from "react-icons/ri";
 
 export function ProtectedRoute() {
   const { isAuthenticated, loading } = useAuth();
@@ -12,7 +13,7 @@ export function ProtectedRoute() {
           fontWeight: "bold",
           color: "aliceblue",
           textAlign: "center",
-          fontFamily: "san-serif",
+          fontFamily: "sans-serif",
           width: "100%",
           height: "100vh",
           display: "flex",
@@ -20,14 +21,16 @@ export function ProtectedRoute() {
           alignItems: "center",
         }}
       >
-        Loading...
+        <RiLoader2Line className="spin" size={30} />
       </div>
     );
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to={"/auth/login"} />;
-  } else {
+  // ✅ Allow access if authenticated
+  if (isAuthenticated) {
     return <Outlet />;
   }
+
+  // ❌ Redirect to login if not authenticated
+  return <Navigate to="/auth/login" replace />;
 }

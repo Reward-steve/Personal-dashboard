@@ -27,6 +27,15 @@ export const BasicForm = ({ change, value, errors, step }: BasicInfoProps) => {
           errorMessage={errors.lastname}
         />
       </label>
+      <Input
+        nameTitle="Username"
+        type="text"
+        name="username"
+        placeholder="Jackson David Ayomideh"
+        value={value.username}
+        change={change}
+        errorMessage={errors.username}
+      />
 
       <label>
         <TogglePassword
@@ -38,7 +47,7 @@ export const BasicForm = ({ change, value, errors, step }: BasicInfoProps) => {
           nameTitle="Email Address"
           type="email"
           name="email"
-          placeholder="williams@example.com"
+          placeholder="***@example.com"
           value={value.email}
           change={change}
           errorMessage={errors.email}

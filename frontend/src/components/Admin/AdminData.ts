@@ -1,14 +1,14 @@
 import React from "react";
-import Calender from "./Calender";
-import Patients from "./Patients";
-import StaffSchedule from "./StaffSchedule";
+import Calender from "../../components/Admin/Calender";
+import Patients from "../../components/Admin/Patients";
+import StaffSchedule from "../../components/Admin/StaffSchedule";
 import Settings from "./Settings";
 import Dashboard from "./Dashboard";
-import Doctors from "./Doctors";
-import Departments from "./Department";
-import Stock from "./Stock";
-import HelpCenter from "./HelpCenter";
-import Logout from "../../components/Logout";
+import Doctors from "../../components/Admin/Doctors";
+import Departments from "../../components/Admin/Department";
+import Stock from "../../components/Admin/Stock";
+import HelpCenter from "../../components/Admin/HelpCenter";
+import Logout from "../Logout";
 
 export interface PageIntroProps {
   children: React.ReactNode;

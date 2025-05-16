@@ -6,6 +6,7 @@ import style from "../../styles/Authpages.module.css";
 import { Input } from "../Inputs";
 import { TogglePassword } from "../TogglePassword";
 import { LoginType, ValidationErrors } from "./types";
+import { RiLoader2Line } from "react-icons/ri";
 
 interface Props {
   next: boolean;
@@ -81,13 +82,17 @@ export const LoginForm = ({
             background: isLoading ? "#1e9eb2" : "#1e9ef4",
           }}
         >
-          {isLoading
-            ? next
-              ? "Sending..."
-              : "Logging in..."
-            : next
-            ? "Reset Password"
-            : "Login"}
+          {isLoading ? (
+            next ? (
+              <RiLoader2Line size={30} />
+            ) : (
+              <RiLoader2Line size={30} />
+            )
+          ) : next ? (
+            "Reset Password"
+          ) : (
+            "Login"
+          )}
         </motion.button>
       </div>
 
