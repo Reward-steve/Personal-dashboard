@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FormEvent } from "react";
 import { FaHome } from "react-icons/fa";
 import { NavLink, Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -11,10 +11,11 @@ import { RiLoader2Line } from "react-icons/ri";
 interface Props {
   next: boolean;
   error?: string | null;
+  serverError: string | null;
   isLoading: boolean;
   currentUser: LoginType;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleUserLogin: () => void;
+  handleUserLogin: (e: FormEvent) => void;
   handlePasswordReset: () => void;
   setNext: React.Dispatch<React.SetStateAction<boolean>>;
   validateErrors: ValidationErrors;
@@ -23,6 +24,7 @@ interface Props {
 export const LoginForm = ({
   next,
   error,
+  serverError,
   isLoading,
   currentUser,
   handleInputChange,
@@ -46,6 +48,14 @@ export const LoginForm = ({
             style={{ color: "red", marginBottom: "1rem", textAlign: "center" }}
           >
             {error}
+          </div>
+        )}
+
+        {serverError && (
+          <div
+            style={{ color: "red", marginBottom: "1rem", textAlign: "center" }}
+          >
+            {serverError}
           </div>
         )}
 

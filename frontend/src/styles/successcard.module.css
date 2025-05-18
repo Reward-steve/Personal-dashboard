@@ -1,0 +1,48 @@
+.card {
+  background-color: #e6ffed;
+  border: 1px solid #b5f2cc;
+  color: #2f855a;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  max-width: 400px;
+  margin: 20px auto;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.icon {
+  font-size: 32px;
+  color: #38a169;
+  margin-bottom: 10px;
+}
+
+.message {
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.closeBtn {
+  background-color: #38a169;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.closeBtn:hover {
+  background-color: #2f855a;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

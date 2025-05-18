@@ -18,52 +18,52 @@ export interface Router {
 
 const navLinkRouter: Router[] = [
   {
-    to: "/dashboard",
+    to: "/admin/dashboard",
     name: "Dashboard",
     icon: RiDashboardFill,
   },
   {
-    to: "/calender",
+    to: "/admin/calender",
     name: "Calender",
     icon: SlCalender,
   },
   {
-    to: "/patients",
+    to: "/admin/patients",
     name: "Patients",
     icon: FaUsers,
   },
   {
-    to: "/staffschedule",
+    to: "/admin/staffschedule",
     name: "Staff Schedule",
     icon: SiApachedolphinscheduler,
   },
   {
-    to: "/doctors",
+    to: "/admin/doctors",
     name: "Doctors",
     icon: FaHandshake,
   },
   {
-    to: "/departments",
+    to: "/admin/departments",
     name: "Departments",
     icon: FaBuilding,
   },
   {
-    to: "/stock",
+    to: "/admin/stock",
     name: "Stock",
     icon: FaDonate,
   },
   {
-    to: "/settings",
+    to: "/admin/settings",
     name: "Settings",
     icon: IoSettingsSharp,
   },
   {
-    to: "/helpcenter",
+    to: "/admin/helpcenter",
     name: "Help Center",
     icon: IoHelpCircleOutline,
   },
   {
-    to: "/logout",
+    to: "/auth/logout",
     name: "Logout",
     icon: CiLogout,
   },

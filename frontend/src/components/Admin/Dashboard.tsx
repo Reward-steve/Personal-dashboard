@@ -38,9 +38,16 @@ const Dashboard: React.FC<ComponentProps> = () => {
     appointments: 0,
   });
   const [notification, setNotification] = useState<typeObj | null>(null);
+  const [name, setName] = useState("");
 
   const { api } = useApi();
   const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      setName(user.username);
+    }
+  }, [user]);
 
   const getStatistics = async () => {
     try {
@@ -75,7 +82,7 @@ const Dashboard: React.FC<ComponentProps> = () => {
   return (
     <>
       <PageTitle
-        Title={`Dashboard ${user?.name || " Loading..."}`}
+        Title={`Dashboard ${name || " Loading..."}`}
         Icon={<IoHome />}
       />
       <div className={styles.containerHolder}>

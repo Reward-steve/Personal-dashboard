@@ -8,7 +8,6 @@ const {
   handleNotFound,
   CreateSendToken,
   sendResponse,
-  SignToken,
 } = require("../Utils/reusableFunctions.js");
 
 const {
@@ -22,7 +21,7 @@ const {
   createRoleSpecificDetails,
 } = require("../Utils/roleAuth.js");
 
-//REGISTER OR SIGNUP
+// REGISTER OR SIGNUP
 const Register = catchAsync(async (req, res, next) => {
   const {
     firstname,
@@ -30,18 +29,22 @@ const Register = catchAsync(async (req, res, next) => {
     username,
     email,
     password,
-    role = "Patient", //default role
+    role = "Patient", // Default role
     ...rest
   } = req.body;
 
-  // check if email already exists in the database.
-  const existingUser = await findByEmail(email);
+  // 1. Validate required fields
+  if (!firstname || !lastname || !username || !email || !password) {
+    return next(new AppError("All fields are required", 400));
+  }
 
+  // 2. Check if email already exists
+  const existingUser = await findByEmail(email);
   if (existingUser) {
     return next(new AppError("Email already in use", 400));
   }
 
-  // Create new User
+  // 3. Create new user with role-specific details
   const newUser = await createRoleSpecificDetails(
     role,
     firstname,
@@ -52,21 +55,27 @@ const Register = catchAsync(async (req, res, next) => {
     rest
   );
 
+  if (!newUser) {
+    return next(new AppError("User creation failed", 500));
+  }
+
   await sendVerificationEmail(newUser, email);
 
+  // 5. Success response
   res.status(201).json({
     status: "success",
-    message: "Registration successfull, Please verify your email address",
+    message: "Registration successful, please verify your email address",
   });
 });
 
-//VERIFY USER ACCOUNT
+// VERIFY USER ACCOUNT
 const verifyEmail = catchAsync(async (req, res, next) => {
   const { token } = req.params;
 
-  if (!token) {
+  if (!token || typeof token !== "string") {
     return next(new AppError("Invalid or missing token", 400));
   }
+
   let decoded;
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -74,8 +83,15 @@ const verifyEmail = catchAsync(async (req, res, next) => {
     return next(new AppError("Token is invalid or has expired", 400));
   }
 
+  // Ensure decoded token contains user ID
+  if (!decoded || typeof decoded !== "object" || !("id" in decoded)) {
+    return next(new AppError("Invalid token payload", 400));
+  }
+
+  const userId = decoded.id;
+
   // Find user by ID from token payload
-  const user = await User.findById(decoded.id);
+  const user = await User.findById(userId);
 
   if (!user) {
     return next(new AppError("User no longer exists", 404));
@@ -90,10 +106,54 @@ const verifyEmail = catchAsync(async (req, res, next) => {
 
   // Mark email as verified
   user.isVerified = true;
+  user.verificationExp = undefined;
+
   await user.save({ validateBeforeSave: false });
 
-  // Optional: Automatically log them in after verification
+  // Automatically log them in after verification
   CreateSendToken(user, res);
+});
+
+// RESEND VERIFICATION LINK
+const resendVerificationLink = catchAsync(async (req, res, next) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return next(new AppError("Email is required", 400));
+  }
+
+  const user = await findByEmail(email.trim().toLowerCase());
+  if (!user) {
+    return next(new AppError("User not found", 404));
+  }
+
+  if (user.isVerified) {
+    return res.status(200).json({ message: "Email already verified" });
+  }
+
+  const ONE_MINUTE = 60 * 1000;
+  const now = Date.now();
+
+  if (
+    user.lastVerificationSent &&
+    now - user.lastVerificationSent < ONE_MINUTE
+  ) {
+    const waitTime = Math.ceil(
+      (ONE_MINUTE - (now - user.lastVerificationSent)) / 1000
+    );
+    return next(
+      new AppError(`Please wait ${waitTime} seconds before retrying`, 429)
+    );
+  }
+
+  user.lastVerificationSent = now;
+  await user.save({ validateBeforeSave: false });
+
+  await sendVerificationEmail(user, user.email);
+
+  return res.status(200).json({
+    message: "Verification email has been resent",
+  });
 });
 
 //CHECK-AUTH
@@ -106,40 +166,48 @@ const checkAuth = catchAsync(async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    res.status(200).json({
-      user: decoded,
-    });
+    // Find user by ID from token payload
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return next(new AppError("User not found", 404));
+    }
+    CreateSendToken(user, res);
   } catch (err) {
-    return next(new AppError("Invalid Token", 400));
+    return next(new AppError("Session expired or token invalid", 401));
   }
 });
-//LOGIN OR SIGNIN
-const Login = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
 
-  // check if email and password exist
+// LOGIN OR SIGNIN
+const Login = catchAsync(async (req, res, next) => {
+  let { email, password } = req.body;
+
+  // Validate input
   if (!email || !password) {
     return next(new AppError("Email and password are required", 400));
   }
 
-  //find user by email
-  const user = await findByEmail(email);
+  // Normalize email
+  email = email.trim().toLowerCase();
 
+  // Find user by email
+  const user = await findByEmail(email);
   if (!user) {
     return next(new AppError("Incorrect email or password", 401));
   }
 
-  //compare user password
-  const isMatch = await user.comparePassword(password, user.password);
-
+  // Check password
+  const isMatch = await user.comparePassword(password);
   if (!isMatch) {
     return next(new AppError("Incorrect email or password", 401));
   }
 
+  // Check email verification
   if (!user.isVerified) {
-    return next(new AppError("Please verify your email address"));
+    return next(new AppError("Please verify your email address", 403));
   }
 
+  // Success - send token
   CreateSendToken(user, res);
 });
 
@@ -161,33 +229,44 @@ const forgottenPassword = catchAsync(async (req, res, next) => {
   await sendResetPasswordEmail(resetToken, user.username, email);
   res.status(200).json({
     status: "success",
-    message: "Email successfully sent to user",
+    message: "Email successfully sent",
   });
 });
 
-//RESET PASSWORD
 const resetPassword = catchAsync(async (req, res, next) => {
-  const encryptedToken = hashedToken(req.params.token);
+  const { token } = req.params;
+  const { password } = req.body;
+
+  if (!password) {
+    return next(new AppError("New password is required", 400));
+  }
+
+  const encryptedToken = hashedToken(token);
 
   const user = await User.findOne({
     passwordResetToken: encryptedToken,
   });
 
-  if (!user) {
-    return next(new AppError("Invalid Token, Token has expired", 400));
+  if (!user || !user.tokenExp || user.tokenExp < Date.now()) {
+    return next(new AppError("Invalid or expired reset token", 400));
   }
-  // update changedPasswordAt property for user
-  user.password = req.body.password;
+
+  user.password = password;
   user.passwordResetToken = undefined;
   user.tokenExp = undefined;
+
   await user.save();
+
+  // Optionally, update changedPasswordAt to invalidate JWTs issued before now
+  // You may already handle this in pre-save hooks
+
   CreateSendToken(user, res);
 });
 
 const updatePassword = catchAsync(async (req, res, next) => {
   const { currentPassword, password } = req.body;
   //get user id
-  const { id } = req.user.id;
+  const { id } = req.user;
 
   if (!currentPassword || !password) {
     return next(new AppError("All fields are require", 500));
@@ -217,7 +296,12 @@ const Logout = catchAsync(async (req, res, next) => {
     next(new AppError("User not found", 404));
   }
 
-  res.cookie("token", "", { httpOnly: true, expires: new Date(0) });
+  res.cookie("token", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+    expires: new Date(0),
+  });
 
   sendResponse(res, 200, "success", "successfully logged out");
 });
@@ -225,8 +309,9 @@ const Logout = catchAsync(async (req, res, next) => {
 module.exports = {
   Register,
   Login,
-  checkAuth,
   verifyEmail,
+  resendVerificationLink,
+  checkAuth,
   forgottenPassword,
   resetPassword,
   updatePassword,

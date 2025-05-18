@@ -8,7 +8,7 @@ export default function Logout() {
 
   const handleLogout = () => {
     logout();
-    navigate("/"); // or wherever the user should go after logout
+    navigate("/auth/login"); // or wherever the user should go after logout
   };
 
   return (

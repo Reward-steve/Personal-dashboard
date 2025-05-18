@@ -50,7 +50,7 @@ const routerObject: Router[] = [
   {
     path: "logout",
     element: Logout,
-    props: { name: "Help Center Page" },
+    props: { name: "Logout" },
   },
 ];
 

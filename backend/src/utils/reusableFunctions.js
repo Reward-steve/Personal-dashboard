@@ -50,18 +50,17 @@ const SignToken = (ID) => {
 const CreateSendToken = async (user, res) => {
   try {
     const token = SignToken(user._id.toString());
-
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
     });
 
-    const { _id, firstname, lastname, email, role } = user;
+    const { _id, firstname, lastname, username, email, role } = user;
 
     res.status(200).json({
       status: "success",
-      user: { _id, firstname, lastname, email, role },
+      user: { _id, firstname, lastname, username, email, role },
     });
   } catch (error) {
     res.status(400).json({

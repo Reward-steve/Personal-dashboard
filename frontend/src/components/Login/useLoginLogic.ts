@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { LoginType, ErrorType, ValidationErrors } from "./types";
@@ -7,34 +7,54 @@ import { validateLoginForm } from "../../utils/validateForm";
 export const useLoginLogic = () => {
   const [next, setNext] = useState(false);
   const [error, setError] = useState<ErrorType | string>();
+  const [successMessage, setSuccessMessage] = useState<string>("");
+
   const [isLoading, setIsLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
     {}
   );
-
-  const navigate = useNavigate();
-  const { login } = useAuth();
-
   const [currentUser, setCurrentUser] = useState<LoginType>({
     email: "",
     password: "",
   });
 
+  const navigate = useNavigate();
+  const { user, serverError, login, clearError } = useAuth();
+
   useEffect(() => {
     document.title = next ? "Auth | Forgotten Password" : "Auth | Login";
   }, [next]);
 
+  // Navigate when user logs in
+  useEffect(() => {
+    if (user) {
+      switch (user.role) {
+        case "Admin":
+          navigate("/admin/dashboard");
+          break;
+        case "Patient":
+          navigate("/patient/dashboard");
+          break;
+        case "Doctor":
+          navigate("/doctor/dashboard");
+          break;
+      }
+    }
+  }, [user, navigate, serverError]);
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCurrentUser((prev) => ({ ...prev, [name]: value }));
+    clearError();
   };
 
-  const handleUserLogin = async () => {
-    setError("");
+  const handleUserLogin = async (e: FormEvent) => {
+    e.preventDefault();
+    setError(undefined);
     const errors = validateLoginForm(currentUser, next);
     setValidationErrors(errors || {});
 
-    if (errors) {
+    if (errors && Object.keys(errors).length > 0) {
       setError("Please fix the errors before continuing.");
       return;
     }
@@ -42,29 +62,31 @@ export const useLoginLogic = () => {
     try {
       setIsLoading(true);
       await login(currentUser);
-      navigate("/dashboard");
     } catch (err) {
+      const errorMessage =
+        (err as ErrorType)?.response?.data?.message ||
+        (err as Error).message ||
+        "Something went wrong. Please try again.";
+      setError(errorMessage || serverError);
       console.error("Login Error:", err);
-      if ((err as ErrorType)?.response?.data?.message) {
-        setError((err as ErrorType).response.data.message);
-      } else {
-        setError("Something went wrong. Please try again.");
-      }
     } finally {
       setIsLoading(false);
     }
   };
 
   const handlePasswordReset = async () => {
-    setError("");
+    setError(undefined);
+    setSuccessMessage(""); // clear previous
+
     const errors = validateLoginForm(currentUser, next);
     setValidationErrors(errors || {});
 
-    if (errors) return;
+    if (errors && Object.keys(errors).length > 0) return;
 
     try {
       setIsLoading(true);
-      alert("Reset instructions sent to your email.");
+      // Ideally: await api call here
+      setSuccessMessage("Reset instructions sent to your email.");
     } catch (err) {
       console.error("Password Reset Error:", err);
       setError("Failed to send reset email.");
@@ -77,11 +99,15 @@ export const useLoginLogic = () => {
     next,
     setNext,
     error,
+    serverError,
     isLoading,
     currentUser,
     handleInputChange,
     handleUserLogin,
     handlePasswordReset,
     validationErrors,
+    successMessage,
+    setSuccessMessage,
+    setError,
   };
 };

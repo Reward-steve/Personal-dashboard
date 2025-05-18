@@ -4,14 +4,17 @@ import { apiReducer, initialState } from "../hooks/apiReducer";
 import apiClient from "../utils/apiClient";
 import axios from "axios";
 
-export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+interface ApiProviderProps {
+  children: React.ReactNode;
+}
+
+export const ApiProvider = ({ children }: ApiProviderProps) => {
   const [state, dispatch] = useReducer(apiReducer, initialState);
 
   const api = useCallback(
     async (method: string, url: string, body?: object) => {
       dispatch({ type: "LOADING" });
+
       try {
         const response = await apiClient.request({ method, url, data: body });
 
@@ -25,15 +28,18 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
 
         return response.data;
       } catch (err: unknown) {
+        console.error("API Error:", err);
+
         const errorMessage =
           axios.isAxiosError(err) && err.response?.data?.message
             ? err.response.data.message
             : "An unknown error occurred";
+
         dispatch({ type: "ERROR", payload: errorMessage });
         return null;
       }
     },
-    []
+    [dispatch]
   );
 
   return (

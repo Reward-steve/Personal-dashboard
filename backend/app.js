@@ -19,6 +19,7 @@ const Billing = require("./src/routes/Billing.js");
 const Notification = require("./src/routes/Notification.js");
 const Message = require("./src/routes/Message.js");
 const Profile = require("./src/routes/Profile.js");
+const User = require("./src/models/UserModels/User.js");
 
 const app = express();
 app.use(express.json());
@@ -36,6 +37,25 @@ const corsOptionsDelegate = (req, callback) => {
   }
   callback(null, corsOption);
 };
+
+const deleteUnverifiedUser = async () => {
+  try {
+    const result = await User.deleteMany({
+      isVerified: false,
+      verificationExp: { $lte: Date.now() },
+    });
+    if (result.deletedCount > 0) {
+      console.log(`🧹 Deleted ${result.deletedCount} unverified user(s)`);
+    }
+  } catch (err) {
+    console.error("Failed to delete unverified users:", err);
+  }
+};
+
+// deleteUnverifiedUser()
+
+const oneDay = 24 * 60 * 60 * 1000;
+setInterval(deleteUnverifiedUser, oneDay);
 
 app.use(cors(corsOptionsDelegate));
 

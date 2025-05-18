@@ -8,7 +8,8 @@ import { ProtectedRoute } from "./utils/ProtectedRoute";
 import { AuthProvider } from "./context/AuthProvider";
 import { SignUp } from "./pages/register";
 import { Login } from "./pages/login/index";
-import { VerifyEmail } from "./components/VerifyEmail";
+import { VerifyEmail } from "./pages/verify-email/index";
+import Logout from "./components/Logout";
 
 const App: React.FC = () => {
   return (
@@ -21,10 +22,11 @@ const App: React.FC = () => {
               <Route path="/auth/login" element={<Login />} />
               <Route path="/auth/signup" element={<SignUp />} />
               <Route path="/verify-email" element={<VerifyEmail />} />
+              <Route path="/auth/logout" element={<Logout />} />
 
               {/* ✅ Protected Routes */}
               <Route element={<ProtectedRoute />}>
-                <Route path="/*" element={<MainContent />}>
+                <Route path="/admin/*" element={<MainContent />}>
                   {routerObject.map((route, id) => (
                     <Route
                       key={id}

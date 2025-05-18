@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { Input } from "../Inputs";
 import style from "../../styles/Authpages.module.css";
 import { DetailsFormProps } from "../../types/SignupFormProps";
-import { RiLoader2Line } from "react-icons/ri";
 
 export const DetailsForm = ({
   change,
@@ -108,9 +107,10 @@ export const DetailsForm = ({
         <button
           type="submit"
           className={style.navlink}
+          disabled={isLoading}
           style={{ background: "#1e9ef4" }}
         >
-          {isLoading ? <RiLoader2Line size={30} /> : "Signup"}
+          {isLoading ? "Registering..." : "Sign Up"}
         </button>
       </div>
     </div>

@@ -53,10 +53,6 @@ export const verifyEmailTemplate = (username, verificationUrl) => {
             Please verify your email address by clicking the button below:
           </p>
           <a href="${verificationUrl}" class="button">Verify Email</a>
-          <p>
-            If the button doesn't work, you can copy and paste the following link into your browser:<br />
-            <a href="${verificationUrl}" style="color: #00b894;">${verificationUrl}</a>
-          </p>
           <p>This link will expire in 24 hours for your security.</p>
           <div class="footer">
             &copy; ${new Date().getFullYear()} Hospital Medical System. All rights reserved.

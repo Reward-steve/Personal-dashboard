@@ -9,6 +9,7 @@ const {
   updatePassword,
   Logout,
   verifyEmail,
+  resendVerificationLink,
 } = require("../controllers/Auth");
 
 const {
@@ -28,6 +29,10 @@ router.route("/login").post(Login);
 
 router.route("/check-auth").get(checkAuth);
 
+router.route("/verify-email/:token").get(verifyEmail);
+
+router.route("resend-verification").post(resendVerificationLink);
+
 router.route("/forgotpassword").post(forgottenPassword);
 
 router.route("/reset-password/:token").patch(resetPassword);
@@ -35,8 +40,6 @@ router.route("/reset-password/:token").patch(resetPassword);
 router.route("/updatepassword").patch(Protect, updatePassword);
 
 router.route("/logout/:id").post(Protect, Logout);
-
-router.route("/verify-email/:token").get(verifyEmail);
 
 router
   .route("/user/:id")

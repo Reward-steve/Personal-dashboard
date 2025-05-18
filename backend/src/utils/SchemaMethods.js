@@ -47,8 +47,8 @@ const createPasswordResetToken = function () {
   return resetToken;
 };
 
-const comparePassword = async function (currPassword, encryptedPassword) {
-  return await bcrypt.compare(currPassword, encryptedPassword);
+const comparePassword = async function (candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
 };
 
 module.exports = {

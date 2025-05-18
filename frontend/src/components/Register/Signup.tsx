@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 import style from "../../styles/Authpages.module.css";
 import { FaHome } from "react-icons/fa";
@@ -17,17 +17,28 @@ export default function SignUp(): JSX.Element {
   const [step, setStep] = useState<"basic" | "details">("basic");
   const [err, setErr] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const { api, error, isLoading } = useApi();
   const [userInfo, setUserInfo] = useState(initialUserInfo);
+
+  const { api, error, isLoading, message } = useApi();
+
+  useEffect(() => {
+    if (error) {
+      setErr(error);
+    }
+  }, [error]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErr("");
+    setErrors({});
+
     const validationErrors = validateSignup(userInfo);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       setErr("Please fix the highlighted errors.");
       return;
     }
+
     const {
       firstname,
       lastname,
@@ -45,7 +56,7 @@ export default function SignUp(): JSX.Element {
       relationship,
     } = userInfo;
 
-    const res = await api("POST", "auth/register", {
+    await api("POST", "auth/register", {
       firstname,
       lastname,
       username,
@@ -60,20 +71,20 @@ export default function SignUp(): JSX.Element {
         relationship,
       },
     });
-    console.log(res);
-    if (!error) {
-      alert("");
-    } else {
-      setErr(error || "An error occurred during signup.");
-    }
+
+    setUserInfo(initialUserInfo);
   };
 
   return (
     <AuthHolder>
-      <form onSubmit={handleAuth} className={style.loginForm}>
+      <form
+        onSubmit={handleAuth}
+        className={style.loginForm}
+        aria-labelledby="signup-heading"
+      >
         <div className={style.iconholder}>
-          <h3>Sign Up</h3>
-          <Link to="/" className={style.homeIcon}>
+          <h3 id="signup-heading">Sign Up</h3>
+          <Link to="/" className={style.homeIcon} aria-label="Go to homepage">
             <FaHome size={20} />
           </Link>
         </div>
@@ -81,28 +92,38 @@ export default function SignUp(): JSX.Element {
         {err && (
           <p
             className={style.error}
+            role="alert"
             style={{ color: "red", marginBottom: "10px" }}
           >
             {err}
           </p>
         )}
 
-        {step === "basic" ? (
-          <BasicForm
-            change={(e) => handleInputChange(e, setUserInfo)}
-            value={userInfo}
-            errors={errors}
-            step={() => setStep("details")}
-          />
-        ) : (
-          <DetailsForm
-            change={(e) => handleInputChange(e, setUserInfo)}
-            value={userInfo}
-            errors={errors}
-            step={() => setStep("basic")}
-            isLoading={isLoading}
-          />
+        {message && (
+          <p role="status" style={{ color: "green", marginBottom: "10px" }}>
+            {message}
+          </p>
         )}
+
+        {/* Use semantic fieldsets for grouping form inputs */}
+        <section aria-live="polite">
+          {step === "basic" ? (
+            <BasicForm
+              change={(e) => handleInputChange(e, setUserInfo)}
+              value={userInfo}
+              errors={errors}
+              step={() => setStep("details")}
+            />
+          ) : (
+            <DetailsForm
+              change={(e) => handleInputChange(e, setUserInfo)}
+              value={userInfo}
+              errors={errors}
+              step={() => setStep("basic")}
+              isLoading={isLoading}
+            />
+          )}
+        </section>
 
         <label className={style.bottomText}>
           <p>Already have an account?</p>

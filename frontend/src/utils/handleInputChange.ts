@@ -5,6 +5,7 @@ const handleInputChange = (
     value: React.SetStateAction<{
       firstname: string;
       lastname: string;
+      username: string;
       email: string;
       password: string;
       gender: string;
